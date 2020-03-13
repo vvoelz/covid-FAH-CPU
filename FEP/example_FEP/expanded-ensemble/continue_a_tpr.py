@@ -7,31 +7,34 @@ from expanded import *
 Testing = False      #True
 
 usage = """
-    Usage:   continue_a_tpr.py [prev-jobdir] [this-jobdir] [ndxfile] [ps to extend]
+    Usage:   continue_a_tpr.py [prev-tprfile] [prev-jobdir] [this-jobdir] [topfile] [ndxfile] [ps to extend] [output tprfile]
 
 EXAMPLE
 
-    $ python continue_a_tpr.py out1 out2 index.ndx 1000
+    $ python continue_a_tpr.py testout/frame0.tpr testout nextout RUN0/topol.top  RUN0/index.ndx 1000  nextout/frame1.tpr
 """
 
-if len(sys.argv) < 5:
+if len(sys.argv) < 8:
     print(usage)
     sys.exit(1)
 
+print('sys.argv', sys.argv)
+
 # parse the input arguments
-prev_jobdir = sys.argv[1]
-prev_gen_tpr = glob.glob(os.path.join(prev_jobdir, 'frame*.tpr'))[0]  # assume tpr is in this form
-prev_gen_trr = os.path.join(prev_jobdir, 'traj.trr')
+prev_gen_tpr = sys.argv[1]
+
+prev_jobdir = sys.argv[2]
+prev_gen_trr = glob.glob( os.path.join(prev_jobdir, '*.trr') )[0]
 #prev_gen_dhdl = os.path.join(prev_jobdir, 'dhdl.xvg')
 prev_gen_mdlog = os.path.join(prev_jobdir, 'md.log')
 prev_gen_ndx = os.path.join(prev_jobdir, 'index.ndx')
 
-this_jobdir = sys.argv[2]
-this_gen = int(this_jobdir.replace('out',''))
-this_gen_tpr = os.path.join(this_jobdir, 'frame%d.tpr'%this_gen)
+this_jobdir = sys.argv[3]
 
-ndxfile      = sys.argv[3]
-extend_in_ps = int(sys.argv[4])
+topfile      = sys.argv[4]
+ndxfile      = sys.argv[5]
+extend_in_ps = int(sys.argv[6])
+this_gen_tpr = sys.argv[7]
 
 #############################
 # Read in the previous md.log file and parse out the latest WL weights!
@@ -97,9 +100,9 @@ print('Writing', this_mdpfile, '...')
 e.write_to_filename(this_mdpfile)
 print ('...Done')
 
-
-cmd = "gmx grompp -c {prev_gen_tpr} -t {prev_gen_trr} -f {this_mdpfile} -n {ndxfile} -o {this_gen_tpr} -po {this_jobdir}/mdout.mdp -maxwarn 1".format(prev_gen_tpr=prev_gen_tpr, prev_gen_trr=prev_gen_trr, \
-	this_mdpfile=this_mdpfile, ndxfile=ndxfile, this_gen_tpr=this_gen_tpr, this_jobdir=this_jobdir)
+GMX_BIN = '/usr/local/gromacs/bin/gmx'
+cmd = "{GMX_BIN} grompp -c {prev_gen_tpr} -t {prev_gen_trr} -f {this_mdpfile} -p {topfile} -n {ndxfile} -o {this_gen_tpr} -po {this_jobdir}/mdout.mdp -maxwarn 1".format(GMX_BIN=GMX_BIN, prev_gen_tpr=prev_gen_tpr, prev_gen_trr=prev_gen_trr, \
+	this_mdpfile=this_mdpfile, topfile=topfile, ndxfile=ndxfile, this_gen_tpr=this_gen_tpr, this_jobdir=this_jobdir)
 print('cmd:', cmd)
-# os.system(cmd)
+os.system(cmd)
 
