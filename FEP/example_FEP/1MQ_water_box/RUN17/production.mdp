@@ -1,45 +1,11 @@
-import os, sys
-import time
-import numpy as np
+;
+;	File 'mdout.mdp' was generated
+;	By user: onbekend (0)
+;	On host: onbekend
+;	At date: Fri Feb 10 08:26:42 2012
+;
 
-# Classes and Functions for preparing and continuing expanded-ensemble simulations
-
-class expanded_ensemble_mdpfile(object):
-
-    def __init__(self,  couple_moltype = '1MQ',
-			pull_group1_name = 'a1-Protein', 
-                        pull_group2_name = 'a2-Ligand', 
-                        pull_coord1_k    = 200.0, 
-                        pull_coord1_init  = 0.4, 
-                        fep_lambdas      = np.arange(0.00, 1.05, 0.05),
-                        init_lambda_weights = np.zeros(21),
-                        init_lambda_state   = 20,
-                        wl_increment_in_kT  = 3.0 ):
-
-        """Initialize the class."""
-
-        self.couple_moltype = couple_moltype 
-        self.pull_group1_name = pull_group1_name
-        self.pull_group2_name = pull_group2_name
-        self.pull_coord1_k    = pull_coord1_k     # the spring constant in kJ/nm^2
-        self.pull_coord1_init = pull_coord1_init  # the equilibrium distance between the pull group 1 and 2
-        self.fep_lambdas      = fep_lambdas
-        self.nlambdas         = len(self.fep_lambdas)
-        self.fep_lambdas_string   = ' '.join(['%2.3f'%fep_lambdas[i] for i in range(self.nlambdas)])
-
-        self.init_lambda_weights  = init_lambda_weights
-        self.init_lambda_weights_string =  ' '.join(['%2.3f'%init_lambda_weights[i] for i in range(self.nlambdas)])
-
-        self.init_lambda_state    = init_lambda_state
-        self.wl_increment_in_kT   = wl_increment_in_kT
-
-
-    def mdpfile_text(self):
-        """Returns a string corresponding to the mdpfile contents."""
-
-        self.header_desc = ";       generated from expanded_ensemble_mdpfile() on %s \n;\n;\n"%time.asctime()
-
-        self.mdp_text = """; VARIOUS PREPROCESSING OPTIONS
+; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
 ; e.g.: -I/home/joe/doe -I/home/mary/roe
 include                  = -I../top
@@ -47,11 +13,11 @@ include                  = -I../top
 define                   = 
 
 ; RUN CONTROL PARAMETERS
-integrator               = md-vv   ;  only md-vv works with ee;  sd
+integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 500000   ; 1000 ps = 1 ns
+nsteps                   = -1
 ; For exact run continuation or redoing part of a run
 init_step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -68,26 +34,38 @@ comm_grps                = System
 bd-fric                  = 0
 ld-seed                  = -1 
 
+; ENERGY MINIMIZATION OPTIONS
+; Force tolerance and initial step-size
+emtol                    = 10
+emstep                   = 0.01
+; Max number of iterations in relax_shells
+niter                    = 20
+; Step size (ps^2) for minimization of flexible constraints
+fcstep                   = 0
+; Frequency of steepest descents steps when doing CG
+nstcgsteep               = 1000
+nbfgscorr                = 10
+
 ; TEST PARTICLE INSERTION OPTIONS
 rtpi                     = 0.05
 
 ; OUTPUT CONTROL OPTIONS
 ; Output frequency for coords (x), velocities (v) and forces (f)
-nstxout                  = 500000  ; 1 ns 
-nstvout                  = 500000  ; 1 ns
+nstxout                  = 125000
+nstvout                  = 125000
 nstfout                  = 0
 ; Output frequency for energies to log file and energy file
-nstlog                   = 500     ; 1 ps
-nstcalcenergy            = 500     ; 1 ps
-nstenergy                = 500     ; 1 ps
+nstlog                   = 5000
+nstcalcenergy            = -1
+nstenergy                = 5000
 ; Output frequency and precision for .xtc file
-nstxtcout                = 5000  ; every 10 ps
+nstxtcout                = 5000  ; every 100 ps
 xtc-precision            = 1000
 ; This selects the subset of atoms for the .xtc file. You can
 ; select multiple groups. By default all atoms will be written.
-xtc_grps                 = Protein 1MQ
+xtc_grps                 = 1MQ
 ; Selection of energy groups
-energygrps               = Protein Water_and_ions 1MQ
+energygrps               = Water_and_ions 1MQ
 
 ; NEIGHBORSEARCHING PARAMETERS
 ; nblist update frequency
@@ -134,13 +112,38 @@ ewald_geometry           = 3d
 epsilon_surface          = 0
 optimize_fft             = no
 
+; IMPLICIT SOLVENT ALGORITHM
+implicit_solvent         = No
+
+; GENERALIZED BORN ELECTROSTATICS
+; Algorithm for calculating Born radii
+gb_algorithm             = Still
+; Frequency of calculating the Born radii inside rlist
+nstgbradii               = 1
+; Cutoff for Born radii calculation; the contribution from atoms
+; between rlist and rgbradii is updated every nstlist steps
+rgbradii                 = 1
+; Dielectric coefficient of the implicit solvent
+gb_epsilon_solvent       = 80
+; Salt concentration in M for Generalized Born models
+gb_saltconc              = 0
+; Scaling factors used in the OBC GB model. Default values are OBC(II)
+gb_obc_alpha             = 1
+gb_obc_beta              = 0.8
+gb_obc_gamma             = 4.85
+gb_dielectric_offset     = 0.009
+sa_algorithm             = Ace-approximation
+; Surface tension (kJ/mol/nm^2) for the SA (nonpolar surface) part of GBSA
+; The value -1 will set default value for Still/HCT/OBC GB-models.
+sa_surface_tension       = -1
+
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling  
 tcoupl                   = Berendsen
 nsttcouple               = -1
 nh-chain-length          = 10
 ; Groups to couple separately
-tc-grps                  = Protein non-Protein
+tc-grps                  = Other Water_and_ions
 ; Time constant (ps) and reference temperature (K)
 tau_t                    = 1.0  1.0
 ref_t                    = 300  300
@@ -156,6 +159,44 @@ ref_p                    = 1.0
 refcoord_scaling         = No
 ; Random seed for Andersen thermostat
 andersen_seed            = 815131
+
+; OPTIONS FOR QMMM calculations
+QMMM                     = no
+; Groups treated Quantum Mechanically
+QMMM-grps                = 
+; QM method             
+QMmethod                 = 
+; QMMM scheme           
+QMMMscheme               = normal
+; QM basisset           
+QMbasis                  = 
+; QM charge             
+QMcharge                 = 
+; QM multiplicity       
+QMmult                   = 
+; Surface Hopping       
+SH                       = 
+; CAS space options     
+CASorbitals              = 
+CASelectrons             = 
+SAon                     = 
+SAoff                    = 
+SAsteps                  = 
+; Scale factor for MM charges
+MMChargeScaleFactor      = 1
+; Optimization of QM subsystem
+bOPT                     = 
+bTS                      = 
+
+; SIMULATED ANNEALING  
+; Type of annealing for each temperature group (no/single/periodic)
+annealing                = 
+; Number of time points to use for specifying annealing in each group
+annealing_npoints        = 
+; List of times at the annealing points for each group
+annealing_time           = 
+; Temp. at each annealing point, for each group.
+annealing_temp           = 
 
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen_vel                  = yes
@@ -197,93 +238,74 @@ wall_atomtype            =
 wall_density             = 
 wall_ewald_zfac          = 3
 
+; NMR refinement stuff 
+; Distance restraints type: No, Simple or Ensemble
+disre                    = No
+; Force weighting of pairs in one distance restraint: Conservative or Equal
+disre-weighting          = Conservative
+; Use sqrt of the time averaged times the instantaneous violation
+disre-mixed              = no
+disre-fc                 = 1000
+disre-tau                = 0
+; Output frequency for pair distances to energy file
+nstdisreout              = 100
+; Orientation restraints: No or Yes
+orire                    = no
+; Orientation restraints force constant and tau for time averaging
+orire-fc                 = 0
+orire-tau                = 0
+orire-fitgrp             = 
+; Output frequency for trace(SD) and S to energy file
+nstorireout              = 100
+; Dihedral angle restraints: No or Yes
+dihre                    = no
+dihre-fc                 = 1000
+
 ; Free energy control stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-free-energy              = expanded
-init-lambda-state        = {init_lambda_state}
-;  delta-lambda             = 0
-fep-lambdas              = {fep_lambdas_string}
+free-energy              = yes
+init-lambda-state        = 17
+delta-lambda             = 0
+fep-lambdas              = 0.00 0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50 0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95 1.00
 calc-lambda-neighbors    = -1
 sc-alpha                 = 0
 sc-power                 = 0
 sc-sigma                 = 0.3
-nstdhdl                  = 500
+nstdhdl                  = 10
 separate-dhdl-file       = yes
 dhdl-derivatives         = yes
-;   dh_hist_size             = 0
-;   dh_hist_spacing          = 0.1
-couple-moltype           = {couple_moltype}
+dh_hist_size             = 0
+dh_hist_spacing          = 0.1
+couple-moltype           = 1MQ
 couple-lambda0           = none ; off
 couple-lambda1           = vdw-q ; on
 couple-intramol          = no
 
+; Non-equilibrium MD stuff
+acc-grps                 = 
+accelerate               = 
+freezegrps               = 
+freezedim                = 
+cos-acceleration         = 0
+deform                   = 
 
-; expanded ensemble variables
-nstexpanded              = 500     ; 1 ps
-lmc-stats                = wang-landau
-lmc-move                 = metropolized-gibbs
-lmc-weights-equil        = no
-weight-equil-number-all-lambda = -1
-weight-equil-number-samples = -1
-weight-equil-number-steps = -1
-weight-equil-wl-delta    = -1
-weight-equil-count-ratio = -1
+; Electric fields      
+; Format is number of terms (int) and for all terms an amplitude (real)
+; and a phase angle (real)
+E-x                      = 
+E-xt                     = 
+E-y                      = 
+E-yt                     = 
+E-z                      = 
+E-zt                     = 
 
-; Seed for Monte Carlo in lambda space
-lmc-seed                 = -1
-mc-temperature           = -1
-lmc-repeats              = 1
-lmc-gibbsdelta           = -1
-lmc-forced-nstart        = 0
-symmetrized-transition-matrix = no
-nst-transition-matrix    = -1
-mininum-var-min          = 100
-init-lambda-weights      = {init_lambda_weights}
-weight-c-range           = 0
-wl-scale                 = 0.8
-wl-ratio                 = 0.8
-init-wl-delta            = {wl_increment_in_kT}  ; kT -- default is 1.0
-wl-oneovert              = no
-
-; pulling parameters
-pull                     = umbrella
-pull_ngroups             = 2
-pull_ncoords             = 1
-pull_group1_name         = {pull_group1_name}
-pull_group2_name         = {pull_group2_name}
-pull-geometry            = direction-periodic
-pull_coord1_groups       = 1 2
-pull-dim                 = Y Y Y
-pull_coord1_rate         = 0.00
-pull_coord1_k            = {pull_coord1_k}
-pull-start               = no
-pull-coord1-init         = {pull_coord1_init}
-pull-nstxout             = 500   ; 1 ps
-pull-nstfout             = 500   ; 1 ps
-""".format(couple_moltype      = self.couple_moltype, 
-           pull_group1_name    = self.pull_group1_name, 
-           pull_group2_name    = self.pull_group2_name,
-           pull_coord1_k       = self.pull_coord1_k,
-           pull_coord1_init    = self.pull_coord1_init,
-           fep_lambdas_string  = self.fep_lambdas_string,
-           init_lambda_state   = self.init_lambda_state,
-           init_lambda_weights = self.init_lambda_weights_string,
-           wl_increment_in_kT  = self.wl_increment_in_kT )
-
-        return self.header_desc + self.mdp_text
-
-    def write_to_filename(self, filename):
-        """Writes the ee mdpfile to specified filename."""
-
-        fout = open(filename, 'w')
-        fout.write( self.mdpfile_text() )         
-        fout.close()
-   
-
-if __name__ == "__main__": 
-    e = expanded_ensemble_mdpfile()
-    print(e.mdpfile_text())
-    e.write_to_filename('test.mdp')
- 
-
-
-
+; User defined thingies
+user1-grps               = 
+user2-grps               = 
+userint1                 = 0
+userint2                 = 0
+userint3                 = 0
+userint4                 = 0
+userreal1                = 0
+userreal2                = 0
+userreal3                = 0
+userreal4                = 0
