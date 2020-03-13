@@ -6,10 +6,11 @@ import numpy as np
 
 class expanded_ensemble_mdpfile(object):
 
-    def __init__(self,  couple_moltype = '1MQ', \
-			pull_group1_name = 'a_678', \
-                        pull_group2_name = 'a_1564', \
-                        pull_coord1_k    = 200.0, \
+    def __init__(self,  couple_moltype = '1MQ',
+			pull_group1_name = 'a_678', 
+                        pull_group2_name = 'a_1564', 
+                        pull_coord1_k    = 200.0, 
+                        pull_coord1_init  = 0.4, 
                         fep_lambdas      = np.arange(0.00, 1.05, 0.05),
                         init_lambda_weights = np.zeros(21),
                         init_lambda_state   = 20,
@@ -20,7 +21,8 @@ class expanded_ensemble_mdpfile(object):
         self.couple_moltype = couple_moltype 
         self.pull_group1_name = pull_group1_name
         self.pull_group2_name = pull_group2_name
-        self.pull_coord1_k    = pull_coord1_k
+        self.pull_coord1_k    = pull_coord1_k     # the spring constant in kJ/nm^2
+        self.pull_coord1_init = pull_coord1_init  # the equilibrium distance between the pull group 1 and 2
         self.fep_lambdas      = fep_lambdas
         self.nlambdas         = len(self.fep_lambdas)
         self.fep_lambdas_string   = ' '.join(['%2.3f'%fep_lambdas[i] for i in range(self.nlambdas)])
@@ -254,13 +256,14 @@ pull-dim                 = Y Y Y
 pull_coord1_rate         = 0.00
 pull_coord1_k            = {pull_coord1_k}
 pull-start               = no
-pull-coord1-init         = 0.4
+pull-coord1-init         = {pull_coord1_init}
 pull-nstxout             = 500   ; 1 ps
 pull-nstfout             = 500   ; 1 ps
 """.format(couple_moltype      = self.couple_moltype, 
            pull_group1_name    = self.pull_group1_name, 
            pull_group2_name    = self.pull_group2_name,
            pull_coord1_k       = self.pull_coord1_k,
+           pull_coord1_init    = self.pull_coord1_init
            fep_lambdas_string  = self.fep_lambdas_string,
            init_lambda_state   = self.init_lambda_state,
            init_lambda_weights = self.init_lambda_weights_string,
