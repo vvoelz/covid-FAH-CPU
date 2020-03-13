@@ -1,17 +1,18 @@
 ;
 ;	File 'mdout.mdp' was generated
-;	By user: tug27224 (1001)
-;	On host: vav13
-;	At date: Fri Mar 13 10:49:25 2020
+;	By user: tug27224 (40003)
+;	On host: cb2rr
+;	At date: Thu Mar  5 13:18:39 2020
+
 ;
 ;	Created by:
-;	                     :-) GROMACS - gmx grompp, 2019.3 (-:
+;	                     :-) GROMACS - gmx grompp, 2016.3 (-:
 ;	
-;	Executable:   /usr/local/gromacs/bin/gmx
-;	Data prefix:  /usr/local/gromacs
-;	Working dir:  /home/tug27224/projects/covid-FAH-CPU/FEP/example_FEP/water
+;	Executable:   /gpfs/opt/apps/gromacs-2016.3/bin/gmx
+;	Data prefix:  /gpfs/opt/apps/gromacs-2016.3
+;	Working dir:  /home/tug27224/free_nuts/prod/1MQ/RUN8
 ;	Command line:
-;	  gmx grompp -f production.mdp -c npt.gro -p topol.top -o prod.tpr
+;	  gmx grompp -f production.mdp -c npt.gro -p topol.top -n index.ndx -o prod.tpr
 
 ; VARIOUS PREPROCESSING OPTIONS
 ; Preprocessor information: use cpp syntax.
@@ -25,7 +26,7 @@ integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = -1
+nsteps                   = 1250000
 ; For exact run continuation or redoing part of a run
 init_step                = 0
 ; Part index is updated automatically on checkpointing (keeps files separate)
@@ -127,7 +128,31 @@ ewald-rtol-lj            = 0.001
 lj-pme-comb-rule         = Geometric
 ewald_geometry           = 3d
 epsilon_surface          = 0
+
+; IMPLICIT SOLVENT ALGORITHM
 implicit_solvent         = No
+
+; GENERALIZED BORN ELECTROSTATICS
+; Algorithm for calculating Born radii
+gb_algorithm             = Still
+; Frequency of calculating the Born radii inside rlist
+nstgbradii               = 1
+; Cutoff for Born radii calculation; the contribution from atoms
+; between rlist and rgbradii is updated every nstlist steps
+rgbradii                 = 1
+; Dielectric coefficient of the implicit solvent
+gb_epsilon_solvent       = 80
+; Salt concentration in M for Generalized Born models
+gb_saltconc              = 0
+; Scaling factors used in the OBC GB model. Default values are OBC(II)
+gb_obc_alpha             = 1
+gb_obc_beta              = 0.8
+gb_obc_gamma             = 4.85
+gb_dielectric_offset     = 0.009
+sa_algorithm             = Ace-approximation
+; Surface tension (kJ/mol/nm^2) for the SA (nonpolar surface) part of GBSA
+; The value -1 will set default value for Still/HCT/OBC GB-models.
+sa_surface_tension       = -1
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling  
@@ -175,6 +200,9 @@ SAoff                    =
 SAsteps                  = 
 ; Scale factor for MM charges
 MMChargeScaleFactor      = 1
+; Optimization of QM subsystem
+bOPT                     = 
+bTS                      = 
 
 ; SIMULATED ANNEALING  
 ; Type of annealing for each temperature group (no/single/periodic)
@@ -229,9 +257,6 @@ wall_ewald_zfac          = 3
 ; COM PULLING          
 pull                     = no
 
-; AWH biasing          
-awh                      = no
-
 ; ENFORCED ROTATION    
 ; Enforced rotation: No or Yes
 rotation                 = no
@@ -266,7 +291,7 @@ couple-lambda0           = none
 couple-lambda1           = vdw-q
 couple-intramol          = no
 init-lambda              = -1
-init-lambda-state        = 0
+init-lambda-state        = 8
 delta-lambda             = 0
 nstdhdl                  = 10
 fep-lambdas              = 0.00 0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50 0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95 1.00
@@ -303,6 +328,19 @@ simulated-tempering-scaling = geometric
 sim-temp-low             = 300
 sim-temp-high            = 300
 
+; Electric fields      
+; Format is number of terms (int) and for all terms an amplitude (real)
+; and a phase angle (real)
+E-x                      = 
+; Time dependent (pulsed) electric field. Format is omega, time for pulse
+; peak, and sigma (width) for pulse. Sigma = 0 removes pulse, leaving
+; the field to be a cosine function.
+E-xt                     = 
+E-y                      = 
+E-yt                     = 
+E-z                      = 
+E-zt                     = 
+
 ; Ion/water position swapping for computational electrophysiology setups
 ; Swap positions along direction: no, X, Y, Z
 swapcoords               = no
@@ -319,11 +357,3 @@ userreal1                = 0
 userreal2                = 0
 userreal3                = 0
 userreal4                = 0
-; Electric fields
-; Format for electric-field-x, etc. is: four real variables:
-; amplitude (V/nm), frequency omega (1/ps), time for the pulse peak (ps),
-; and sigma (ps) width of the pulse. Omega = 0 means static field,
-; sigma = 0 means no pulse, leaving the field to be a cosine function.
-electric-field-x         = 0 0 0 0
-electric-field-y         = 0 0 0 0
-electric-field-z         = 0 0 0 0
