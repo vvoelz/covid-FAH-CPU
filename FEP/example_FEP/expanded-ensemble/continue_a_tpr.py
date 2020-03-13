@@ -24,7 +24,7 @@ print('sys.argv', sys.argv)
 prev_gen_tpr = sys.argv[1]
 
 prev_jobdir = sys.argv[2]
-prev_gen_trr = os.path.join(prev_jobdir, 'traj.trr')
+prev_gen_trr = glob.glob( os.path.join(prev_jobdir, '*.trr') )[0]
 #prev_gen_dhdl = os.path.join(prev_jobdir, 'dhdl.xvg')
 prev_gen_mdlog = os.path.join(prev_jobdir, 'md.log')
 prev_gen_ndx = os.path.join(prev_jobdir, 'index.ndx')
