@@ -1,0 +1,28 @@
+# This file was created Fri Mar 13 08:38:58 2020
+# Created by:
+# GROMACS:      gmx mdrun, VERSION 5.0.4
+# Executable:   /usr/local/gromacs/bin/gmx
+# Library dir:  /usr/local/gromacs/share/gromacs/top
+# Command line:
+#   gmx mdrun -v -s frame0.tpr
+# gmx is part of G R O M A C S:
+#
+# Good ROcking Metal Altar for Chronical Sinners
+#
+@    title "Pull COM"
+@    xaxis  label "Time (ps)"
+@    yaxis  label "Position (nm)"
+@TYPE xy
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "1 dX"
+@ s1 legend "1 dY"
+@ s2 legend "1 dZ"
+0.0000	-0.215066	0.227052	0.227982
+1.0000	-0.256624	0.208006	0.235296
+2.0000	-0.318413	0.234917	0.283486
+3.0000	-0.248252	0.239923	0.236442
