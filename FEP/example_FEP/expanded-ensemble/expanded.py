@@ -7,8 +7,8 @@ import numpy as np
 class expanded_ensemble_mdpfile(object):
 
     def __init__(self,  couple_moltype = '1MQ',
-			pull_group1_name = 'a_678', 
-                        pull_group2_name = 'a_1564', 
+			pull_group1_name = 'a1-Protein', 
+                        pull_group2_name = 'a2-Ligand', 
                         pull_coord1_k    = 200.0, 
                         pull_coord1_init  = 0.4, 
                         fep_lambdas      = np.arange(0.00, 1.05, 0.05),
