@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import os, sys
+import os, sys, glob
 import shutil
 from expanded import *
 
@@ -20,14 +20,15 @@ if len(sys.argv) < 5:
 
 # parse the input arguments
 prev_jobdir = sys.argv[1]
-prev_gen_tpr = os.path.join(prev_jobdir, 'frame0.tpr')   # <-- we assume a certain filename convention
+prev_gen_tpr = glob.glob(os.path.join(prev_jobdir, 'frame*.tpr'))[0]  # assume tpr is in this form
 prev_gen_trr = os.path.join(prev_jobdir, 'traj.trr')
 #prev_gen_dhdl = os.path.join(prev_jobdir, 'dhdl.xvg')
 prev_gen_mdlog = os.path.join(prev_jobdir, 'md.log')
 prev_gen_ndx = os.path.join(prev_jobdir, 'index.ndx')
 
 this_jobdir = sys.argv[2]
-this_gen_tpr = os.path.join(this_jobdir, 'frame1.tpr')
+this_gen = int(this_jobdir.replace('out',''))
+this_gen_tpr = os.path.join(this_jobdir, 'frame%d.tpr'%this_gen)
 
 ndxfile      = sys.argv[3]
 extend_in_ps = int(sys.argv[4])
