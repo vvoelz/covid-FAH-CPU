@@ -5,7 +5,7 @@ import numpy as np
 ######## Functions #############
 
 
-def get_distances(xvgfile, skip=None, stride=1,  gmx_v512=True):
+def get_distances(xvgfile, skip=None, stride=1,  gmx_v512=False):
     """Extract time points (ps) and distances (nm) from a pullx.xvg file
 
     OPTIONS
@@ -47,7 +47,7 @@ def get_distances(xvgfile, skip=None, stride=1,  gmx_v512=True):
 
     return times[::stride], distances[::stride]
 
-def get_dhdl(xvgfile, skip=None):
+def get_dhdl(xvgfile, skip=None, ignore_last_column=False):
     """Extract time points and all the \Delta energies from a dhdl.xvg file.
 
     OPTIONS
@@ -68,11 +68,18 @@ def get_dhdl(xvgfile, skip=None):
         Ind = (dhdl[:,0] >= skip)  # skip the first few snapshots
         times = dhdl[Ind,0]
         thermo_indices = dhdl[Ind,1].astype(int)
-        energies = dhdl[Ind,4:-1]  # ignore pV term in last column
+        if ignore_last_column:
+            energies = dhdl[Ind,4:-1]  # ignore pV term in last column
+        else:
+            energies = dhdl[Ind,4:] 
+
     else:
         times = dhdl[:,0]
         thermo_indices = dhdl[:,1].astype(int)
-        energies = dhdl[:,4:-1]
+        if ignore_last_column:
+            energies = dhdl[:,4:-1]
+        else:
+            energies = dhdl[:,4:]
 
     return times, thermo_indices, energies 
 
