@@ -1,12 +1,13 @@
 # Example use of create_ee_mdp.py
 
 
-# First, we create a protein-ligand *.mdp for the *.tpr we're about to build
+# First, we create a ligand-only ee *.mdp for the *.tpr we're about to build
 python ../scripts/create_ee_mdp.py RUN0/npt.gro RUN0/topol.top RUN0/index.ndx RUN0/prod.mdp ligonly
 
-# Then, we grompp and make the *.tpr for the WU
+# Then, we grompp and make the *.tpr for the WU -- the FAH server code will do this
 mkdir job0
 $GMXBIN/gmx grompp -c RUN0/npt.gro -f RUN0/prod.mdp -p RUN0/topol.top -n RUN0/index.ndx -o job0/frame0.tpr -po job0/mdout.mdp -maxwarn 1
 
+echo "# To test the tpr, do this:"
 echo "cd job0"
 echo "nohup gmx mdrun -v -s frame0.tpr &" 
