@@ -1,0 +1,46 @@
+# This file was created Sat Mar 14 14:04:01 2020
+# Created by:
+# GROMACS:      gmx mdrun, VERSION 5.0.4
+# Executable:   /usr/local/gromacs/bin/gmx
+# Library dir:  /usr/local/gromacs/share/gromacs/top
+# Command line:
+#   gmx mdrun -v -s frame1.tpr
+# gmx is part of G R O M A C S:
+#
+# Gromacs Runs One Microsecond At Cannonball Speeds
+#
+@    title "dH/d\xl\f{} and \xD\f{}H"
+@    xaxis  label "Time (ps)"
+@    yaxis  label "dH/d\xl\f{} and \xD\f{}H (kJ/mol [\xl\f{}]\S-1\N)"
+@TYPE xy
+@ subtitle "T = 300 (K) "
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "Thermodynamic state"
+@ s1 legend "dH/d\xl\f{} fep-lambda = 1.0000"
+@ s2 legend "\xD\f{}H \xl\f{} to 0.0000"
+@ s3 legend "\xD\f{}H \xl\f{} to 0.0500"
+@ s4 legend "\xD\f{}H \xl\f{} to 0.1000"
+@ s5 legend "\xD\f{}H \xl\f{} to 0.1500"
+@ s6 legend "\xD\f{}H \xl\f{} to 0.2000"
+@ s7 legend "\xD\f{}H \xl\f{} to 0.2500"
+@ s8 legend "\xD\f{}H \xl\f{} to 0.3000"
+@ s9 legend "\xD\f{}H \xl\f{} to 0.3500"
+@ s10 legend "\xD\f{}H \xl\f{} to 0.4000"
+@ s11 legend "\xD\f{}H \xl\f{} to 0.4500"
+@ s12 legend "\xD\f{}H \xl\f{} to 0.5000"
+@ s13 legend "\xD\f{}H \xl\f{} to 0.5500"
+@ s14 legend "\xD\f{}H \xl\f{} to 0.6000"
+@ s15 legend "\xD\f{}H \xl\f{} to 0.6500"
+@ s16 legend "\xD\f{}H \xl\f{} to 0.7000"
+@ s17 legend "\xD\f{}H \xl\f{} to 0.7500"
+@ s18 legend "\xD\f{}H \xl\f{} to 0.8000"
+@ s19 legend "\xD\f{}H \xl\f{} to 0.8500"
+@ s20 legend "\xD\f{}H \xl\f{} to 0.9000"
+@ s21 legend "\xD\f{}H \xl\f{} to 0.9500"
+@ s22 legend "\xD\f{}H \xl\f{} to 1.0000"
+0.0000   20 -781.07050 781.07051 742.01698 702.96345 663.90993 624.85640 585.80288 546.74935 507.69583 468.64230 429.58879 390.53525 351.48172 312.42818 273.37470 234.32116 195.26763 156.21409 117.16056 78.107069 39.053535 0.0000000
