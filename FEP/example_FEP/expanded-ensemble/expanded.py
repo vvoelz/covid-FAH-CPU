@@ -85,9 +85,9 @@ nstxtcout                = 500     ; every 1 ps
 xtc-precision            = 1000
 ; This selects the subset of atoms for the .xtc file. You can
 ; select multiple groups. By default all atoms will be written.
-xtc_grps                 = Protein 1MQ
+xtc_grps                 = 1MQ
 ; Selection of energy groups
-energygrps               = Protein Water_and_ions 1MQ
+energygrps               = WaterProtein Water_and_ions 1MQ
 
 ; NEIGHBORSEARCHING PARAMETERS
 ; nblist update frequency
@@ -357,9 +357,9 @@ nstxtcout                = 50000  ; every 100 ps
 xtc-precision            = 1000
 ; This selects the subset of atoms for the .xtc file. You can
 ; select multiple groups. By default all atoms will be written.
-xtc_grps                 = Protein 1MQ
+xtc_grps                 = 1MQ
 ; Selection of energy groups
-energygrps               = Protein Water_and_ions 1MQ
+energygrps               = Water non-Water
 
 ; NEIGHBORSEARCHING PARAMETERS
 ; nblist update frequency
@@ -412,7 +412,7 @@ tcoupl                   = Berendsen
 nsttcouple               = -1
 nh-chain-length          = 10
 ; Groups to couple separately
-tc-grps                  = Protein non-Protein
+tc-grps                  = Water   non-Water
 ; Time constant (ps) and reference temperature (K)
 tau_t                    = 1.0  1.0
 ref_t                    = 300  300
