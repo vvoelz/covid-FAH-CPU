@@ -1,2 +1,0 @@
-turns out that the docked poses are lead molecules are saved in hits.sdf. These can be separated in chimera into pdb/mol2 files and converted back to sdf with obabel.
-Hydrogens must be added to ligand molecules as well.. Otherwise the do_everything.py script *should* work to create a system, which I'm guessing will have numeric atom-typed Gromacs topology.
