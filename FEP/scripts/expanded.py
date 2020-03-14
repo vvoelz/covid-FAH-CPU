@@ -250,7 +250,7 @@ energygrps               = Protein non-Protein
 """
 
 
-            self.mdp_text +=  """; NEIGHBORSEARCHING PARAMETERS
+        self.mdp_text +=  """; NEIGHBORSEARCHING PARAMETERS
 ; nblist update frequency
 nstlist                  = 10
 ; ns algorithm (simple or grid)
