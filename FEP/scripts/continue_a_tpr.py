@@ -104,7 +104,7 @@ print('current wang_landau_weights', wang_landau_weights)
 
 
 # Write an mdp file with the latest weights !!!
-e = expanded_ensemble_mdpfile(ligand_only=ligand=only, init_lambda_weights=wang_landau_weights,
+e = expanded_ensemble_mdpfile(ligand_only=ligand_only, init_lambda_weights=wang_landau_weights,
                               wl_increment_in_kT=wl_increment_in_kT)
 if not os.path.exists(this_jobdir):
     os.mkdir(this_jobdir)
