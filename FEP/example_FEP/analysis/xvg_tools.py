@@ -69,17 +69,17 @@ def get_dhdl(xvgfile, skip=None, ignore_last_column=False):
         times = dhdl[Ind,0]
         thermo_indices = dhdl[Ind,1].astype(int)
         if ignore_last_column:
-            energies = dhdl[Ind,4:-1]  # ignore pV term in last column
+            energies = dhdl[Ind,3:-1]  # ignore pV term in last column
         else:
-            energies = dhdl[Ind,4:] 
+            energies = dhdl[Ind,3:] 
 
     else:
         times = dhdl[:,0]
         thermo_indices = dhdl[:,1].astype(int)
         if ignore_last_column:
-            energies = dhdl[:,4:-1]
+            energies = dhdl[:,3:-1]
         else:
-            energies = dhdl[:,4:]
+            energies = dhdl[:,3:]
 
     return times, thermo_indices, energies 
 
