@@ -11,7 +11,7 @@ Also:
 **IMPORTANT!!!** DO NOT mess with the organization of these scripts in the repo!!! 
 This git repo is pulled onto the FAH servers, and the FAH work serve calles them directly!!!!!
 
-## How to set up a project
+## How to prepare the simulation files
 
 The FEP project _MUST_ be prepared with standard naming conventions!!
 (You can see some examples of this in [../ee-protein-ligand](../ee-protein-ligand) and [../ee-ligand-only](../ee-ligand-only) )
@@ -37,4 +37,37 @@ define as in the following example:
 Moreover, there needs to be atom groups `Protein` and `non-Protein`, which the thermostat will control separately.
 
 ### Ligand-only simulations ###
-        There needs to be atom groups `Water` and `non-Water`, which the thermostat will control separately.
+
+There needs to be atom groups `Water` and `non-Water`, which the thermostat will control separately.
+
+
+
+## How to build the project
+
+In your `~/server2/projects/p14xxx` directory, prepare a `RUN0` directory with the correctly-formatted  `*.gro`, `index.ndx`,  and `topol.top`.  To create an `*.mdp` for FEP simulations:
+
+```
+# Create a protein-ligand *.mdp for the FEP simulation
+python /home/server/git/covid-FAH-CPU/FEP/scripts/create_ee_mdp.py RUN0/npt.gro RUN0/topol.top RUN0/index.ndx RUN0/prod.mdp
+```
+Or, for a ligand-only simulation:
+```
+# Create a protein-ligand *.mdp for the FEP simulation
+python /home/server/git/covid-FAH-CPU/FEP/scripts/create_ee_mdp.py RUN0/npt.gro RUN0/topol.top RUN0/index.ndx RUN0/prod.mdp
+```
+
+Then, in your `project.xml` file, you should call the `continue_a_tpr.py` script instead of the the `gmx convert-tpr` that is usually in the `<next-gen-command>`:
+
+```
+  <next-gen-command>
+    /home/server/packages/anaconda3/bin/python /home/server/git/covid-FAH-CPU/FEP/scripts/continue_a_tpr.py $jobdir/frame$prev-gen.tpr $jobdir/results$prev-gen $jobdir/results$gen $home/RUN$run/topol.top $home/RUN$run/index.ndx 1000  $jobdir/frame$gen.tpr
+  </next-gen-command>
+```
+
+Note that if you are running a ligand-only simulation, you need to add the keyword `ligonly`:
+```
+  <next-gen-command>
+    /home/server/packages/anaconda3/bin/python /home/server/git/covid-FAH-CPU/FEP/scripts/continue_a_tpr.py $jobdir/frame$prev-gen.tpr $jobdir/results$prev-gen $jobdir/results$gen $home/RUN$run/topol.top $home/RUN$run/index.ndx 1000  $jobdir/frame$gen.tpr ligonly
+  </next-gen-command>
+```
+
