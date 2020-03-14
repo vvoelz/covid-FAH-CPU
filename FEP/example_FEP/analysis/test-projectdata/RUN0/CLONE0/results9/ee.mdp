@@ -1,4 +1,4 @@
-;       generated from expanded_ensemble_mdpfile() on Fri Mar 13 20:40:51 2020 
+;       generated from expanded_ensemble_mdpfile() on Fri Mar 13 22:10:06 2020 
 ;
 ;
 ; VARIOUS PREPROCESSING OPTIONS
@@ -199,11 +199,11 @@ lmc-forced-nstart        = 0
 symmetrized-transition-matrix = no
 nst-transition-matrix    = -1
 mininum-var-min          = 100
-init-lambda-weights      = 0.000 -0.759 -3.066 -7.456 -12.299 -17.846 -24.466 -31.947 -38.989 -47.464 -56.820 -66.675 -77.792 -89.319 -101.846 -114.678 -127.822 -142.522 -157.741 -172.920 -189.134
+init-lambda-weights      = 0.000 -1.481 -4.767 -8.435 -12.866 -18.774 -25.188 -32.617 -40.484 -49.165 -58.882 -69.407 -80.833 -91.999 -104.165 -118.698 -131.894 -146.954 -161.246 -176.992 -193.309
 weight-c-range           = 0
 wl-scale                 = 0.8
 wl-ratio                 = 0.8
-init-wl-delta            = 0.2577  ; kT -- default is 1.0
+init-wl-delta            = 0.20616  ; kT -- default is 1.0
 wl-oneovert              = no
 
 ; pulling parameters

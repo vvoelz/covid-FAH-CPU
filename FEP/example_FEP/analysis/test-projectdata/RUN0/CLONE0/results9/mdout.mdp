@@ -1,8 +1,8 @@
 ;
-;	File 'out9/mdout.mdp' was generated
+;	File 'out10/mdout.mdp' was generated
 ;	By user: suvince (504)
 ;	On host: CST11352
-;	At date: Fri Mar 13 20:40:51 2020
+;	At date: Fri Mar 13 22:10:06 2020
 ;
 
 ; VARIOUS PREPROCESSING OPTIONS
@@ -327,7 +327,7 @@ bonded-lambdas           =
 restraint-lambdas        = 
 temperature-lambdas      = 
 calc-lambda-neighbors    = -1
-init-lambda-weights      = 0.000 -0.759 -3.066 -7.456 -12.299 -17.846 -24.466 -31.947 -38.989 -47.464 -56.820 -66.675 -77.792 -89.319 -101.846 -114.678 -127.822 -142.522 -157.741 -172.920 -189.134
+init-lambda-weights      = 0.000 -1.481 -4.767 -8.435 -12.866 -18.774 -25.188 -32.617 -40.484 -49.165 -58.882 -69.407 -80.833 -91.999 -104.165 -118.698 -131.894 -146.954 -161.246 -176.992 -193.309
 dhdl-print-energy        = no
 sc-alpha                 = 0
 sc-power                 = 0
@@ -376,7 +376,7 @@ mininum-var-min          = 100
 weight-c-range           = 0
 wl-scale                 = 0.8
 wl-ratio                 = 0.8
-init-wl-delta            = 0.2577
+init-wl-delta            = 0.20616
 wl-oneovert              = no
 
 ; Electric fields      

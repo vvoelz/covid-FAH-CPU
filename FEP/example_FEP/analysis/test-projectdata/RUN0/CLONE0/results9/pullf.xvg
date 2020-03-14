@@ -1,13 +1,13 @@
-# This file was created Fri Mar 13 20:41:14 2020
+# This file was created Fri Mar 13 22:10:22 2020
 # Created by:
 # GROMACS:      gmx mdrun, VERSION 5.0.4
 # Executable:   /usr/local/gromacs/bin/gmx
 # Library dir:  /usr/local/gromacs/share/gromacs/top
 # Command line:
-#   gmx mdrun -v -s frame9.tpr
+#   gmx mdrun -v -s frame10.tpr
 # gmx is part of G R O M A C S:
 #
-# GROningen MAchine for Chemical Simulation
+# Good ROcking Metal Altar for Chronical Sinners
 #
 @    title "Pull force"
 @    xaxis  label "Time (ps)"
