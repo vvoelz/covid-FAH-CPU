@@ -7,11 +7,16 @@ from expanded import *
 Testing = False      #True
 
 usage = """
-    Usage:   continue_a_tpr.py [prev-tprfile] [prev-jobdir] [this-jobdir] [topfile] [ndxfile] [ps to extend] [output tprfile]
+    Usage:   continue_a_tpr.py [prev-tprfile] [prev-jobdir] [this-jobdir] [topfile] [ndxfile] [ps to extend] [output tprfile] <ligonly>
+
+    Add extra argument "ligonly" if this is a ligand-only simulation
 
 EXAMPLE
 
     $ python continue_a_tpr.py testout/frame0.tpr testout nextout RUN0/topol.top  RUN0/index.ndx 1000  nextout/frame1.tpr
+or
+    $ python continue_a_tpr.py testout/frame0.tpr testout nextout RUN0/topol.top  RUN0/index.ndx 1000  nextout/frame1.tpr ligonly
+
 """
 
 if len(sys.argv) < 8:
@@ -35,6 +40,13 @@ topfile      = sys.argv[4]
 ndxfile      = sys.argv[5]
 extend_in_ps = int(sys.argv[6])
 this_gen_tpr = sys.argv[7]
+
+ligand_only = False
+if len(sys.argv) > 8:
+    if sys.argv[8].count('only') > 0:
+        ligand_only = True
+
+
 
 #############################
 # Read in the previous md.log file and parse out the latest WL weights!
@@ -90,8 +102,9 @@ nlambdas = len(chunk_lines)
 wang_landau_weights = np.array([ float(chunk_lines[i].split()[3]) for i in range(nlambdas) ])
 print('current wang_landau_weights', wang_landau_weights)
 
-# write an mdp file with the latest weights
-e = expanded_ensemble_mdpfile(init_lambda_weights=wang_landau_weights,
+
+# Write an mdp file with the latest weights !!!
+e = expanded_ensemble_mdpfile(ligand_only=ligand=only, init_lambda_weights=wang_landau_weights,
                               wl_increment_in_kT=wl_increment_in_kT)
 if not os.path.exists(this_jobdir):
     os.mkdir(this_jobdir)
