@@ -1,0 +1,20 @@
+This project is to more directly emulate the creation and continuation
+of ee WUs using the "master" version of our covid.../FEP/scripts
+
+
+# An example of creating an ee `*.tpr` from  is in `./create`:
+
+```
+# First, we create a protein-ligand *.mdp for the *.tpr we're about to build
+python ../../scripts/create_ee_mdp.py RUN0/npt.gro RUN0/topol.top RUN0/index.ndx RUN0/prod.mdp
+
+# Then, we grompp and make the *.tpr for the WU
+mkdir job0
+$GMXBIN/gmx grompp -c RUN0/npt.gro -f RUN0/prod.mdp -p RUN0/topol.top -n RUN0/index.ndx -o job0/frame0.tpr -po job0/mdout.mdp -maxwarn 1
+
+echo "cd job0"
+echo "nohup gmx mdrun -v -s frame0.tpr &" 
+```
+
+
+
