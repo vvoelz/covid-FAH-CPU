@@ -233,18 +233,23 @@ nstenergy                = 500     ; 1 ps
 ; Output frequency and precision for .xtc file
 nstxtcout                = 500     ; every 1 ps
 xtc-precision            = 1000
-; This selects the subset of atoms for the .xtc file. You can
-; select multiple groups. By default all atoms will be written.
-xtc_grps                 = LIG
 """
 
         if self.ligand_only:
             self.mdp_text +=  """; 
+; This selects the subset of atoms for the .xtc file. You can
+; select multiple groups. By default all atoms will be written.
+xtc_grps                 = LIG
+
 ; Selection of energy groups
 energygrps               = Water non-Water
 """
         else:
             self.mdp_text +=  """; 
+; This selects the subset of atoms for the .xtc file. You can
+; select multiple groups. By default all atoms will be written.
+xtc_grps                 = Protein LIG
+
 ; Selection of energy groups
 energygrps               = Protein non-Protein
 """
