@@ -1,1 +1,0 @@
-gmx mdrun -v -s frame0.tpr
