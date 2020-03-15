@@ -27,7 +27,7 @@ solvation_forcefield = 'amber14/tip3p.xml'
 
 receptor_file = './fixed_receptor.pdb'
 
-for ligand_ndx in range(86,101): # range(1,101):
+for ligand_ndx in range(1,10):
     print(f'Processing RUN{ligand_ndx}')
     # create the system, solvate, and write integrator
     output_prefix = f'RUN{ligand_ndx}'
@@ -64,35 +64,30 @@ for ligand_ndx in range(86,101): # range(1,101):
     # minimize and equilibrate
     print('Minimizing...')
     platform = openmm.Platform.getPlatformByName('CUDA')
-    platform.setPropertyDefaultValue('CudaDeviceIndex', '1')
+    platform.setPropertyDefaultValue('CudaDeviceIndex', '2')
     context = openmm.Context(system, integrator, platform)
     context.setPositions(modeller.positions)
     openmm.LocalEnergyMinimizer.minimize(context)
     
     print('Equilibrating...')
-    integrator.step(nsteps_equil)
+#    integrator.step(nsteps_equil)
     
     # save equilibrated pdb/state/system
-    with open(f'{output_prefix}/equilibrated_complex.pdb', 'w') as f:
-        app.PDBFile.writeFile(modeller.topology, context.getState(
-            getPositions=True,enforcePeriodicBox=True).getPositions(),
-            file=f, keepIds=True)
+#    with open(f'{output_prefix}/equilibrated_complex.pdb', 'w') as f:
+#        app.PDBFile.writeFile(modeller.topology, context.getState(
+#            getPositions=True,enforcePeriodicBox=True).getPositions(),
+#            file=f, keepIds=True)
 
     state = context.getState(getPositions=True, getVelocities=True, getEnergy=True, getForces=True)
-    with open(f'{output_prefix}/state.xml','w') as f:
-        f.write(openmm.XmlSerializer.serialize(state))
+#    with open(f'{output_prefix}/state.xml','w') as f:
+#        f.write(openmm.XmlSerializer.serialize(state))
 
     system.setDefaultPeriodicBoxVectors(*state.getPeriodicBoxVectors())
-    with open(f'{output_prefix}/system.xml','w') as f:
-        f.write(openmm.XmlSerializer.serialize(system))
+#    with open(f'{output_prefix}/system.xml','w') as f:
+#        f.write(openmm.XmlSerializer.serialize(system))
 
-# this doesn't work
     parmed_system = parmed.openmm.load_topology(modeller.topology,
         system, xyz=modeller.positions)
-# this doesn't work either D:
-#    equil_structure = parmed.load_file(f'{output_prefix}/equilibrated_complex.pdb', 'w')
-#    parmed_system = parmed.openmm.load_topology(equil_structure.topology, system=system, xyz=equil_structure.positions)
-# and finally save the equilibrated gro/top
     parmed_system.save(f'{output_prefix}/conf.gro', overwrite=True)
     parmed_system.save(f'{output_prefix}/topol.top', overwrite=True)
 
