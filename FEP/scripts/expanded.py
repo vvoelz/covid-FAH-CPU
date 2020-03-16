@@ -221,13 +221,10 @@ nstcomm                  = 1
 nstlog                   = 5000		; every 10 ps
 nstcalcenergy            = 1
 nstenergy                = 50000        ; save edr every 100 ps
-nstxout-compressed       = 50000	; save coordinates every 100 ps
+nstxout-compressed       = 50000	; save xtc coordinates every 100 ps
 nstxout		 	 = 500000	; save coordinates every 1 ns
 nstvout			 = 500000	; save velocities every 1 ns
-;;; compressed-x-precision	 = 100
-;;; compressed-x-grps        = non-Water   ; will have to define this index group.
-nstxtcout                = 50000        ; xtc snaps every 100 ps
-xtc-precision            = 1000
+compressed-x-precision	 = 1000
 """
 
 
@@ -235,7 +232,7 @@ xtc-precision            = 1000
             self.mdp_text +=  """; 
 ; This selects the subset of atoms for the .xtc file. You can
 ; select multiple groups. By default all atoms will be written.
-xtc_grps                 = LIG
+compressed-x-grps        = LIG
 
 ; Selection of energy groups
 energygrps               = Water non-Water
@@ -244,7 +241,7 @@ energygrps               = Water non-Water
             self.mdp_text +=  """; 
 ; This selects the subset of atoms for the .xtc file. You can
 ; select multiple groups. By default all atoms will be written.
-xtc_grps                 = Protein LIG
+compressed-x-grps        = Protein LIG
 
 ; Selection of energy groups
 energygrps               = Protein non-Protein
