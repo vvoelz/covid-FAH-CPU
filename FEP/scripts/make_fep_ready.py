@@ -211,10 +211,15 @@ testing_cmds = "### To test this project, try: ###\n"
 if ligand_only:
     testing_cmds += "python ../scripts/create_ee_mdp.py {out_rundir}/npt.gro {out_topfile} {ndxfile} {out_rundir}/prod.mdp ligonly\n".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
 
+    testing_cmds += """mkdir test
+gmx grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
+cd test
+gmx mdrun -nt 1 -v -s testme.tpr""".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
+
 else:
     testing_cmds += "python ../scripts/create_ee_mdp.py {out_rundir}/npt.gro {out_topfile} {ndxfile} {out_rundir}/prod.mdp\n".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
 
-testing_cmds += """mkdir test
+    testing_cmds += """mkdir test
 gmx grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
 cd test
 gmx mdrun -v -s testme.tpr""".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir) 
