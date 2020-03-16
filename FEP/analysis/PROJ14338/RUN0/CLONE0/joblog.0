@@ -1,0 +1,89 @@
+GROMACS:    gmx grompp, VERSION 5.0.4
+
+GROMACS is written by:
+Emile Apol         Rossen Apostolov   Herman J.C. Berendsen Par Bjelkmar       
+Aldert van Buuren  Rudi van Drunen    Anton Feenstra     Sebastian Fritsch  
+Gerrit Groenhof    Christoph Junghans Peter Kasson       Carsten Kutzner    
+Per Larsson        Justin A. Lemkul   Magnus Lundborg    Pieter Meulenhoff  
+Erik Marklund      Teemu Murtola      Szilard Pall       Sander Pronk       
+Roland Schulz      Alexey Shvetsov    Michael Shirts     Alfons Sijbers     
+Peter Tieleman     Christian Wennberg Maarten Wolf       
+and the project leaders:
+Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2014, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, VERSION 5.0.4
+Executable:   /usr/local/gromacs/bin/gmx
+Library dir:  /usr/local/gromacs/share/gromacs/top
+Command line:
+  gmx grompp -c /var/lib/fah-work/projects/p14338/RUN0/npt.gro -f /var/lib/fah-work/projects/p14338/RUN0/prod.mdp -p /var/lib/fah-work/projects/p14338/RUN0/topol.top -n /var/lib/fah-work/projects/p14338/RUN0/index.ndx -o ../frame0.tpr -po ../mdout.mdp -maxwarn 1
+
+
+NOTE 1 [file /var/lib/fah-work/projects/p14338/RUN0/prod.mdp, line 226]:
+  /var/lib/fah-work/projects/p14338/RUN0/prod.mdp did not specify a value
+  for the .mdp option "cutoff-scheme". Probably it was first intended for
+  use with GROMACS before 4.6. In 4.6, the Verlet scheme was introduced,
+  but the group scheme was still the default. The default is now the Verlet
+  scheme, so you will observe different behaviour.
+
+Ignoring obsolete mdp entry 'andersen_seed'
+Ignoring obsolete mdp entry 'optimize_fft'
+Replacing old mdp entry 'nstxtcout' by 'nstxout-compressed'
+Replacing old mdp entry 'xtc_grps' by 'compressed-x-grps'
+Replacing old mdp entry 'xtc-precision' by 'compressed-x-precision'
+
+NOTE 2 [file /var/lib/fah-work/projects/p14338/RUN0/prod.mdp]:
+  nstcomm < nstcalcenergy defeats the purpose of nstcalcenergy, setting
+  nstcomm to nstcalcenergy
+
+
+NOTE 3 [file /var/lib/fah-work/projects/p14338/RUN0/prod.mdp]:
+  The Berendsen thermostat does not generate the correct kinetic energy
+  distribution. You might want to consider using the V-rescale thermostat.
+
+Setting the LD random seed to 1181913288
+Setting the lambda MC random seed to -1131844993
+Generated 210 of the 210 non-bonded parameter combinations
+Excluding 3 bonded neighbours molecule type 'system1'
+Excluding 3 bonded neighbours molecule type 'LIG'
+Excluding 3 bonded neighbours molecule type 'HOH'
+Excluding 3 bonded neighbours molecule type 'NA'
+Excluding 3 bonded neighbours molecule type 'CL'
+Coupling 1 copies of molecule type 'LIG'
+Setting gen_seed to 209066773
+Velocities were taken from a Maxwell distribution at 300 K
+Removing all charge groups because cutoff-scheme=Verlet
+Pull group 1 'a1-Protein' has 1 atoms
+Pull group 2 'a2-Ligand' has 1 atoms
+Number of degrees of freedom in T-Coupling group Protein is 11637.70
+Number of degrees of freedom in T-Coupling group non-Protein is 105443.30
+Pull group  natoms  pbc atom  distance at start  reference at t=0
+       1         1         0
+       2         1         0       0.000 nm          0.375 nm
+Estimate for the relative computational load of the PME mesh part: 0.34
+
+There were 3 notes
+
+gcq#281: "It Just Tastes Better" (Burger King)
+
+turning H bonds into constraints...
+turning H bonds into constraints...
+turning H bonds into constraints...
+turning H bonds into constraints...
+turning H bonds into constraints...
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 300 K
+Calculated rlist for 1x1 atom pair-list as 0.935 nm, buffer size 0.035 nm
+Set rlist, assuming 4x4 atom pair-list, to 0.900 nm, buffer size 0.000 nm
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 72x72x72, spacing 0.115 0.115 0.115
+This run will generate roughly 33 Mb of data
