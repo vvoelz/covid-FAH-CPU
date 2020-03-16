@@ -1,0 +1,131 @@
+GROMACS:    gmx grompp, VERSION 5.0.4
+
+GROMACS is written by:
+Emile Apol         Rossen Apostolov   Herman J.C. Berendsen Par Bjelkmar       
+Aldert van Buuren  Rudi van Drunen    Anton Feenstra     Sebastian Fritsch  
+Gerrit Groenhof    Christoph Junghans Peter Kasson       Carsten Kutzner    
+Per Larsson        Justin A. Lemkul   Magnus Lundborg    Pieter Meulenhoff  
+Erik Marklund      Teemu Murtola      Szilard Pall       Sander Pronk       
+Roland Schulz      Alexey Shvetsov    Michael Shirts     Alfons Sijbers     
+Peter Tieleman     Christian Wennberg Maarten Wolf       
+and the project leaders:
+Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2014, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, VERSION 5.0.4
+Executable:   /usr/local/gromacs/bin/gmx
+Library dir:  /usr/local/gromacs/share/gromacs/top
+Command line:
+  gmx grompp -c ../frame1.tpr -t ../results1/frame1.trr -f ../results2/ee.mdp -p /var/lib/fah-work/projects/p14338/RUN0/topol.top -n /var/lib/fah-work/projects/p14338/RUN0/index.ndx -o ../frame2.tpr -po ../results2/mdout.mdp -maxwarn 1
+
+
+NOTE 1 [file ../results2/ee.mdp, line 226]:
+  ../results2/ee.mdp did not specify a value for the .mdp option
+  "cutoff-scheme". Probably it was first intended for use with GROMACS
+  before 4.6. In 4.6, the Verlet scheme was introduced, but the group
+  scheme was still the default. The default is now the Verlet scheme, so
+  you will observe different behaviour.
+
+Ignoring obsolete mdp entry 'andersen_seed'
+Ignoring obsolete mdp entry 'optimize_fft'
+Replacing old mdp entry 'nstxtcout' by 'nstxout-compressed'
+Replacing old mdp entry 'xtc_grps' by 'compressed-x-grps'
+Replacing old mdp entry 'xtc-precision' by 'compressed-x-precision'
+
+NOTE 2 [file ../results2/ee.mdp]:
+  nstcomm < nstcalcenergy defeats the purpose of nstcalcenergy, setting
+  nstcomm to nstcalcenergy
+
+
+NOTE 3 [file ../results2/ee.mdp]:
+  The Berendsen thermostat does not generate the correct kinetic energy
+  distribution. You might want to consider using the V-rescale thermostat.
+
+Setting the LD random seed to 3610112400
+Setting the lambda MC random seed to -2117303734
+Generated 210 of the 210 non-bonded parameter combinations
+Excluding 3 bonded neighbours molecule type 'system1'
+Excluding 3 bonded neighbours molecule type 'LIG'
+Excluding 3 bonded neighbours molecule type 'HOH'
+Excluding 3 bonded neighbours molecule type 'NA'
+Excluding 3 bonded neighbours molecule type 'CL'
+Coupling 1 copies of molecule type 'LIG'
+Reading file ../frame1.tpr, VERSION 5.0.4 (single precision)
+Reading file ../frame1.tpr, VERSION 5.0.4 (single precision)
+Setting gen_seed to 3131515936
+Velocities were taken from a Maxwell distribution at 300 K
+Removing all charge groups because cutoff-scheme=Verlet
+Pull group 1 'a1-Protein' has 1 atoms
+Pull group 2 'a2-Ligand' has 1 atoms
+Number of degrees of freedom in T-Coupling group Protein is 11637.70
+Number of degrees of freedom in T-Coupling group non-Protein is 105443.30
+Reading Coordinates and Box size from old trajectory
+Will read whole trajectory
+Velocities generated: ignoring velocities in input trajectory
+trn version: GMX_trn_file (single precision)
+Reading frame       0 time    0.000   Reading frame       1 time 1000.000   Last frame          1 time 1000.000   
+Using frame at t = 1000 ps
+Starting time for run is 0 ps
+Pull group  natoms  pbc atom  distance at start  reference at t=0
+       1         1         0
+       2         1         0       0.000 nm          0.400 nm
+Estimate for the relative computational load of the PME mesh part: 0.34
+
+There were 3 notes
+
+gcq#47: "Insane In Tha Membrane" (Cypress Hill)
+
+turning H bonds into constraints...
+turning H bonds into constraints...
+turning H bonds into constraints...
+turning H bonds into constraints...
+turning H bonds into constraints...
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 300 K
+Calculated rlist for 1x1 atom pair-list as 0.935 nm, buffer size 0.035 nm
+Set rlist, assuming 4x4 atom pair-list, to 0.900 nm, buffer size 0.000 nm
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 72x72x72, spacing 0.115 0.115 0.115
+This run will generate roughly 33 Mb of data
+sys.argv ['/home/server/git/covid-FAH-CPU/FEP/scripts/continue_a_tpr.py', '../frame1.tpr', '../results1', '../results2', '/var/lib/fah-work/projects/p14338/RUN0/topol.top', '/var/lib/fah-work/projects/p14338/RUN0/index.ndx', '1000', '../frame2.tpr']
+             MC-lambda information
+  Wang-Landau incrementor is:     0.98304
+  N   FEPL    Count   G(in kT)  dG(in kT)
+  1  0.000       13    0.00000    3.00288   
+  2  0.050       11    3.00288    1.80768   
+  3  0.100        9    4.81056   -0.17856   
+  4  0.150        8    4.63200   -0.12672   
+  5  0.200        6    4.50528   -1.70880   
+  6  0.250        6    2.79648   -3.21504   
+  7  0.300        7   -0.41856   -1.53696   
+  8  0.350        6   -1.95552   -1.28256 <<
+  9  0.400        5   -3.23808   -2.75424   
+ 10  0.450        6   -5.99232   -2.49024   
+ 11  0.500        7   -8.48256   -3.50976   
+ 12  0.550        6  -11.99232   -4.36704   
+ 13  0.600        7  -16.35936   -1.90464   
+ 14  0.650        8  -18.26400   -4.46016   
+ 15  0.700        7  -22.72416   -3.89088   
+ 16  0.750        9  -26.61504   -3.07776   
+ 17  0.800        8  -29.69280   -4.43520   
+ 18  0.850        8  -34.12800   -3.30720   
+ 19  0.900        8  -37.43520   -5.25888   
+ 20  0.950       10  -42.69408   -2.80416   
+ 21  1.000        9  -45.49824    0.00000   
+
+current Wang Landau increment_in_kT 0.98304
+current wang_landau_weights [  0.        3.00288   4.81056   4.632     4.50528   2.79648  -0.41856
+  -1.95552  -3.23808  -5.99232  -8.48256 -11.99232 -16.35936 -18.264
+ -22.72416 -26.61504 -29.6928  -34.128   -37.4352  -42.69408 -45.49824]
+Writing ../results2/ee.mdp ...
+...Done
+cmd: /usr/local/gromacs/bin/gmx grompp -c ../frame1.tpr -t ../results1/frame1.trr -f ../results2/ee.mdp -p /var/lib/fah-work/projects/p14338/RUN0/topol.top -n /var/lib/fah-work/projects/p14338/RUN0/index.ndx -o ../frame2.tpr -po ../results2/mdout.mdp -maxwarn 1
