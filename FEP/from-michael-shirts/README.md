@@ -2,16 +2,15 @@
 
 ## Contents
 
-## Email correspondence
+## Email correspondence March 12, 2020
 
-```
 Hi, Vince-
  
-Amidst a HUGE spike in Folding@home participation due to people wanting to help with coronavirus, my lab is going to try doing some massively parallel FEP of drug screening hits.
+ Amidst a HUGE spike in Folding@home participation due to people wanting to help with coronavirus, my lab is going to try doing some massively parallel FEP of drug screening hits.
  
 That’s great! 
  
-How confident are you that  expanded-ensemble Wang Landau works "out of the box" in gmx 5.0.4 (the version in the GRO_A7 core)?  It think it might be the right tool for the job.  Thoughts?
+ How confident are you that  expanded-ensemble Wang Landau works "out of the box" in gmx 5.0.4 (the version in the GRO_A7 core)? It think it might be the right tool for the job.  Thoughts?
  
 I have a number of example files that were run with 5.0.4, so it should work correctly. I’m attaching files that are adapted for running expanded ensemble in the SAMPLing paper where we used expanded ensemble for host-guest simulation (https://www.biorxiv.org/content/10.1101/795005v1), where we got very comparable answers to other methods.   There might be a couple of vague things – I’m happy to help clarify anything.
  
@@ -21,7 +20,7 @@ What I can’t remember in the current core is how much of the wang-landau infor
  
 I’m happy to help with any troubleshooting on getting these started, and on the analysis once things are running!
  
-﻿Best,
+Best,
 ~~~~~~~~~~~~~~~~
 Michael Shirts
 Associate Professor
