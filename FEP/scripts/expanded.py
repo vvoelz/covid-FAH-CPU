@@ -14,10 +14,20 @@ class expanded_ensemble_mdpfile(object):
                         pull_group2_name = 'a2-Ligand', 
                         pull_coord1_k    = 200.0, 
                         pull_coord1_init  = 0.4, 
-                        fep_lambdas      = np.arange(0.00, 1.05, 0.05),
-                        init_lambda_weights = np.zeros(21),
-                        init_lambda_state   = 20,
+                        fep_lambdas      = np.array( 40*[0.0] ),
+                        coul_lambdas     = np.array( [ 0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45,
+                                                       0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95,
+                                                       1.0, 1.0,  1.0, 1.0,  1.0, 1.0,  1.0, 1.0,  1.0, 1.0, 
+                                                       1.0, 1.0,  1.0, 1.0,  1.0, 1.0,  1.0, 1.0,  1.0, 1.0 ] ), 
+                        vdw_lambdas      = np.array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
+                                                       0.00, 0.10, 0.20, 0.30, 0.40, 0.45, 0.50, 0.55, 0.60, 0.63,
+                                                       0.66, 0.69, 0.72, 0.75, 0.78, 0.81, 0.84, 0.88, 0.92, 1.00 ] ), 
+                        init_lambda_weights = np.zeros(40),
+                        init_lambda_state   = 39,
                         wl_increment_in_kT  = 3.0 ):
+
+
 
         """Initialize the class with default options.
 
@@ -74,8 +84,18 @@ class expanded_ensemble_mdpfile(object):
         self.init_lambda_weights  = init_lambda_weights
         self.init_lambda_weights_string =  ' '.join(['%2.3f'%init_lambda_weights[i] for i in range(self.nlambdas)])
 
+        self.coul_lambdas     = coul_lambdas
+        self.coul_lambdas_string   = ' '.join(['%2.3f'%coul_lambdas[i] for i in range(self.nlambdas)])
+
+        self.vdw_lambdas     = vdw_lambdas
+        self.vdw_lambdas_string   = ' '.join(['%2.3f'%vdw_lambdas[i] for i in range(self.nlambdas)])
+
         self.init_lambda_state    = init_lambda_state
         self.wl_increment_in_kT   = wl_increment_in_kT
+
+        # Here's a random number seed, in case we need it:
+        self.randseed         = np.random.randint(1e5)
+
 
     def report(self):
         """Print a report of the settings."""
@@ -189,51 +209,27 @@ class expanded_ensemble_mdpfile(object):
 
         self.mdp_text = ''
 
-        self.mdp_text +=  """; VARIOUS PREPROCESSING OPTIONS
-; Preprocessor information: use cpp syntax.
-; e.g.: -I/home/joe/doe -I/home/mary/roe
-include                  = -I../top
-; e.g.: -DPOSRES -DFLEXIBLE (note these variable names are case sensitive)
-define                   = 
-
-; RUN CONTROL PARAMETERS
-integrator               = md-vv   ;  only md-vv works with ee;  sd
-; Start time and timestep in ps
+        self.mdp_text +=  """; Run control
+integrator               = md-vv
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 500000   ; 1000 ps = 1 ns
-; For exact run continuation or redoing part of a run
-init_step                = 0
-; Part index is updated automatically on checkpointing (keeps files separate)
-simulation_part          = 1
-; mode for center of mass motion removal
+nsteps                   = 500000       ; 1 ns
 comm-mode                = Linear
-; number of steps for center of mass motion removal
-nstcomm                  = 10
-; group(s) for center of mass motion removal
-comm_grps                = System
+nstcomm                  = 1
 
-; LANGEVIN DYNAMICS OPTIONS
-; Friction coefficient (amu/ps) and random seed
-bd-fric                  = 0
-ld-seed                  = -1 
-
-; TEST PARTICLE INSERTION OPTIONS
-rtpi                     = 0.05
-
-; OUTPUT CONTROL OPTIONS
-; Output frequency for coords (x), velocities (v) and forces (f)
-nstxout                  = 500000  ; 1 ns 
-nstvout                  = 500000  ; 1 ns
-nstfout                  = 0
-; Output frequency for energies to log file and energy file
-nstlog                   = 500     ; 1 ps
-nstcalcenergy            = 500     ; 1 ps
-nstenergy                = 500     ; 1 ps
-; Output frequency and precision for .xtc file
-nstxtcout                = 500     ; every 1 ps
+; Output control
+nstlog                   = 5000		; every 10 ps
+nstcalcenergy            = 1
+nstenergy                = 50000        ; save edr every 100 ps
+nstxout-compressed       = 50000	; save coordinates every 100 ps
+nstxout		 	 = 500000	; save coordinates every 1 ns
+nstvout			 = 500000	; save velocities every 1 ns
+;;; compressed-x-precision	 = 100
+;;; compressed-x-grps        = non-Water   ; will have to define this index group.
+nstxtcout                = 50000        ; xtc snaps every 100 ps
 xtc-precision            = 1000
 """
+
 
         if self.ligand_only:
             self.mdp_text +=  """; 
@@ -255,174 +251,95 @@ energygrps               = Protein non-Protein
 """
 
 
-        self.mdp_text +=  """; NEIGHBORSEARCHING PARAMETERS
-; nblist update frequency
+        self.mdp_text +=  """; Neighborsearching and short-range nonbonded interactions
 nstlist                  = 10
-; ns algorithm (simple or grid)
 ns_type                  = grid
-; Periodic boundary conditions: xyz, no, xy
 pbc                      = xyz
-periodic_molecules       = no
-; nblist cut-off        
-rlist                    = 0.9
-; long-range cut-off for switched potentials
-rlistlong                = -1
+rlist                    = 1.0
 
-; OPTIONS FOR ELECTROSTATICS AND VDW
-; Method for doing electrostatics
+; Electrostatics
+cutoff-scheme            = verlet
 coulombtype              = PME
-rcoulomb-switch          = 0
-rcoulomb                 = 0.9
-; Relative dielectric constant for the medium and the reaction field
-epsilon_r                = 1
-epsilon_rf               = 1
-; Method for doing Van der Waals
+coulomb-modifier         = none
+rcoulomb                 = 1.0
+
+; van der Waals
 vdw-type                 = Cut-off
-; cut-off lengths       
-rvdw-switch              = 0
-rvdw                     = 0.9
-; Apply long range dispersion corrections for Energy and Pressure
-DispCorr                 = No
-; Extension of the potential lookup tables beyond the cut-off
-table-extension          = 1
-; Seperate tables between energy group pairs
-energygrp_table          = 
+vdw-modifier             = Potential-switch
+rvdw-switch              = 0.9
+rvdw                     = 1.0
+
+; Apply long range dispersion corrections for Energy and Pressure 
+DispCorr                 = EnerPres
+
 ; Spacing for the PME/PPPM FFT grid
-fourierspacing           = 0.12
-; FFT grid size, when a value is 0 fourierspacing will be used
-fourier_nx               = 0
-fourier_ny               = 0
-fourier_nz               = 0
-; EWALD/PME/PPPM parameters
+fourierspacing           = 0.10
+fourier-nx               = 48
+fourier-ny               = 48
+fourier-nz               = 48
+; EWALD/PME/PPPM parameters = 
 pme_order                = 4
-ewald_rtol               = 1e-5
+ewald_rtol               = 1e-05
 ewald_geometry           = 3d
 epsilon_surface          = 0
-optimize_fft             = no
 
-; OPTIONS FOR WEAK COUPLING ALGORITHMS
-; Temperature coupling  
-tcoupl                   = Berendsen
-nsttcouple               = -1
-nh-chain-length          = 10
-"""
+; Temperature coupling
+tcoupl                   = v-rescale
+nsttcouple               = 1
+tc_grps                  = System
+tau_t                    = 0.5
+ref_t                    = 298.15
+; Pressure coupling is on for NPT
+pcoupl                   = no
 
-        if self.ligand_only:
-            self.mdp_text +=  """; 
-; Groups to couple separately
-tc-grps                  = Water non-Water
-"""
-        else:
-            self.mdp_text +=  """; 
-; Groups to couple separately
-tc-grps                  = Protein non-Protein
-"""
-
-
-        self.mdp_text +=  """; Time constant (ps) and reference temperature (K)
-tau_t                    = 1.0  1.0
-ref_t                    = 300  300
-; Pressure coupling     
-Pcoupl                   = no
-Pcoupltype               = Isotropic
-nstpcouple               = -1
-; Time constant (ps), compressibility (1/bar) and reference P (bar)
-tau_p                    = 1.0
-compressibility          = 4.5e-5
-ref_p                    = 1.0
-; Scaling of reference coordinates, No, All or COM
-refcoord_scaling         = No
-; Random seed for Andersen thermostat
-andersen_seed            = 815131
-
-; GENERATE VELOCITIES FOR STARTUP RUN
+; velocity generation
 gen_vel                  = yes
-gen_temp                 = 300
-;gen_seed		 = -1 <<<--- FAHWorkServer complains that there are multiple lines; it adds its own line!
+gen-temp                 = 298.15
+gen-seed                 = {randseed} ; need to randomize the seed each time.
 
-; OPTIONS FOR BONDS    
-constraints              = hbonds
+; options for bonds
+constraints              = h-bonds  ; we only have C-H bonds here
 ; Type of constraint algorithm
-constraint-algorithm     = Lincs
-; Do not constrain the start configuration
-continuation             = no
-; Use successive overrelaxation to reduce the number of shake iterations
-Shake-SOR                = no
-; Relative tolerance of shake
-shake-tol                = 0.0001
+constraint-algorithm     = lincs
 ; Highest order in the expansion of the constraint coupling matrix
-lincs-order              = 4
-; Number of iterations in the final step of LINCS. 1 is fine for
-; normal simulations, but use 2 to conserve energy in NVE runs.
-; For energy minimization with constraints it should be 4 to 8.
-lincs-iter               = 1
-; Lincs will write a warning to the stderr if in one step a bond
-; rotates over more degrees than
-lincs-warnangle          = 30
-; Convert harmonic bonds to morse potentials
-morse                    = no
-
-; ENERGY GROUP EXCLUSIONS
-; Pairs of energy groups for which all non-bonded interactions are excluded
-energygrp_excl           = 
-
-; WALLS                
-; Number of walls, type, atom types, densities and box-z scale factor for Ewald
-nwall                    = 0
-wall_type                = 9-3
-wall_r_linpot            = -1
-wall_atomtype            = 
-wall_density             = 
-wall_ewald_zfac          = 3
-
-; Free energy control stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-free-energy              = expanded
-init-lambda-state        = {init_lambda_state}
-;  delta-lambda             = 0
-fep-lambdas              = {fep_lambdas_string}
-calc-lambda-neighbors    = -1
-sc-alpha                 = 0
-sc-power                 = 0
-sc-sigma                 = 0.3
-nstdhdl                  = 500
-separate-dhdl-file       = yes
-dhdl-derivatives         = yes
-;   dh_hist_size             = 0
-;   dh_hist_spacing          = 0.1
-couple-moltype           = {couple_moltype}
-couple-lambda0           = none ; off
-couple-lambda1           = vdw-q ; on
-couple-intramol          = no
+lincs-order              = 12
+lincs-iter               = 2
 
 
-; expanded ensemble variables
-nstexpanded              = 500     ; 1 ps
-lmc-stats                = wang-landau
-lmc-move                 = metropolized-gibbs
-lmc-weights-equil        = no
-weight-equil-number-all-lambda = -1
-weight-equil-number-samples = -1
-weight-equil-number-steps = -1
-weight-equil-wl-delta    = -1
-weight-equil-count-ratio = -1
+; FREE ENERGY CONTROL OPTIONS =
+free-energy   	        = expanded
+calc-lambda-neighbors 	= -1
+sc-alpha 		= 0.5
+sc-power 		= 1
+sc-sigma 	        = 0.5
+couple-moltype 		= {couple_moltype}  ; ligand mol type
+couple-lambda0 		= vdw-q
+couple-lambda1 		= none
+couple-intramol 	= yes
+init-lambda-state	= {init_lambda_state}
 
-; Seed for Monte Carlo in lambda space
-lmc-seed                 = -1
-mc-temperature           = -1
-lmc-repeats              = 1
-lmc-gibbsdelta           = -1
-lmc-forced-nstart        = 0
-symmetrized-transition-matrix = no
-nst-transition-matrix    = -1
-mininum-var-min          = 100
-init-lambda-weights      = {init_lambda_weights}
-weight-c-range           = 0
-wl-scale                 = 0.8
-wl-ratio                 = 0.8
-init-wl-delta            = {wl_increment_in_kT}  ; kT -- default is 1.0
-wl-oneovert              = no
+nstexpanded 		= 10
+nstdhdl 		= 500	; dhdl snaps every 1 ps
+dhdl-print-energy 	= total
+nst-transition-matrix 	= 500000
+
+lmc-seed                = {randseed} ; should be randomized
+lmc-gibbsdelta          = -1 ; print all energies
+symmetrized-transition-matrix = yes
+
+lmc-stats 		      	= wang-landau
+lmc-move 			= metropolized-gibbs
+lmc-weights-equil 	        = wl-delta
+weight-equil-wl-delta 	  	= 0.0001
+init-wl-delta 		  	= {wl_increment_in_kT}   ; in units kT
+separate-dhdl-file 		= yes
+wl-scale 			= 0.8
+wl-ratio 			= 0.7
+coul-lambdas         = {coul_lambdas_string}
+vdw-lambdas          = {vdw_lambdas_string}
+fep-lambdas          = {fep_lambdas_string}
+init-lambda-weights  = {init_lambda_weights}
 """
-
 
         if not self.ligand_only:
             self.mdp_text +=  """; 
@@ -452,9 +369,12 @@ pull-nstfout             = 500   ; 1 ps
             pull_coord1_k       = self.pull_coord1_k,
             pull_coord1_init    = self.pull_coord1_init,
             fep_lambdas_string  = self.fep_lambdas_string,
+            coul_lambdas_string = self.coul_lambdas_string,
+            vdw_lambdas_string  = self.vdw_lambdas_string,
             init_lambda_state   = self.init_lambda_state,
             init_lambda_weights = self.init_lambda_weights_string,
-            wl_increment_in_kT  = self.wl_increment_in_kT )
+            wl_increment_in_kT  = self.wl_increment_in_kT,
+            randseed            = self.randseed )
 
         return self.header_desc + self.mdp_text
 
@@ -464,277 +384,5 @@ pull-nstfout             = 500   ; 1 ps
         fout = open(filename, 'w')
         fout.write( self.mdpfile_text() )         
         fout.close()
-
-
-
-### A derived class for an mdpfile wth NO RESTRAINT
-   
-class expanded_ensemble_mdpfile_NOREST(expanded_ensemble_mdpfile):
-
-    def __init__(self,  couple_moltype = '1MQ',
-                        fep_lambdas      = np.arange(0.00, 1.05, 0.05),
-                        init_lambda_weights = np.zeros(21),
-                        init_lambda_state   = 20,
-                        wl_increment_in_kT  = 3.0 ):
-
-        """Initialize the class."""
-
-        self.couple_moltype = couple_moltype 
-        self.fep_lambdas      = fep_lambdas
-        self.nlambdas         = len(self.fep_lambdas)
-        self.fep_lambdas_string   = ' '.join(['%2.3f'%fep_lambdas[i] for i in range(self.nlambdas)])
-
-        self.init_lambda_weights  = init_lambda_weights
-        self.init_lambda_weights_string =  ' '.join(['%2.3f'%init_lambda_weights[i] for i in range(self.nlambdas)])
-
-        self.init_lambda_state    = init_lambda_state
-        self.wl_increment_in_kT   = wl_increment_in_kT
-
-
-    def mdpfile_text(self):
-        """Returns a string corresponding to the mdpfile contents.
-
-        NOTE -- these will be used for ligand-only simulations in small boxes of water, so total time is 10 ns"""
-
-        self.header_desc = ";       generated from expanded_ensemble_mdpfile() on %s \n;\n;\n"%time.asctime()
-
-        self.mdp_text = """; VARIOUS PREPROCESSING OPTIONS
-; Preprocessor information: use cpp syntax.
-; e.g.: -I/home/joe/doe -I/home/mary/roe
-include                  = -I../top
-; e.g.: -DPOSRES -DFLEXIBLE (note these variable names are case sensitive)
-define                   = 
-
-; RUN CONTROL PARAMETERS
-integrator               = md-vv   ;  only md-vv works with ee;  sd
-; Start time and timestep in ps
-tinit                    = 0
-dt                       = 0.002
-nsteps                   = 5000000   ; 10 000 ps = 10 ns
-; For exact run continuation or redoing part of a run
-init_step                = 0
-; Part index is updated automatically on checkpointing (keeps files separate)
-simulation_part          = 1
-; mode for center of mass motion removal
-comm-mode                = Linear
-; number of steps for center of mass motion removal
-nstcomm                  = 10
-; group(s) for center of mass motion removal
-comm_grps                = System
-
-; LANGEVIN DYNAMICS OPTIONS
-; Friction coefficient (amu/ps) and random seed
-bd-fric                  = 0
-ld-seed                  = -1 
-
-; TEST PARTICLE INSERTION OPTIONS
-rtpi                     = 0.05
-
-; OUTPUT CONTROL OPTIONS
-; Output frequency for coords (x), velocities (v) and forces (f)
-nstxout                  = 500000  ; 1 ns 
-nstvout                  = 500000  ; 1 ns
-nstfout                  = 0
-; Output frequency for energies to log file and energy file
-nstlog                   = 5000     ; 10 ps
-nstcalcenergy            = 5000     ; 10 ps
-nstenergy                = 5000     ; 10 ps
-; Output frequency and precision for .xtc file
-nstxtcout                = 50000  ; every 100 ps
-xtc-precision            = 1000
-; This selects the subset of atoms for the .xtc file. You can
-; select multiple groups. By default all atoms will be written.
-xtc_grps                 = 1MQ
-; Selection of energy groups
-energygrps               = Water non-Water
-
-; NEIGHBORSEARCHING PARAMETERS
-; nblist update frequency
-nstlist                  = 10
-; ns algorithm (simple or grid)
-ns_type                  = grid
-; Periodic boundary conditions: xyz, no, xy
-pbc                      = xyz
-periodic_molecules       = no
-; nblist cut-off        
-rlist                    = 0.9
-; long-range cut-off for switched potentials
-rlistlong                = -1
-
-; OPTIONS FOR ELECTROSTATICS AND VDW
-; Method for doing electrostatics
-coulombtype              = PME
-rcoulomb-switch          = 0
-rcoulomb                 = 0.9
-; Relative dielectric constant for the medium and the reaction field
-epsilon_r                = 1
-epsilon_rf               = 1
-; Method for doing Van der Waals
-vdw-type                 = Cut-off
-; cut-off lengths       
-rvdw-switch              = 0
-rvdw                     = 0.9
-; Apply long range dispersion corrections for Energy and Pressure
-DispCorr                 = No
-; Extension of the potential lookup tables beyond the cut-off
-table-extension          = 1
-; Seperate tables between energy group pairs
-energygrp_table          = 
-; Spacing for the PME/PPPM FFT grid
-fourierspacing           = 0.12
-; FFT grid size, when a value is 0 fourierspacing will be used
-fourier_nx               = 0
-fourier_ny               = 0
-fourier_nz               = 0
-; EWALD/PME/PPPM parameters
-pme_order                = 4
-ewald_rtol               = 1e-5
-ewald_geometry           = 3d
-epsilon_surface          = 0
-optimize_fft             = no
-
-; OPTIONS FOR WEAK COUPLING ALGORITHMS
-; Temperature coupling  
-tcoupl                   = Berendsen
-nsttcouple               = -1
-nh-chain-length          = 10
-; Groups to couple separately
-tc-grps                  = Water   non-Water
-; Time constant (ps) and reference temperature (K)
-tau_t                    = 1.0  1.0
-ref_t                    = 300  300
-; Pressure coupling     
-Pcoupl                   = no
-Pcoupltype               = Isotropic
-nstpcouple               = -1
-; Time constant (ps), compressibility (1/bar) and reference P (bar)
-tau_p                    = 1.0
-compressibility          = 4.5e-5
-ref_p                    = 1.0
-; Scaling of reference coordinates, No, All or COM
-refcoord_scaling         = No
-; Random seed for Andersen thermostat
-andersen_seed            = 815131
-
-; GENERATE VELOCITIES FOR STARTUP RUN
-gen_vel                  = yes
-gen_temp                 = 300
-;gen_seed		 = -1 <<<--- FAHWorkServer complains that there are multiple lines; it adds its own line!
-
-; OPTIONS FOR BONDS    
-constraints              = hbonds
-; Type of constraint algorithm
-constraint-algorithm     = Lincs
-; Do not constrain the start configuration
-continuation             = no
-; Use successive overrelaxation to reduce the number of shake iterations
-Shake-SOR                = no
-; Relative tolerance of shake
-shake-tol                = 0.0001
-; Highest order in the expansion of the constraint coupling matrix
-lincs-order              = 4
-; Number of iterations in the final step of LINCS. 1 is fine for
-; normal simulations, but use 2 to conserve energy in NVE runs.
-; For energy minimization with constraints it should be 4 to 8.
-lincs-iter               = 1
-; Lincs will write a warning to the stderr if in one step a bond
-; rotates over more degrees than
-lincs-warnangle          = 30
-; Convert harmonic bonds to morse potentials
-morse                    = no
-
-; ENERGY GROUP EXCLUSIONS
-; Pairs of energy groups for which all non-bonded interactions are excluded
-energygrp_excl           = 
-
-; WALLS                
-; Number of walls, type, atom types, densities and box-z scale factor for Ewald
-nwall                    = 0
-wall_type                = 9-3
-wall_r_linpot            = -1
-wall_atomtype            = 
-wall_density             = 
-wall_ewald_zfac          = 3
-
-; Free energy control stuff ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-free-energy              = expanded
-init-lambda-state        = {init_lambda_state}
-;  delta-lambda             = 0
-fep-lambdas              = {fep_lambdas_string}
-calc-lambda-neighbors    = -1
-sc-alpha                 = 0
-sc-power                 = 0
-sc-sigma                 = 0.3
-nstdhdl                  = 5000
-separate-dhdl-file       = yes
-dhdl-derivatives         = yes
-;   dh_hist_size             = 0
-;   dh_hist_spacing          = 0.1
-couple-moltype           = {couple_moltype}
-couple-lambda0           = none ; off
-couple-lambda1           = vdw-q ; on
-couple-intramol          = no
-
-
-; expanded ensemble variables
-nstexpanded              = 5000     ; 10 ps
-lmc-stats                = wang-landau
-lmc-move                 = metropolized-gibbs
-lmc-weights-equil        = no
-weight-equil-number-all-lambda = -1
-weight-equil-number-samples = -1
-weight-equil-number-steps = -1
-weight-equil-wl-delta    = -1
-weight-equil-count-ratio = -1
-
-; Seed for Monte Carlo in lambda space
-lmc-seed                 = -1
-mc-temperature           = -1
-lmc-repeats              = 1
-lmc-gibbsdelta           = -1
-lmc-forced-nstart        = 0
-symmetrized-transition-matrix = no
-nst-transition-matrix    = -1
-mininum-var-min          = 100
-init-lambda-weights      = {init_lambda_weights}
-weight-c-range           = 0
-wl-scale                 = 0.8
-wl-ratio                 = 0.8
-init-wl-delta            = {wl_increment_in_kT}  ; kT -- default is 1.0
-wl-oneovert              = no
-
-; pulling parameters
-pull                     = no
-""".format(couple_moltype      = self.couple_moltype, 
-           fep_lambdas_string  = self.fep_lambdas_string,
-           init_lambda_state   = self.init_lambda_state,
-           init_lambda_weights = self.init_lambda_weights_string,
-           wl_increment_in_kT  = self.wl_increment_in_kT )
-
-        return self.header_desc + self.mdp_text
-
-    def write_to_filename(self, filename):
-        """Writes the ee mdpfile to specified filename."""
-
-        fout = open(filename, 'w')
-        fout.write( self.mdpfile_text() )         
-        fout.close()
-   
-
-if __name__ == "__main__": 
-
-    # First test: write and read an mdpfile with restraints
-    e = expanded_ensemble_mdpfile(ligand_only=True)
-    e.write_to_filename('test.mdp')
-    e.read_parms_from_mdpfile('test.mdp')
-
-    # Next test: write and read an mdpfile without restraints (LIGAND ONLY)
-    e = expanded_ensemble_mdpfile(ligand_only=True)
-    e.write_to_filename('test_ligonly.mdp')
-    e.read_parms_from_mdpfile('test_ligonly.mdp')
-
-
- 
-
 
 
