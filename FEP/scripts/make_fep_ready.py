@@ -156,46 +156,99 @@ define                   =
 ; RUN CONTROL PARAMETERS
 integrator               = steep
 emtol                    = 100.0
-emstep                   = 0.01
-nsteps                   = 1000 ; 100000
-cutoff-scheme            = Verlet
-energygrps               = System
+emstep                   = 0.05
+nsteps                   = 2000 ; 100000
+
+comm-mode                = Linear
+nstcomm                  = 1
+
+; Output control
+nstlog                   = 500		; every 1 ps
+nstcalcenergy            = 1
+nstenergy                = 50000        ; save edr every 100 ps
+nstxout-compressed       = 50000	; save xtc coordinates every 100 ps
+nstxout		 	 = 500000	; save coordinates every 1 ns
+nstvout			 = 500000	; save velocities every 1 ns
+compressed-x-precision	 = 1000
+; 
+; This selects the subset of atoms for the .xtc file. You can
+; select multiple groups. By default all atoms will be written.
+compressed-x-grps        = Protein LIG
+
+; Selection of energy groups
+energygrps               = Protein non-Protein
+; Neighborsearching and short-range nonbonded interactions
 nstlist                  = 10
 ns_type                  = grid
 pbc                      = xyz
-rlist                    = 0.9
+rlist                    = 1.0
+
+; Electrostatics
+cutoff-scheme            = verlet
 coulombtype              = PME
-rcoulomb-switch          = 0
-rcoulomb                 = 0.9
-epsilon_r                = 1
-epsilon_rf               = 1
+coulomb-modifier         = none
+rcoulomb                 = 1.0
+
+; van der Waals
 vdw-type                 = Cut-off
-rvdw-switch              = 0
-rvdw                     = 0.9
+;;; vdw-modifier             = Potential-switch
+rvdw-switch              = 0.9
+rvdw                     = 1.0
+
+; Apply long range dispersion corrections for Energy and Pressure 
+DispCorr                 = EnerPres
+
+; Spacing for the PME/PPPM FFT grid
 fourierspacing           = 0.12
+;fourier-nx               = 48
+;fourier-ny               = 48
+;fourier-nz               = 48
+; EWALD/PME/PPPM parameters = 
 pme_order                = 4
-ewald_rtol               = 1e-5
+ewald_rtol               = 1e-05
 ewald_geometry           = 3d
 epsilon_surface          = 0
-optimize_fft             = no
-;tcoupl                   = V-rescale
-compressibility          = 4.5e-5
-ref_p                    = 1.0
-constraints              = hbonds
-constraint-algorithm     = Lincs
-continuation             = no
-Shake-SOR                = no
-shake-tol                = 0.0001
-lincs-order              = 4
-lincs-iter               = 1
-lincs-warnangle          = 30
-morse                    = no
-nwall                    = 0
-wall_type                = 9-3
-wall_r_linpot            = -1
-wall_atomtype            = 
-wall_density             = 
-wall_ewald_zfac          = 3
+
+; Temperature coupling
+tcoupl                   = v-rescale
+nsttcouple               = 1
+tc_grps                  = System
+tau_t                    = 0.5
+ref_t                    = 298.15
+; Pressure coupling is on for NPT
+pcoupl                   = no
+
+; velocity generation
+gen_vel                  = yes
+gen-temp                 = 298.15
+gen-seed                 = 5420 ; need to randomize the seed each time.
+
+; options for bonds
+constraints              = h-bonds  ; we only have C-H bonds here
+; Type of constraint algorithm
+constraint-algorithm     = lincs
+; Highest order in the expansion of the constraint coupling matrix
+lincs-order              = 4   ;12
+lincs-iter               = 1   ;2
+
+; pulling parameters
+pull                     = umbrella
+pull_ngroups             = 2
+pull_ncoords             = 1
+pull_group1_name         = a1-Protein
+pull_group2_name         = a2-Ligand
+pull-geometry            = direction-periodic
+pull_coord1_groups       = 1 2
+pull-dim                 = Y Y Y
+pull_coord1_rate         = 0.00
+pull_coord1_k            = 200.0
+pull-start               = yes   ;    no
+pull-coord1-init         = 0.375
+pull-nstxout             = 500   ; 1 ps
+pull-nstfout             = 500   ; 1 ps
+
+
+
 """
 fout = open(min_mdpfile, 'w')
 fout.write(mdpfile_text)
