@@ -19,14 +19,14 @@ class expanded_ensemble_mdpfile(object):
                                                        0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95,
                                                        1.0, 1.0,  1.0, 1.0,  1.0, 1.0,  1.0, 1.0,  1.0, 1.0, 
                                                        1.0, 1.0,  1.0, 1.0,  1.0, 1.0,  1.0, 1.0,  1.0, 1.0 ] ), 
-#                        vdw_lambdas      = np.array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-#                                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
-#                                                       0.00, 0.10, 0.20, 0.30, 0.40, 0.45, 0.50, 0.55, 0.60, 0.63,
-#                                                       0.66, 0.69, 0.72, 0.75, 0.78, 0.81, 0.84, 0.88, 0.92, 1.00 ] ), 
                         vdw_lambdas      = np.array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                                       0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.45, 0.50, 0.60,
-                                                       0.65, 0.70, 0.75, 0.80, 0.86, 0.92, 0.95, 0.975, 0.99, 1.00 ] ),
+                                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
+                                                       0.00, 0.10, 0.20, 0.30, 0.40, 0.45, 0.50, 0.55, 0.60, 0.63,
+                                                       0.66, 0.69, 0.72, 0.75, 0.78, 0.81, 0.84, 0.88, 0.92, 1.00 ] ), 
+#                        vdw_lambdas      = np.array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+#                                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+#                                                       0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.45, 0.50, 0.60,
+#                                                       0.65, 0.70, 0.75, 0.80, 0.86, 0.92, 0.95, 0.975, 0.99, 1.00 ] ),
                         init_lambda_weights = np.zeros(40),
                         init_lambda_state   = 39,
                         wl_increment_in_kT  = 3.0 ):
@@ -261,13 +261,13 @@ rlist                    = 1.0
 ; Electrostatics
 cutoff-scheme            = verlet
 coulombtype              = PME
-coulomb-modifier         = none
+rcoulomb-switch          = 0.89
 rcoulomb                 = 1.0
 
 ; van der Waals
 vdw-type                 = Cut-off
 vdw-modifier             = Potential-switch
-rvdw-switch              = 0.9      ;    0.9
+rvdw-switch              = 0.89      ;    0.9
 rvdw                     = 1.0
 
 ; Apply long range dispersion corrections for Energy and Pressure 
@@ -311,15 +311,15 @@ constraints              = h-bonds  ; we only have C-H bonds here
 ; Type of constraint algorithm
 constraint-algorithm     = lincs
 ; Highest order in the expansion of the constraint coupling matrix
-lincs-order              = 4    ;  12    # Changing from Shirts 3/16
-lincs-iter               = 1    ;  2     # Changing from Shirts 3/16
+lincs-order              = 12
+lincs-iter               = 2
 
 
 ; FREE ENERGY CONTROL OPTIONS =
 free-energy   	        = expanded
 calc-lambda-neighbors 	= -1
-sc-alpha 		= 0    ;     0.5     I think 5.0.4 SC IS CRASHING the SHIRTS PROTOCOL -VAV
-sc-power 		= 0      ;     1
+sc-alpha 		= 0.5    ;     0.5     I think 5.0.4 SC IS CRASHING the SHIRTS PROTOCOL -VAV
+sc-power 		= 2      ;     1
 sc-sigma 	        = 0.3    ;     0.5
 couple-moltype 		= {couple_moltype}  ; ligand mol type
 couple-lambda0 		= vdw-q
