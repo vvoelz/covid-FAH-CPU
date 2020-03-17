@@ -24,7 +24,7 @@ class expanded_ensemble_mdpfile(object):
                                                        0.00, 0.10, 0.20, 0.30, 0.40, 0.45, 0.50, 0.55, 0.60, 0.63,
                                                        0.66, 0.69, 0.72, 0.75, 0.78, 0.81, 0.84, 0.88, 0.92, 1.00 ] ), 
                         init_lambda_weights = np.zeros(40),
-                        init_lambda_state   = 39,
+                        init_lambda_state   = 0,
                         wl_increment_in_kT  = 3.0 ):
 
 
@@ -218,7 +218,7 @@ comm-mode                = Linear
 nstcomm                  = 1
 
 ; Output control
-nstlog                   = 5000		; every 10 ps
+nstlog                   = 500		; every 1 ps
 nstcalcenergy            = 1
 nstenergy                = 50000        ; save edr every 100 ps
 nstxout-compressed       = 50000	; save xtc coordinates every 100 ps
@@ -263,22 +263,30 @@ rcoulomb                 = 1.0
 ; van der Waals
 vdw-type                 = Cut-off
 vdw-modifier             = Potential-switch
-rvdw-switch              = 0.9
+rvdw-switch              = 0.0      ;    0.9
 rvdw                     = 1.0
 
 ; Apply long range dispersion corrections for Energy and Pressure 
-DispCorr                 = EnerPres
+;;;;;;;; TRYING THIS DispCorr                 = EnerPres
 
-; Spacing for the PME/PPPM FFT grid
-fourierspacing           = 0.10
-fourier-nx               = 48
-fourier-ny               = 48
-fourier-nz               = 48
-; EWALD/PME/PPPM parameters = 
+
+;vdw-type                 = Cut-off
+;rvdw-switch              = 0
+;vdw                     = 0.9
+fourierspacing           = 0.12
 pme_order                = 4
-ewald_rtol               = 1e-05
+ewald_rtol               = 1e-5
 ewald_geometry           = 3d
 epsilon_surface          = 0
+; optimize_fft             = no    ;;; OBSOLETE
+
+
+; Spacing for the PME/PPPM FFT grid
+; fourierspacing           = 0.10
+; fourier-nx               = 48      ; TURNING THIS OFF to see if we can stop crashing 3/16
+; fourier-ny               = 48
+; fourier-nz               = 48
+
 
 ; Temperature coupling
 tcoupl                   = v-rescale
@@ -299,23 +307,23 @@ constraints              = h-bonds  ; we only have C-H bonds here
 ; Type of constraint algorithm
 constraint-algorithm     = lincs
 ; Highest order in the expansion of the constraint coupling matrix
-lincs-order              = 12
-lincs-iter               = 2
+lincs-order              = 4    ;  12    # Changing from Shirts 3/16
+lincs-iter               = 1    ;  2     # Changing from Shirts 3/16
 
 
 ; FREE ENERGY CONTROL OPTIONS =
 free-energy   	        = expanded
 calc-lambda-neighbors 	= -1
-sc-alpha 		= 0.5
-sc-power 		= 1
-sc-sigma 	        = 0.5
+sc-alpha 		= 0    ;     0.5     I think 5.0.4 SC IS CRASHING the SHIRTS PROTOCOL -VAV
+sc-power 		= 0      ;     1
+sc-sigma 	        = 0.3    ;     0.5
 couple-moltype 		= {couple_moltype}  ; ligand mol type
 couple-lambda0 		= vdw-q
 couple-lambda1 		= none
 couple-intramol 	= yes
 init-lambda-state	= {init_lambda_state}
 
-nstexpanded 		= 10
+nstexpanded 		= 100   ;    trying less frequent 10
 nstdhdl 		= 500	; dhdl snaps every 1 ps
 dhdl-print-energy 	= total
 nst-transition-matrix 	= 500000
