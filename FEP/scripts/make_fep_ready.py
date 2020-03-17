@@ -157,7 +157,7 @@ define                   =
 integrator               = steep
 emtol                    = 100.0
 emstep                   = 0.05
-nsteps                   = 2000 ; 100000
+nsteps                   = 100000 ; 100000
 
 comm-mode                = Linear
 nstcomm                  = 1
