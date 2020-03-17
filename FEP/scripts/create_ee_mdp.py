@@ -54,6 +54,8 @@ if not ligand_only:
 
     ### To create the mdpfile, we need to know these default names, *and* the distance between the atoms
     GMX_BIN = '/usr/local/gromacs/bin/gmx'
+    if not os.path.exists(GMX_BIN):
+        GMX_BIN = 'gmx'    
     
     # write a temp "selection.dat"
     fout = open('selection.dat', 'w')
