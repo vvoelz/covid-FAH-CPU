@@ -46,3 +46,5 @@ Protocol2:
 The python script "simulate.py" is designed for only 1 ligand with a sys.argv for the ligand index. The runme file will have a "for loop" for mutiple ligands. The difference is in the "simulate.py", you don't need "del" lines in the end. Correspondingly, in the qsub file, you are running "runme" file instead of "python" files used in protocol1.
 
 Both protocol should have similar performance. My test is still running and I will update once they are done. The current estimate is ~ 20 min for 1 ligand (prep+min+equil). That said, on CB2RR we should have ~ 280 ligands finished by 1 GPU node per day.
+
+### In the currecnt scripts, 1 ns equilibration is used. For the future use, maybe 100ps is enough. One can change ```nsteps_equil``` in the python scripts to adjust the length of equilibration. Also the performance estimate is based on 1 ns equilibration.
