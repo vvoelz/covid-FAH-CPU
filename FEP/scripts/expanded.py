@@ -396,7 +396,7 @@ couple-intramol          = no
 
 
 ; expanded ensemble variables
-nstexpanded              = 500     ; 1 ps
+nstexpanded              = 100     ; 200 fs
 lmc-stats                = wang-landau
 lmc-move                 = metropolized-gibbs
 lmc-weights-equil        = no
