@@ -10,7 +10,7 @@ usage = """
 NOTES
     * This should be used with an installation of GROMACS 5.0.4, as on the FAH servers!!!!
     * It assumes you have a structure `conf.gro` that represents the whole system,
-      a topology `topol.top`
+      and a topology `topol.top`
 
 EXAMPLE
     $ python make_fep_ready.py ../100_ligands/RUN1 ./RUN1
@@ -21,6 +21,7 @@ or
 if len(sys.argv) < 3:
     print(usage)
     sys.exit(1)
+
 
 # parse the input arguments
 in_rundir = sys.argv[1]
@@ -55,7 +56,7 @@ fout.write( gro_contents )
 fout.close()
 print('...Done.')
 
-############### convert to topfile ###############
+############### convert the topfile to FEP-ready ###############
 in_topfile = os.path.join(in_rundir, 'topol.top')
 if not os.path.exists(in_topfile):
     print("Can't find topfile", in_topfile, '! Exiting.')
@@ -66,13 +67,22 @@ out_topfile = os.path.join(out_rundir, 'topol.top')
 
 # read in the lines
 fin = open(in_topfile, 'r')
-top_contents = fin.read()
+top_lines = fin.readlines()
 fin.close()
+
+for i in range(len(top_lines)):
+
+    # Change names from UNL to LIG
+    top_lines[i] = top_lines[i].replace('UNL', 'LIG')
+
+    # Convert any hydrogen mass to 4.000 amu  
+    ### NOTE there is no error-checking here -- to do: make this more robust 
+    if top_lines[i].count('H') > 0:   # We ASSUME that atom names have an 'H' 
+        top_lines[i] = top_lines[i].replace('1.007947', '4.000000')
 
 print('Writing to', out_topfile, '...')
 fout = open(out_topfile, 'w')
-top_contents = top_contents.replace('UNL', 'LIG')
-fout.write( top_contents )
+fout.writelines( top_lines )
 fout.close()
 print('...Done.')
 
