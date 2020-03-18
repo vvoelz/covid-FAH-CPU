@@ -12,8 +12,8 @@ class expanded_ensemble_mdpfile(object):
                         couple_moltype = 'LIG',
 			pull_group1_name = 'a1-Protein', 
                         pull_group2_name = 'a2-Ligand', 
-                        pull_coord1_k    = 200.0, 
-                        pull_coord1_init  = 0.4, 
+                        pull_coord1_k    = 50.0, 
+                        pull_coord1_init  = 0.4,   # an initial guess; gets measured in make_fep_ready.py
                         fep_lambdas      = np.array( 40*[0.0] ),
                         coul_lambdas     = np.array( [ 0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45,
                                                        0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95,
@@ -23,13 +23,9 @@ class expanded_ensemble_mdpfile(object):
                                                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
                                                        0.00, 0.10, 0.20, 0.30, 0.40, 0.45, 0.50, 0.55, 0.60, 0.63,
                                                        0.66, 0.69, 0.72, 0.75, 0.78, 0.81, 0.84, 0.88, 0.92, 1.00 ] ), 
-#                        vdw_lambdas      = np.array( [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-#                                                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-#                                                       0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.45, 0.50, 0.60,
-#                                                       0.65, 0.70, 0.75, 0.80, 0.86, 0.92, 0.95, 0.975, 0.99, 1.00 ] ),
                         init_lambda_weights = np.zeros(40),
-                        init_lambda_state   = 39,
-                        wl_increment_in_kT  = 3.0 ):
+                        init_lambda_state   = 0,
+                        wl_increment_in_kT  = 10.0 ):
 
 
 
@@ -216,18 +212,18 @@ class expanded_ensemble_mdpfile(object):
         self.mdp_text +=  """; Run control
 integrator               = md-vv
 tinit                    = 0
-dt                       = 0.002
-nsteps                   = 500000       ; 1 ns
+dt                       = 0.004
+nsteps                   = 250000       ; 1 ns
 comm-mode                = Linear
 nstcomm                  = 1
 
 ; Output control
-nstlog                   = 500		; every 1 ps
+nstlog                   = 250		; every 1 ps
 nstcalcenergy            = 1
-nstenergy                = 50000        ; save edr every 100 ps
-nstxout-compressed       = 50000	; save xtc coordinates every 100 ps
-nstxout		 	 = 500000	; save coordinates every 1 ns
-nstvout			 = 500000	; save velocities every 1 ns
+nstenergy                = 25000        ; save edr every 100 ps
+nstxout-compressed       = 25000	; save xtc coordinates every 100 ps
+nstxout		 	 = 250000	; save coordinates every 1 ns
+nstvout			 = 250000	; save velocities every 1 ns
 compressed-x-precision	 = 1000
 """
 
@@ -256,40 +252,28 @@ energygrps               = Protein non-Protein
 nstlist                  = 10
 ns_type                  = grid
 pbc                      = xyz
-rlist                    = 1.0
+rlist                    = 0.9
 
 ; Electrostatics
 cutoff-scheme            = verlet
 coulombtype              = PME
-rcoulomb-switch          = 0.89
-rcoulomb                 = 1.0
+rcoulomb                 = 0.9
 
 ; van der Waals
 vdw-type                 = Cut-off
 vdw-modifier             = Potential-switch
 rvdw-switch              = 0.89      ;    0.9
-rvdw                     = 1.0
+rvdw                     = 0.9
 
 ; Apply long range dispersion corrections for Energy and Pressure 
-;;;;;;;; TRYING THIS DispCorr                 = EnerPres
+; NO -- we're doing NVT
+; DispCorr                 = EnerPres
 
-
-;vdw-type                 = Cut-off
-;rvdw-switch              = 0
-;vdw                     = 0.9
-fourierspacing           = 0.12
+fourierspacing           = 0.10
 pme_order                = 4
-ewald_rtol               = 1e-5
+ewald_rtol               = 1e-6
 ewald_geometry           = 3d
 epsilon_surface          = 0
-; optimize_fft             = no    ;;; OBSOLETE
-
-
-; Spacing for the PME/PPPM FFT grid
-; fourierspacing           = 0.10
-; fourier-nx               = 48      ; TURNING THIS OFF to see if we can stop crashing 3/16
-; fourier-ny               = 48
-; fourier-nz               = 48
 
 
 ; Temperature coupling
@@ -298,7 +282,7 @@ nsttcouple               = 1
 tc_grps                  = System
 tau_t                    = 0.5
 ref_t                    = 298.15
-; Pressure coupling is on for NPT
+; Pressure coupling is on for NPT - we're doing NVT
 pcoupl                   = no
 
 ; velocity generation
@@ -318,8 +302,8 @@ lincs-iter               = 2
 ; FREE ENERGY CONTROL OPTIONS =
 free-energy   	        = expanded
 calc-lambda-neighbors 	= -1
-sc-alpha 		= 0.5    ;     0.5     I think 5.0.4 SC IS CRASHING the SHIRTS PROTOCOL -VAV
-sc-power 		= 2      ;     1
+sc-alpha 		= 0.5    ;     0.5 
+sc-power 		= 1      ;     keep this at 1 
 sc-sigma 	        = 0.3    ;     0.5
 couple-moltype 		= {couple_moltype}  ; ligand mol type
 couple-lambda0 		= vdw-q
@@ -327,14 +311,23 @@ couple-lambda1 		= none
 couple-intramol 	= yes
 init-lambda-state	= {init_lambda_state}
 
-nstexpanded 		= 100   ;    trying less frequent 10
-nstdhdl 		= 500	; dhdl snaps every 1 ps
+nstexpanded             = 250   ; trying exchanges every 1 ps
+nstdhdl                 = 250   ; dhdl snaps every 1 ps   <-- BINGO these must be set the same
 dhdl-print-energy 	= total
-nst-transition-matrix 	= 500000
+nst-transition-matrix 	= 250000
 
 lmc-seed                = {randseed} ; should be randomized
 lmc-gibbsdelta          = -1 ; print all energies
 symmetrized-transition-matrix = yes
+
+lmc-stats                       = wang-landau
+lmc-move                        = metropolized-gibbs
+lmc-weights-equil               = wl-delta
+weight-equil-wl-delta           = 0.00001
+init-wl-delta                   = {wl_increment_in_kT}   ; in units kT -  MRS had 10.0 at first
+separate-dhdl-file              = yes
+wl-scale                        = 0.8
+wl-ratio                        = 0.7
 
 lmc-stats 		      	= wang-landau
 lmc-move 			= metropolized-gibbs
@@ -365,8 +358,8 @@ pull_coord1_rate         = 0.00
 pull_coord1_k            = {pull_coord1_k}
 pull-start               = no
 pull-coord1-init         = {pull_coord1_init}
-pull-nstxout             = 500   ; 1 ps
-pull-nstfout             = 500   ; 1 ps
+pull-nstxout             = 250   ; 1 ps
+pull-nstfout             = 250   ; 1 ps
 """
 
 
