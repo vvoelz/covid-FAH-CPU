@@ -1,0 +1,1 @@
+gmx grompp -c npt.gro -f prod.mdp -p topol.top -n index.ndx -o frame0.tpr -po mdout.mdp -maxwarn 1
