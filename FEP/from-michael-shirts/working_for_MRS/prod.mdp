@@ -87,7 +87,7 @@ couple-intramol 	= yes
 init-lambda-state	= 39
 
 nstexpanded 		= 100   ;    trying less frequent 10
-nstdhdl 		= 500	; dhdl snaps every 1 ps
+nstdhdl 		= 100	; dhdl snaps every 200 fs   <---- BINGO
 dhdl-print-energy 	= total
 nst-transition-matrix 	= 500000
 
