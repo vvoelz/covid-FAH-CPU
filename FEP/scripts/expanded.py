@@ -329,14 +329,6 @@ separate-dhdl-file              = yes
 wl-scale                        = 0.8
 wl-ratio                        = 0.7
 
-lmc-stats 		      	= wang-landau
-lmc-move 			= metropolized-gibbs
-lmc-weights-equil 	        = wl-delta
-weight-equil-wl-delta 	  	= 0.0001
-init-wl-delta 		  	= {wl_increment_in_kT}   ; in units kT
-separate-dhdl-file 		= yes
-wl-scale 			= 0.8
-wl-ratio 			= 0.7
 coul-lambdas         = {coul_lambdas_string}
 vdw-lambdas          = {vdw_lambdas_string}
 fep-lambdas          = {fep_lambdas_string}
