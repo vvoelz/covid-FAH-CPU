@@ -38,7 +38,7 @@ this_jobdir = sys.argv[3]
 
 topfile      = sys.argv[4]
 ndxfile      = sys.argv[5]
-extend_in_ps = int(sys.argv[6])
+extend_in_ps = int(sys.argv[6])   # currently no being used
 this_gen_tpr = sys.argv[7]
 
 ligand_only = False
