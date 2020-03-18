@@ -4,18 +4,18 @@
 ; Run control
 integrator               = md-vv
 tinit                    = 0
-dt                       = 0.004
-nsteps                   = 100000       ; 1 ns   500000
+dt                       = 0.004        ; 4 fs with cheap mass partitioning
+nsteps                   = 250000       ; 1 ns  
 comm-mode                = Linear
 nstcomm                  = 1
 
 ; Output control
-nstlog                   = 500		; every 1 ps
+nstlog                   = 250		; every 1 ps
 nstcalcenergy            = 1
-nstenergy                = 50000        ; save edr every 100 ps
-nstxout-compressed       = 50000	; save xtc coordinates every 100 ps
-nstxout		 	 = 500000	; save coordinates every 1 ns
-nstvout			 = 500000	; save velocities every 1 ns
+nstenergy                = 25000        ; save edr every 100 ps
+nstxout-compressed       = 25000	; save xtc coordinates every 100 ps
+nstxout		 	 = 250000	; save coordinates every 1 ns
+nstvout			 = 250000	; save velocities every 1 ns
 compressed-x-precision	 = 1000
 ; 
 ; This selects the subset of atoms for the .xtc file. You can
@@ -86,10 +86,10 @@ couple-lambda1 		= none
 couple-intramol 	= yes
 init-lambda-state	= 39
 
-nstexpanded 		= 100   ;    trying less frequent 10
-nstdhdl 		= 100	; dhdl snaps every 200 fs   <---- BINGO
+nstexpanded 		= 100   ; trying less frequent 10
+nstdhdl 		= 100	; dhdl snaps every 400 fs   <-- BINGO these must be set the same
 dhdl-print-energy 	= total
-nst-transition-matrix 	= 500000
+nst-transition-matrix 	= 250000
 
 lmc-seed                = 37500 ; should be randomized
 lmc-gibbsdelta          = -1 ; print all energies
