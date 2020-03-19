@@ -183,10 +183,11 @@ compressed-x-precision	 = 1000
 ; 
 ; This selects the subset of atoms for the .xtc file. You can
 ; select multiple groups. By default all atoms will be written.
-compressed-x-grps        = Protein LIG
+compressed-x-grps        = LIG
 
 ; Selection of energy groups
-energygrps               = Protein non-Protein
+energygrps               = System
+
 ; Neighborsearching and short-range nonbonded interactions
 nstlist                  = 10
 ns_type                  = grid
