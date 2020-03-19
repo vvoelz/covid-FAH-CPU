@@ -241,24 +241,6 @@ constraint-algorithm     = lincs
 lincs-order              = 4   ;12
 lincs-iter               = 1   ;2
 
-; pulling parameters
-pull                     = umbrella
-pull_ngroups             = 2
-pull_ncoords             = 1
-pull_group1_name         = a1-Protein
-pull_group2_name         = a2-Ligand
-pull-geometry            = direction-periodic
-pull_coord1_groups       = 1 2
-pull-dim                 = Y Y Y
-pull_coord1_rate         = 0.00
-pull_coord1_k            = 200.0
-pull-start               = yes   ;    no
-pull-coord1-init         = 0.375
-pull-nstxout             = 500   ; 1 ps
-pull-nstfout             = 500   ; 1 ps
-
-
-
 """
 fout = open(min_mdpfile, 'w')
 fout.write(mdpfile_text)
