@@ -333,6 +333,7 @@ coul-lambdas         = {coul_lambdas_string}
 vdw-lambdas          = {vdw_lambdas_string}
 fep-lambdas          = {fep_lambdas_string}
 init-lambda-weights  = {init_lambda_weights}
+
 """
 
         if not self.ligand_only:

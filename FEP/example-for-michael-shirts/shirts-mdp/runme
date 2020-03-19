@@ -1,0 +1,2 @@
+gmx grompp -c ./RUN101/npt.gro -f ./RUN101/prod.mdp -p ./RUN101/topol.top -n ./RUN101/index.ndx -o testme.tpr -po mdout.mdp -maxwarn 1
+gmx mdrun -v -s testme.tpr
