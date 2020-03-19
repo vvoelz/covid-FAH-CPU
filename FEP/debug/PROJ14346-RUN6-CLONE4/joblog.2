@@ -1,0 +1,144 @@
+GROMACS:    gmx grompp, VERSION 5.0.4
+
+GROMACS is written by:
+Emile Apol         Rossen Apostolov   Herman J.C. Berendsen Par Bjelkmar       
+Aldert van Buuren  Rudi van Drunen    Anton Feenstra     Sebastian Fritsch  
+Gerrit Groenhof    Christoph Junghans Peter Kasson       Carsten Kutzner    
+Per Larsson        Justin A. Lemkul   Magnus Lundborg    Pieter Meulenhoff  
+Erik Marklund      Teemu Murtola      Szilard Pall       Sander Pronk       
+Roland Schulz      Alexey Shvetsov    Michael Shirts     Alfons Sijbers     
+Peter Tieleman     Christian Wennberg Maarten Wolf       
+and the project leaders:
+Mark Abraham, Berk Hess, Erik Lindahl, and David van der Spoel
+
+Copyright (c) 1991-2000, University of Groningen, The Netherlands.
+Copyright (c) 2001-2014, The GROMACS development team at
+Uppsala University, Stockholm University and
+the Royal Institute of Technology, Sweden.
+check out http://www.gromacs.org for more information.
+
+GROMACS is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License
+as published by the Free Software Foundation; either version 2.1
+of the License, or (at your option) any later version.
+
+GROMACS:      gmx grompp, VERSION 5.0.4
+Executable:   /usr/local/gromacs/bin/gmx
+Library dir:  /usr/local/gromacs/share/gromacs/top
+Command line:
+  gmx grompp -c ../frame1.tpr -t ../results1/frame1.trr -f ../results2/ee.mdp -p /home/fahsrvadm/projects/14346/RUN6/topol.top -n /home/fahsrvadm/projects/14346/RUN6/index.ndx -o ../frame2.tpr -po ../results2/mdout.mdp -maxwarn 1
+
+Setting the LD random seed to 1152456107
+Generated 171 of the 171 non-bonded parameter combinations
+Excluding 3 bonded neighbours molecule type 'system1'
+Excluding 3 bonded neighbours molecule type 'LIG'
+Excluding 3 bonded neighbours molecule type 'HOH'
+Excluding 3 bonded neighbours molecule type 'NA'
+Excluding 3 bonded neighbours molecule type 'CL'
+Coupling 1 copies of molecule type 'LIG'
+
+NOTE 1 [file topol.top, line 46959]:
+  System has non-zero total charge: -0.003000
+  Total charge should normally be an integer. See
+  http://www.gromacs.org/Documentation/Floating_Point_Arithmetic
+  for discussion on how close it should be to an integer.
+  
+
+
+Reading file ../frame1.tpr, VERSION 5.0.4 (single precision)
+Reading file ../frame1.tpr, VERSION 5.0.4 (single precision)
+Velocities were taken from a Maxwell distribution at 298.15 K
+Removing all charge groups because cutoff-scheme=Verlet
+
+NOTE 2 [file topol.top, line 46959]:
+  The bond in molecule-type system1 between atoms 216 CD and 217 OE1 has an
+  estimated oscillational period of 2.2e-02 ps, which is less than 10 times
+  the time step of 4.0e-03 ps.
+  Maybe you forgot to change the constraints mdp option.
+
+Warning: file does not end with a newline, last line:
+    
+Pull group 1 'a1-Protein' has 1 atoms
+Pull group 2 'a2-Ligand' has 1 atoms
+Number of degrees of freedom in T-Coupling group System is 117097.00
+Reading Coordinates and Box size from old trajectory
+Will read whole trajectory
+Velocities generated: ignoring velocities in input trajectory
+trn version: GMX_trn_file (single precision)
+Reading frame       0 time    0.000   Reading frame       1 time 1000.000   Last frame          1 time 1000.000   
+Using frame at t = 1000 ps
+Starting time for run is 0 ps
+Pull group  natoms  pbc atom  distance at start  reference at t=0
+       1         1         0
+       2         1         0       0.000 nm          0.400 nm
+Estimate for the relative computational load of the PME mesh part: 0.35
+
+There were 2 notes
+
+gcq#126: "The Carpenter Goes Bang Bang" (The Breeders)
+
+turning H bonds into constraints...
+turning H bonds into constraints...
+turning H bonds into constraints...
+turning H bonds into constraints...
+turning H bonds into constraints...
+Determining Verlet buffer for a tolerance of 0.005 kJ/mol/ps at 298.15 K
+Calculated rlist for 1x1 atom pair-list as 0.958 nm, buffer size 0.058 nm
+Set rlist, assuming 4x4 atom pair-list, to 0.940 nm, buffer size 0.040 nm
+Calculating fourier grid dimensions for X Y Z
+Using a fourier grid of 84x84x84, spacing 0.098 0.098 0.098
+This run will generate roughly 11 Mb of data
+sys.argv ['/home/fahsrvadm/git/covid-FAH-CPU/FEP/scripts/continue_a_tpr.py', '../frame1.tpr', '../results1', '../results2', '/home/fahsrvadm/projects/14346/RUN6/topol.top', '/home/fahsrvadm/projects/14346/RUN6/index.ndx', '1000', '../frame2.tpr']
+             MC-lambda information
+  Wang-Landau incrementor is:      3.2768
+  N   FEPL  CoulL   VdwL    Count   G(in kT)  dG(in kT)
+  1  0.000  0.000  0.000        0    0.00000    5.20000   
+  2  0.000  0.050  0.000        0    5.20000    5.12000   
+  3  0.000  0.100  0.000        0   10.32000    4.35200   
+  4  0.000  0.150  0.000        0   14.67200    4.88000   
+  5  0.000  0.200  0.000        0   19.55200    5.82400   
+  6  0.000  0.250  0.000        0   25.37600    5.69600   
+  7  0.000  0.300  0.000        0   31.07200    2.88000   
+  8  0.000  0.350  0.000        0   33.95200    1.42400   
+  9  0.000  0.400  0.000        0   35.37600    5.69601   
+ 10  0.000  0.450  0.000        0   41.07200    3.02400   
+ 11  0.000  0.500  0.000        0   44.09600    4.35200   
+ 12  0.000  0.550  0.000        0   48.44800    2.32000   
+ 13  0.000  0.600  0.000        0   50.76800    3.90400   
+ 14  0.000  0.650  0.000        0   54.67200    3.21600   
+ 15  0.000  0.700  0.000        0   57.88800    0.88000   
+ 16  0.000  0.750  0.000        0   58.76801    3.64799   
+ 17  0.000  0.800  0.000        0   62.41600    6.09599   
+ 18  0.000  0.850  0.000        0   68.51199   -4.23999   
+ 19  0.000  0.900  0.000        0   64.27200    9.31200   
+ 20  0.000  0.950  0.000        0   73.58400    2.30400   
+ 21  0.000  1.000  0.000        0   75.88800   -3.28001   
+ 22  0.000  1.000  0.100        0   72.60799    5.69600   
+ 23  0.000  1.000  0.200        0   78.30399    0.97601   
+ 24  0.000  1.000  0.300        0   79.28000    3.26400   
+ 25  0.000  1.000  0.400        0   82.54400   -2.14400   
+ 26  0.000  1.000  0.450        0   80.39999    0.96640   
+ 27  0.000  1.000  0.500        2   81.36639   -3.21600   
+ 28  0.000  1.000  0.550        2   78.15040    2.57279   
+ 29  0.000  1.000  0.600        1   80.72319   -0.63680   
+ 30  0.000  1.000  0.630        2   80.08640    0.78080   
+ 31  0.000  1.000  0.660        1   80.86720   -0.72000   
+ 32  0.000  1.000  0.690        1   80.14719   -5.47520 <<
+ 33  0.000  1.000  0.720        0   74.67199    0.49600   
+ 34  0.000  1.000  0.750        0   75.16799   -5.31200   
+ 35  0.000  1.000  0.780        0   69.85600    5.31200   
+ 36  0.000  1.000  0.810        0   75.16799   -3.79200   
+ 37  0.000  1.000  0.840        0   71.37599   -8.49599   
+ 38  0.000  1.000  0.880        0   62.88000    0.80000   
+ 39  0.000  1.000  0.920        0   63.68000   -2.54399   
+ 40  0.000  1.000  1.000        0   61.13600    0.00000   
+
+current Wang Landau increment_in_kT 3.2768
+current wang_landau_weights [ 0.       5.2     10.32    14.672   19.552   25.376   31.072   33.952
+ 35.376   41.072   44.096   48.448   50.768   54.672   57.888   58.76801
+ 62.416   68.51199 64.272   73.584   75.888   72.60799 78.30399 79.28
+ 82.544   80.39999 81.36639 78.1504  80.72319 80.0864  80.8672  80.14719
+ 74.67199 75.16799 69.856   75.16799 71.37599 62.88    63.68    61.136  ]
+Writing ../results2/ee.mdp ...
+...Done
+cmd: /usr/local/gromacs/bin/gmx grompp -c ../frame1.tpr -t ../results1/frame1.trr -f ../results2/ee.mdp -p /home/fahsrvadm/projects/14346/RUN6/topol.top -n /home/fahsrvadm/projects/14346/RUN6/index.ndx -o ../frame2.tpr -po ../results2/mdout.mdp -maxwarn 1

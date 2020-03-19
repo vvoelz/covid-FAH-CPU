@@ -1,0 +1,88 @@
+*********************** Log Started 2020-03-19T04:33:49Z ***********************
+************************** Gromacs Folding@home Core ***************************
+       Type: 0xa7
+       Core: Gromacs
+       Args: -dir 01 -suffix 01 -version 705 -lifeline 47885 -checkpoint 15 -np
+             8
+************************************ CBang *************************************
+       Date: Oct 26 2019
+       Time: 03:00:53
+   Revision: 3b1c887e9f30a608262e0d62833b273e843f7c1b
+     Branch: master
+   Compiler: GNU 4.2.1 Compatible Apple LLVM 11.0.0 (clang-1100.0.33.8)
+    Options: -std=c++11 -O3 -funroll-loops -mmacosx-version-min=10.7
+             -Wno-unused-local-typedefs -stdlib=libc++ -fPIC
+   Platform: darwin 19.0.0
+       Bits: 64
+       Mode: Release
+************************************ System ************************************
+        CPU: Intel(R) Core(TM) i7-4960HQ CPU @ 2.60GHz
+     CPU ID: GenuineIntel Family 6 Model 70 Stepping 1
+       CPUs: 8
+     Memory: 16.00GiB
+Free Memory: 219.61MiB
+    Threads: POSIX_THREADS
+ OS Version: 10.15
+Has Battery: true
+ On Battery: false
+ UTC Offset: -4
+        PID: 47886
+        CWD: /Library/Application Support/FAHClient/work
+******************************** Build - libFAH ********************************
+    Version: 0.0.18
+     Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+  Copyright: 2019 foldingathome.org
+   Homepage: https://foldingathome.org/
+       Date: Oct 26 2019
+       Time: 03:06:33
+   Revision: fcc08f30b8997509aaba3a213354c363f474e056
+     Branch: master
+   Compiler: GNU 4.2.1 Compatible Apple LLVM 11.0.0 (clang-1100.0.33.8)
+    Options: -std=c++11 -O3 -funroll-loops -mmacosx-version-min=10.7
+             -Wno-unused-local-typedefs -stdlib=libc++
+   Platform: darwin 19.0.0
+       Bits: 64
+       Mode: Release
+************************************ Build *************************************
+       SIMD: avx_256
+********************************************************************************
+Project: 14346 (Run 6, Clone 4, Gen 2)
+Unit: 0x0000000325bb0c305e728beab3d36e32
+Digital signatures verified
+Calling: mdrun -s frame2.tpr -o frame2.trr -cpt 15 -nt 8
+Steps: first=0 total=250000
+Completed 1 out of 250000 steps (0%)
+ERROR:
+ERROR:-------------------------------------------------------
+ERROR:Program GROMACS, VERSION 5.0.4-20191026-456f0d636-unknown
+ERROR:Source code file: /Users/buildbot/fah/osx-10.11-64bit-core-a7-avx-release/osx-10.11-64bit-core-a7-avx-release/gromacs-core/build/gromacs/src/gromacs/mdlib/pme.c, line: 754
+ERROR:
+ERROR:Fatal error:
+ERROR:5 particles communicated to PME rank 3 are more than 2/3 times the cut-off out of the domain decomposition cell of their charge group in dimension x.
+ERROR:This usually means that your system is not well equilibrated.
+ERROR:For more information and tips for troubleshooting, please check the GROMACS
+ERROR:website at http://www.gromacs.org/Documentation/Errors
+ERROR:-------------------------------------------------------
+ERROR:
+ERROR:-------------------------------------------------------
+ERROR:Program GROMACS, VERSION 5.0.4-20191026-456f0d636-unknown
+ERROR:Source code file: /Users/buildbot/fah/osx-10.11-64bit-core-a7-avx-release/osx-10.11-64bit-core-a7-avx-release/gromacs-core/build/gromacs/src/gromacs/mdlib/pme.c, line: 754
+ERROR:
+ERROR:Fatal error:
+ERROR:1 particles communicated to PME rank 2 are more than 2/3 times the cut-off out of the domain decomposition cell of their charge group in dimension x.
+ERROR:This usually means that your system is not well equilibrated.
+ERROR:For more information and tips for troubleshooting, please check the GROMACS
+ERROR:website at http://www.gromacs.org/Documentation/Errors
+ERROR:-------------------------------------------------------
+ERROR:
+ERROR:-------------------------------------------------------
+ERROR:Program GROMACS, VERSION 5.0.4-20191026-456f0d636-unknown
+ERROR:Source code file: /Users/buildbot/fah/osx-10.11-64bit-core-a7-avx-release/osx-10.11-64bit-core-a7-avx-release/gromacs-core/build/gromacs/src/gromacs/mdlib/pme.c, line: 754
+ERROR:
+ERROR:Fatal error:
+ERROR:6 particles communicated to PME rank 3 are more than 2/3 times the cut-off out of the domain decomposition cell of their charge group in dimension x.
+ERROR:This usually means that your system is not well equilibrated.
+ERROR:For more information and tips for troubleshooting, please check the GROMACS
+ERROR:website at http://www.gromacs.org/Documentation/Errors
+ERROR:-------------------------------------------------------
+Saving result file ../logfile_01.txt

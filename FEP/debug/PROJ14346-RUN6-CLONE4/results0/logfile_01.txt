@@ -1,0 +1,155 @@
+*********************** Log Started 2020-03-18T22:15:46Z ***********************
+************************** Gromacs Folding@home Core ***************************
+       Type: 0xa7
+       Core: Gromacs
+       Args: -dir 01 -suffix 01 -version 705 -lifeline 25100 -checkpoint 15 -np
+             8
+************************************ CBang *************************************
+       Date: Nov 5 2019
+       Time: 05:57:01
+   Revision: 46c96f1aa8419571d83f3e63f9c99a0d602f6da9
+     Branch: master
+   Compiler: GNU 8.3.0
+    Options: -std=c++11 -O3 -funroll-loops -fno-pie -fPIC
+   Platform: linux2 4.19.0-5-amd64
+       Bits: 64
+       Mode: Release
+************************************ System ************************************
+        CPU: Intel(R) Core(TM) i7 CPU 920 @ 2.67GHz
+     CPU ID: GenuineIntel Family 6 Model 26 Stepping 5
+       CPUs: 8
+     Memory: 11.72GiB
+Free Memory: 287.35MiB
+    Threads: POSIX_THREADS
+ OS Version: 4.4
+Has Battery: false
+ On Battery: false
+ UTC Offset: 1
+        PID: 25104
+        CWD: /var/lib/fahclient/work
+******************************** Build - libFAH ********************************
+    Version: 0.0.18
+     Author: Joseph Coffland <joseph@cauldrondevelopment.com>
+  Copyright: 2019 foldingathome.org
+   Homepage: https://foldingathome.org/
+       Date: Nov 5 2019
+       Time: 06:13:26
+   Revision: 490c9aa2957b725af319379424d5c5cb36efb656
+     Branch: master
+   Compiler: GNU 8.3.0
+    Options: -std=c++11 -O3 -funroll-loops -fno-pie
+   Platform: linux2 4.19.0-5-amd64
+       Bits: 64
+       Mode: Release
+************************************ Build *************************************
+       SIMD: sse2
+********************************************************************************
+Project: 14346 (Run 6, Clone 4, Gen 0)
+Unit: 0x0000000025bb0c305e728beab3d36e32
+Reading tar file core.xml
+Reading tar file frame0.tpr
+Digital signatures verified
+Calling: mdrun -s frame0.tpr -o frame0.trr -cpt 15 -nt 8
+Steps: first=0 total=250000
+Completed 1 out of 250000 steps (0%)
+Completed 2500 out of 250000 steps (1%)
+Completed 5000 out of 250000 steps (2%)
+Completed 7500 out of 250000 steps (3%)
+Completed 10000 out of 250000 steps (4%)
+Completed 12500 out of 250000 steps (5%)
+Completed 15000 out of 250000 steps (6%)
+Completed 17500 out of 250000 steps (7%)
+Completed 20000 out of 250000 steps (8%)
+Completed 22500 out of 250000 steps (9%)
+Completed 25000 out of 250000 steps (10%)
+Completed 27500 out of 250000 steps (11%)
+Completed 30000 out of 250000 steps (12%)
+Completed 32500 out of 250000 steps (13%)
+Completed 35000 out of 250000 steps (14%)
+Completed 37500 out of 250000 steps (15%)
+Completed 40000 out of 250000 steps (16%)
+Completed 42500 out of 250000 steps (17%)
+Completed 45000 out of 250000 steps (18%)
+Completed 47500 out of 250000 steps (19%)
+Completed 50000 out of 250000 steps (20%)
+Completed 52500 out of 250000 steps (21%)
+Completed 55000 out of 250000 steps (22%)
+Completed 57500 out of 250000 steps (23%)
+Completed 60000 out of 250000 steps (24%)
+Completed 62500 out of 250000 steps (25%)
+Completed 65000 out of 250000 steps (26%)
+Completed 67500 out of 250000 steps (27%)
+Completed 70000 out of 250000 steps (28%)
+Completed 72500 out of 250000 steps (29%)
+Completed 75000 out of 250000 steps (30%)
+Completed 77500 out of 250000 steps (31%)
+Completed 80000 out of 250000 steps (32%)
+Completed 82500 out of 250000 steps (33%)
+Completed 85000 out of 250000 steps (34%)
+Completed 87500 out of 250000 steps (35%)
+Completed 90000 out of 250000 steps (36%)
+Completed 92500 out of 250000 steps (37%)
+Completed 95000 out of 250000 steps (38%)
+Completed 97500 out of 250000 steps (39%)
+Completed 100000 out of 250000 steps (40%)
+Completed 102500 out of 250000 steps (41%)
+Completed 105000 out of 250000 steps (42%)
+Completed 107500 out of 250000 steps (43%)
+Completed 110000 out of 250000 steps (44%)
+Completed 112500 out of 250000 steps (45%)
+Completed 115000 out of 250000 steps (46%)
+Completed 117500 out of 250000 steps (47%)
+Completed 120000 out of 250000 steps (48%)
+Completed 122500 out of 250000 steps (49%)
+Completed 125000 out of 250000 steps (50%)
+Completed 127500 out of 250000 steps (51%)
+Completed 130000 out of 250000 steps (52%)
+Completed 132500 out of 250000 steps (53%)
+Completed 135000 out of 250000 steps (54%)
+Completed 137500 out of 250000 steps (55%)
+Completed 140000 out of 250000 steps (56%)
+Completed 142500 out of 250000 steps (57%)
+Completed 145000 out of 250000 steps (58%)
+Completed 147500 out of 250000 steps (59%)
+Completed 150000 out of 250000 steps (60%)
+Completed 152500 out of 250000 steps (61%)
+Completed 155000 out of 250000 steps (62%)
+Completed 157500 out of 250000 steps (63%)
+Completed 160000 out of 250000 steps (64%)
+Completed 162500 out of 250000 steps (65%)
+Completed 165000 out of 250000 steps (66%)
+Completed 167500 out of 250000 steps (67%)
+Completed 170000 out of 250000 steps (68%)
+Completed 172500 out of 250000 steps (69%)
+Completed 175000 out of 250000 steps (70%)
+Completed 177500 out of 250000 steps (71%)
+Completed 180000 out of 250000 steps (72%)
+Completed 182500 out of 250000 steps (73%)
+Completed 185000 out of 250000 steps (74%)
+Completed 187500 out of 250000 steps (75%)
+Completed 190000 out of 250000 steps (76%)
+Completed 192500 out of 250000 steps (77%)
+Completed 195000 out of 250000 steps (78%)
+Completed 197500 out of 250000 steps (79%)
+Completed 200000 out of 250000 steps (80%)
+Completed 202500 out of 250000 steps (81%)
+Completed 205000 out of 250000 steps (82%)
+Completed 207500 out of 250000 steps (83%)
+Completed 210000 out of 250000 steps (84%)
+Completed 212500 out of 250000 steps (85%)
+Completed 215000 out of 250000 steps (86%)
+Completed 217500 out of 250000 steps (87%)
+Completed 220000 out of 250000 steps (88%)
+Completed 222500 out of 250000 steps (89%)
+Completed 225000 out of 250000 steps (90%)
+Completed 227500 out of 250000 steps (91%)
+Completed 230000 out of 250000 steps (92%)
+Completed 232500 out of 250000 steps (93%)
+Completed 235000 out of 250000 steps (94%)
+Completed 237500 out of 250000 steps (95%)
+Completed 240000 out of 250000 steps (96%)
+Completed 242500 out of 250000 steps (97%)
+Completed 245000 out of 250000 steps (98%)
+Completed 247500 out of 250000 steps (99%)
+Completed 250000 out of 250000 steps (100%)
+Saving result file ../logfile_01.txt

@@ -1,0 +1,64 @@
+# This file was created Thu Mar 19 00:33:49 2020
+# Created by:
+# GROMACS:      GROMACS, VERSION 5.0.4-20191026-456f0d636-unknown
+# GROMACS is part of G R O M A C S:
+#
+# Groningen Machine for Chemical Simulation
+#
+@    title "dH/d\xl\f{} and \xD\f{}H"
+@    xaxis  label "Time (ps)"
+@    yaxis  label "dH/d\xl\f{} and \xD\f{}H (kJ/mol [\xl\f{}]\S-1\N)"
+@TYPE xy
+@ subtitle "T = 298.15 (K) "
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "Thermodynamic state"
+@ s1 legend "Total Energy (kJ/mol)"
+@ s2 legend "dH/d\xl\f{} fep-lambda = 0.0000"
+@ s3 legend "dH/d\xl\f{} coul-lambda = 0.0000"
+@ s4 legend "dH/d\xl\f{} vdw-lambda = 0.0000"
+@ s5 legend "\xD\f{}H \xl\f{} to (0.0000, 0.0000, 0.0000)"
+@ s6 legend "\xD\f{}H \xl\f{} to (0.0000, 0.0500, 0.0000)"
+@ s7 legend "\xD\f{}H \xl\f{} to (0.0000, 0.1000, 0.0000)"
+@ s8 legend "\xD\f{}H \xl\f{} to (0.0000, 0.1500, 0.0000)"
+@ s9 legend "\xD\f{}H \xl\f{} to (0.0000, 0.2000, 0.0000)"
+@ s10 legend "\xD\f{}H \xl\f{} to (0.0000, 0.2500, 0.0000)"
+@ s11 legend "\xD\f{}H \xl\f{} to (0.0000, 0.3000, 0.0000)"
+@ s12 legend "\xD\f{}H \xl\f{} to (0.0000, 0.3500, 0.0000)"
+@ s13 legend "\xD\f{}H \xl\f{} to (0.0000, 0.4000, 0.0000)"
+@ s14 legend "\xD\f{}H \xl\f{} to (0.0000, 0.4500, 0.0000)"
+@ s15 legend "\xD\f{}H \xl\f{} to (0.0000, 0.5000, 0.0000)"
+@ s16 legend "\xD\f{}H \xl\f{} to (0.0000, 0.5500, 0.0000)"
+@ s17 legend "\xD\f{}H \xl\f{} to (0.0000, 0.6000, 0.0000)"
+@ s18 legend "\xD\f{}H \xl\f{} to (0.0000, 0.6500, 0.0000)"
+@ s19 legend "\xD\f{}H \xl\f{} to (0.0000, 0.7000, 0.0000)"
+@ s20 legend "\xD\f{}H \xl\f{} to (0.0000, 0.7500, 0.0000)"
+@ s21 legend "\xD\f{}H \xl\f{} to (0.0000, 0.8000, 0.0000)"
+@ s22 legend "\xD\f{}H \xl\f{} to (0.0000, 0.8500, 0.0000)"
+@ s23 legend "\xD\f{}H \xl\f{} to (0.0000, 0.9000, 0.0000)"
+@ s24 legend "\xD\f{}H \xl\f{} to (0.0000, 0.9500, 0.0000)"
+@ s25 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.0000)"
+@ s26 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.1000)"
+@ s27 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.2000)"
+@ s28 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.3000)"
+@ s29 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.4000)"
+@ s30 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.4500)"
+@ s31 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.5000)"
+@ s32 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.5500)"
+@ s33 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.6000)"
+@ s34 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.6300)"
+@ s35 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.6600)"
+@ s36 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.6900)"
+@ s37 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.7200)"
+@ s38 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.7500)"
+@ s39 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.7800)"
+@ s40 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.8100)"
+@ s41 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.8400)"
+@ s42 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.8800)"
+@ s43 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 0.9200)"
+@ s44 legend "\xD\f{}H \xl\f{} to (0.0000, 1.0000, 1.0000)"
+0.0000    0 -579663.62 0.0000000 125.59203 -3746181.8 0.0000000 6.2796936 12.559479 18.839181 25.119039 31.398593 37.678324 43.958061 50.237726 56.517513 62.797151 69.076890 75.354624 81.634390 87.914061 94.193773 100.47349 106.75321 113.03293 119.31264 125.59235 -29005.024 -29801.175 -30019.858 -30107.192 -30130.425 -30145.866 -30155.820 -30161.789 -30163.896 -30165.104 -30165.547 -30165.334 -30164.557 -30163.293 -30161.604 -30159.548 -30156.312 -30152.596 -30144.014
