@@ -128,7 +128,7 @@ print('current wang_landau_weights', wang_landau_weights)
 init_lambda_state = 0
 for line in chunk_lines:
     if line.count( ' <<' ) > 0:
-        init_lambda_state = int(line.split()[0]) 
+        init_lambda_state = int(line.split()[0]) + 1  # Argh!!!  the numbering started at 1!  Fixed now
 
 # Write an mdp file with the latest weights !!!
 e = expanded_ensemble_mdpfile( ligand_only=ligand_only,
