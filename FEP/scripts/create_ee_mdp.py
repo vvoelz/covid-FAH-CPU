@@ -16,6 +16,8 @@ usage = """
 EXAMPLE
 
     $ python create_ee_mdp.py RUN0/npt.gro RUN0/topol.top RUN0/index.ndx RUN0/prod.mdp
+or
+    $ python create_ee_mdp.py RUN0/npt.gro RUN0/topol.top RUN0/index.ndx RUN0/prod.mdp ligonly
 """
 
 if len(sys.argv) < 5:
