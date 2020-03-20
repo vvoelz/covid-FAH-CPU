@@ -36,6 +36,8 @@ class expanded_ensemble_mdpfile(object):
         ligand_only -   If True, then the mdp will be written WITHOUT the pull code and without
                         reference to any protein.
 
+                        The work unit will also be 10x longer
+
         [ to do -- add other options here ] 
 
         NOTES
@@ -209,27 +211,24 @@ class expanded_ensemble_mdpfile(object):
 
         self.mdp_text = ''
 
-        self.mdp_text +=  """; Run control
+        if self.ligand_only:
+            self.mdp_text +=  """; Run control
 integrator               = md-vv
 tinit                    = 0
 dt                       = 0.004
-nsteps                   = 250000       ; 1 ns
+nsteps                   = 2500000       ; 10 ns
 comm-mode                = Linear
 nstcomm                  = 1
 
 ; Output control
-nstlog                   = 250		; every 1 ps
+nstlog                   = 2500          ; every 10 ps
 nstcalcenergy            = 1
-nstenergy                = 25000        ; save edr every 100 ps
-nstxout-compressed       = 25000	; save xtc coordinates every 100 ps
-nstxout		 	 = 250000	; save coordinates every 1 ns
-nstvout			 = 250000	; save velocities every 1 ns
-compressed-x-precision	 = 1000
-"""
+nstenergy                = 250000        ; save edr every 1 ns
+nstxout-compressed       = 250000        ; save xtc coordinates every 1 ns
+nstxout                  = 2500000       ; save all coordinates every 10 ns
+nstvout                  = 2500000       ; save all velocities every 10 ns
+compressed-x-precision   = 1000
 
-
-        if self.ligand_only:
-            self.mdp_text +=  """; 
 ; This selects the subset of atoms for the .xtc file. You can
 ; select multiple groups. By default all atoms will be written.
 compressed-x-grps        = LIG
@@ -238,7 +237,23 @@ compressed-x-grps        = LIG
 energygrps               = Water non-Water
 """
         else:
-            self.mdp_text +=  """; 
+            self.mdp_text +=  """; Run control
+integrator               = md-vv
+tinit                    = 0
+dt                       = 0.004
+nsteps                   = 250000       ; 1 ns
+comm-mode                = Linear
+nstcomm                  = 1
+
+; Output control
+nstlog                   = 250          ; every 1 ps
+nstcalcenergy            = 1
+nstenergy                = 25000        ; save edr every 100 ps
+nstxout-compressed       = 25000        ; save xtc coordinates every 100 ps
+nstxout                  = 250000       ; save coordinates every 1 ns
+nstvout                  = 250000       ; save velocities every 1 ns
+compressed-x-precision   = 1000
+
 ; This selects the subset of atoms for the .xtc file. You can
 ; select multiple groups. By default all atoms will be written.
 compressed-x-grps        = Protein LIG
