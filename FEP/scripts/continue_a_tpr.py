@@ -15,7 +15,7 @@ EXAMPLE
 
     $ python continue_a_tpr.py testout/frame0.tpr testout nextout RUN0/topol.top  RUN0/index.ndx 1000  nextout/frame1.tpr
 or
-    $ python continue_a_tpr.py testout/frame0.tpr testout nextout RUN0/topol.top  RUN0/index.ndx 1000  nextout/frame1.tpr ligonly
+    $ python continue_a_tpr.py testout/frame0.tpr testout nextout RUN0/topol.top  RUN0/index.ndx 10000  nextout/frame1.tpr ligonly
 
 """
 
@@ -38,7 +38,7 @@ this_jobdir = sys.argv[3]
 
 topfile      = sys.argv[4]
 ndxfile      = sys.argv[5]
-extend_in_ps = int(sys.argv[6])   # currently no being used
+extend_in_ps = int(sys.argv[6])   # NOTE this argument is currently not being used
 this_gen_tpr = sys.argv[7]
 
 ligand_only = False
@@ -128,7 +128,7 @@ print('current wang_landau_weights', wang_landau_weights)
 init_lambda_state = 0
 for line in chunk_lines:
     if line.count( ' <<' ) > 0:
-        init_lambda_state = int(line.split()[0]) + 1  # Argh!!!  the numbering started at 1!  Fixed now
+        init_lambda_state = int(line.split()[0]) - 1  # Argh!!!  the numbering started at 1!  Fixed now
 
 # Write an mdp file with the latest weights !!!
 e = expanded_ensemble_mdpfile( ligand_only=ligand_only,
