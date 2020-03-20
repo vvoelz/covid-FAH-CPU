@@ -118,16 +118,23 @@ chunk_lines.pop(0)    #  N   FEPL    Count   G(in kT)  dG(in kT)
 print('current Wang Landau increment_in_kT', wl_increment_in_kT)
 # ... and values from the 4th column to get the latest Wang Landau weights
 
-
+# Parse the WL weights
 nlambdas = len(chunk_lines)
-## row index 5 has the WL weights                            vvv !!   
+## Using the MRS protocol, row index 5 has the WL weights    VVV   !!   
 wang_landau_weights = np.array([ float(chunk_lines[i].split()[5]) for i in range(nlambdas) ])
 print('current wang_landau_weights', wang_landau_weights)
 
+# Get the latest lambda state index
+init_lambda_state = 0
+for line in chunk_lines:
+    if line.count( ' <<' ) > 0:
+        init_lambda_state = int(line.split()[0]) 
 
 # Write an mdp file with the latest weights !!!
-e = expanded_ensemble_mdpfile(ligand_only=ligand_only, init_lambda_weights=wang_landau_weights,
-                              wl_increment_in_kT=wl_increment_in_kT)
+e = expanded_ensemble_mdpfile( ligand_only=ligand_only,
+                               init_lambda_weights=wang_landau_weights,
+                               init_lambda_state=init_lambda_state,
+                               wl_increment_in_kT=wl_increment_in_kT)
 if not os.path.exists(this_jobdir):
     os.mkdir(this_jobdir)
 this_mdpfile = os.path.join(this_jobdir, 'ee.mdp') 
