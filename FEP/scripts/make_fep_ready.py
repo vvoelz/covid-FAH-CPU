@@ -1,37 +1,49 @@
 import os, sys, glob
 import numpy as np
 
+import argparse, textwrap
 
-usage = """
-    Usage:   make_fep_ready.py [input rundir] [output rundir] ligonly
+parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+            description=textwrap.dedent('''\
 
-    use "ligonly" keyword if you are readying ligand-only simulatons
+    Process COVID-19 protease drug screening setup directories to make FEP-ready
 
-NOTES
+    NOTES
     * This should be used with an installation of GROMACS 5.0.4, as on the FAH servers!!!!
     * It assumes you have a structure `conf.gro` that represents the whole system,
       and a topology `topol.top`
 
-EXAMPLE
-    $ python make_fep_ready.py ../100_ligands/RUN1 ./RUN1
-or 
-    $ python make_fep_ready.py ../100_ligands_noreceptor/RUN1 ./RUN1 ligonly
-"""
+      use "--ligonly" ONLY if you are readying ligand-only simulatons
 
-if len(sys.argv) < 3:
-    print(usage)
-    sys.exit(1)
+    EXAMPLE
+    $ python make_fep_ready.py ../100_ligands/RUN1 ./RUN1
+or
+    $ python make_fep_ready.py ../100_ligands_noreceptor/RUN1 ./RUN1 --ligonly
+
+      ''' ))
+
+parser.add_argument('in_rundir', type=str, help='the input rundir')
+parser.add_argument('out_rundir', type=str, help='the output rundir')
+parser.add_argument('--ligonly', dest='ligand_only', action='store_true',
+                    help='Specify this is a ligand-only simulation')
+parser.add_argument('--babysteps', dest='babysteps', action='store_true',
+                    help='Use "baby steps" in the energy minimization to avoid errors')
+
+args = parser.parse_args()
+print('args.in_rundir', args.in_rundir)
+print('args.out_rundir', args.out_rundir)
+print('args.ligand_only', args.ligand_only)
+print('args.babysteps', args.babysteps)
 
 
 # parse the input arguments
-in_rundir = sys.argv[1]
-out_rundir = sys.argv[2]
+in_rundir = args.in_rundir
+out_rundir = args.out_rundir
 if not os.path.exists(out_rundir):
     os.mkdir(out_rundir)
-ligand_only = False
-if len(sys.argv) > 3:
-    if sys.argv[3].count('only') > 0:
-        ligand_only = True
+ligand_only = args.ligand_only
+babysteps = args.babysteps
 
 
 ############# convert the grofile ###############3
@@ -154,6 +166,12 @@ if not ligand_only:
 ### do a very quick minimization to make sure we're all set to run
 
 min_mdpfile = os.path.join(out_rundir, 'quickmin.mdp')
+
+if babysteps:
+    emstep = 0.006
+else:
+    emstep = 0.03
+
 mdpfile_text = """;       generated from expanded_ensemble_mdpfile() on Sat Mar 14 21:04:11 2020 
 ;
 ;
@@ -166,8 +184,8 @@ define                   =
 ; RUN CONTROL PARAMETERS
 integrator               = steep
 emtol                    = 100.0
-emstep                   = 0.03   ; was 0.05 as of 3/20/2020
-nsteps                   = 100000 ; 100000
+emstep                   = {emstep} ; was 0.05 prev to 3/20/2020
+nsteps                   = 1000 ; 100000
 
 comm-mode                = Linear
 nstcomm                  = 1
@@ -242,7 +260,8 @@ constraint-algorithm     = lincs
 lincs-order              = 4   ;12
 lincs-iter               = 1   ;2
 
-"""
+""".format(emstep=emstep)
+
 fout = open(min_mdpfile, 'w')
 fout.write(mdpfile_text)
 fout.close()
