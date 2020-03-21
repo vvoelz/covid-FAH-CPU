@@ -71,9 +71,7 @@ if not os.path.exists(outready_dir):
 if not os.path.exists(outcreate_dir):
     os.mkdir('out-create')
 
-ready_path = '/home/server/git/covid-FAH-CPU/FEP/scripts/make_fep_ready_argparse.py'
-#ready_path = '/home/server/git/covid-FAH-CPU/FEP/scripts/make_fep_ready.py'
-
+ready_path = '/home/server/git/covid-FAH-CPU/FEP/scripts/make_fep_ready.py'
 create_path = '/home/server/git/covid-FAH-CPU/FEP/scripts/create_ee_mdp.py'
 
 nruns = 95 
