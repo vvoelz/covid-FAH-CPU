@@ -166,7 +166,7 @@ define                   =
 ; RUN CONTROL PARAMETERS
 integrator               = steep
 emtol                    = 100.0
-emstep                   = 0.05
+emstep                   = 0.03   ; was 0.05 as of 3/20/2020
 nsteps                   = 100000 ; 100000
 
 comm-mode                = Linear
