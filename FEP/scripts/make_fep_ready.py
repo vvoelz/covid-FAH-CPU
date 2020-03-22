@@ -30,6 +30,7 @@ parser.add_argument('--ligonly', dest='ligand_only', action='store_true',
 parser.add_argument('--babysteps', dest='babysteps', action='store_true',
                     help='Use "baby steps" in the energy minimization to avoid errors')
 
+
 args = parser.parse_args()
 print('args.in_rundir', args.in_rundir)
 print('args.out_rundir', args.out_rundir)
@@ -168,7 +169,7 @@ if not ligand_only:
 min_mdpfile = os.path.join(out_rundir, 'quickmin.mdp')
 
 if babysteps:
-    emstep = 0.006
+    emstep = 0.003
 else:
     emstep = 0.03
 
