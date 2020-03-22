@@ -112,7 +112,10 @@ if os.path.exists(ndxfile):
     print(bkup_cmd) 
     os.system(bkup_cmd)
 
-GMX_BIN = os.environ['GMXBIN']
+try:
+    GMX_BIN = os.environ['GMXBIN']
+except:
+    GMX_BIN = '/usr/local/gromacs/bin'
 cmd = 'echo "q\\n" | {GMX_BIN}/gmx make_ndx -f {out_grofile} -o {ndxfile}'.format(GMX_BIN=GMX_BIN, out_grofile=out_grofile, ndxfile=ndxfile)
 os.system(cmd)
 
