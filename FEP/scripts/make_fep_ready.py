@@ -271,8 +271,8 @@ fout.write(mdpfile_text)
 fout.close()
 
 # run the minimization
-os.system( 'gmx grompp -c {out_grofile} -f {out_rundir}/quickmin.mdp -p {out_topfile} -n {ndxfile} -o {out_rundir}/min.tpr'.format(out_grofile=out_grofile, out_rundir=out_rundir, out_topfile=out_topfile, ndxfile=ndxfile) )
-os.system( 'gmx mdrun -v -s {out_rundir}/min.tpr -c {out_rundir}/npt.gro'.format(out_rundir=out_rundir) )
+os.system( '{GMX_BIN}/gmx grompp -c {out_grofile} -f {out_rundir}/quickmin.mdp -p {out_topfile} -n {ndxfile} -o {out_rundir}/min.tpr'.format(GMX_BIN=GMX_BIN, out_grofile=out_grofile, out_rundir=out_rundir, out_topfile=out_topfile, ndxfile=ndxfile) )
+os.system( '{GMX_BIN}/gmx mdrun -v -s {out_rundir}/min.tpr -c {out_rundir}/npt.gro'.format(GMX_BIN=GMX_BIN, out_rundir=out_rundir) )
 
 # print some commands to test the script
 testing_cmds = "### To test this project, try: ###\n"
@@ -281,16 +281,16 @@ if ligand_only:
     testing_cmds += "python ../scripts/create_ee_mdp.py {out_rundir}/npt.gro {out_topfile} {ndxfile} {out_rundir}/prod.mdp ligonly\n".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
 
     testing_cmds += """mkdir test
-gmx grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
+{GMX_BIN}/gmx grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
 cd test
-gmx mdrun -nt 1 -v -s testme.tpr""".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
+{GMX_BIN}/gmx mdrun -nt 1 -v -s testme.tpr""".format(GMX_BIN=GMX_BIN, out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
 
 else:
     testing_cmds += "python ../scripts/create_ee_mdp.py {out_rundir}/npt.gro {out_topfile} {ndxfile} {out_rundir}/prod.mdp\n".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
 
     testing_cmds += """mkdir test
-gmx grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
+{GMX_BIN}/gmx grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
 cd test
-gmx mdrun -v -s testme.tpr""".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir) 
+{GMX_BIN}/gmx mdrun -v -s testme.tpr""".format(GMX_BIN=GMX_BIN, out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir) 
 
 print(testing_cmds)
