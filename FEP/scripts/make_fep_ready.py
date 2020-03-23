@@ -65,6 +65,7 @@ fin.close()
 print('Writing to', out_grofile, '...')
 fout = open(out_grofile, 'w')
 gro_contents = gro_contents.replace('UNL', 'LIG')
+gro_contents = gro_contents.replace('UNK', 'LIG')   # the occasional topol has resname UNK
 fout.write( gro_contents )
 fout.close()
 print('...Done.')
@@ -86,7 +87,7 @@ fin.close()
 for i in range(len(top_lines)):
 
     # Change names from UNL to LIG
-    top_lines[i] = top_lines[i].replace('UNL', 'LIG')
+    top_lines[i] = top_lines[i].replace('UNL', 'LIG').replace('UNK', 'LIG')
 
     # Convert any hydrogen mass to 4.000 amu  
     ### NOTE there is no error-checking here -- to do: make this more robust 
