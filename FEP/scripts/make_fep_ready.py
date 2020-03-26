@@ -29,6 +29,8 @@ parser.add_argument('--ligonly', dest='ligand_only', action='store_true',
                     help='Specify this is a ligand-only simulation')
 parser.add_argument('--babysteps', dest='babysteps', action='store_true',
                     help='Use "baby steps" in the energy minimization to avoid errors')
+parser.add_argument('--moonshot', dest='moonshot', action='store_true',
+                    help='Specify the structure comes from a moonshot simulation.  The resnum in conf.gro is off by +2!')
 
 
 args = parser.parse_args()
@@ -45,6 +47,7 @@ if not os.path.exists(out_rundir):
     os.mkdir(out_rundir)
 ligand_only = args.ligand_only
 babysteps = args.babysteps
+moonshot = args.moonshot
 
 
 ############# convert the grofile ###############3
@@ -124,12 +127,20 @@ if not ligand_only:
 
     ## Finally, we have to select two atoms for the restraint 
 
-    ### Pick '  165MET     CA' as the atom on the protein
-    gro_lines = [ line for line in gro_contents.split('\n') if line.count('  165MET     CA') > 0 ]
-    print('gro_lines', gro_lines)
-    if len(gro_lines)  == 0:
-        print("Can't find 165MET     CA in the grofile -- what gives????  Exiting.")
-        sys.exit(1)
+    if moonshot:
+        ### Pick '  167MET     CA' as the atom on the protein
+        gro_lines = [ line for line in gro_contents.split('\n') if line.count('  165MET     CA') > 0 ]
+        print('gro_lines', gro_lines)
+        if len(gro_lines)  == 0:
+            print("Can't find 167MET     CA in the grofile -- what gives????  Exiting.")
+            sys.exit(1)
+    else:
+        ### Pick '  165MET     CA' as the atom on the protein
+        gro_lines = [ line for line in gro_contents.split('\n') if line.count('  165MET     CA') > 0 ]
+        print('gro_lines', gro_lines)
+        if len(gro_lines)  == 0:
+            print("Can't find 165MET     CA in the grofile -- what gives????  Exiting.")
+            sys.exit(1)
     protein_atomnum = int( (gro_lines[0].strip()).split()[2] )
     protein_xyz = np.array( [float(s) for s in (gro_lines[0].strip()).split()[3:]] )   # units nm
     print('protein_atomnum', protein_atomnum)
