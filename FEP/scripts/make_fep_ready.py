@@ -129,7 +129,7 @@ if not ligand_only:
 
     if moonshot:
         ### Pick '  167MET     CA' as the atom on the protein
-        gro_lines = [ line for line in gro_contents.split('\n') if line.count('  165MET     CA') > 0 ]
+        gro_lines = [ line for line in gro_contents.split('\n') if line.count('167MET     CA') > 0 ]
         print('gro_lines', gro_lines)
         if len(gro_lines)  == 0:
             print("Can't find 167MET     CA in the grofile -- what gives????  Exiting.")
