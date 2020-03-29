@@ -9,7 +9,7 @@ Some examples of FEP simulations being readied for production on FAH:
 100_ligands_noreceptor_FEPready   -- FEP-ready versions
 
 7_hits
-7_hits_FEPready
+7_hits_FEPready -- b
 ```
 
 Note: To scp these projects to FAH, you can make a compressed tarball using, e.g:
