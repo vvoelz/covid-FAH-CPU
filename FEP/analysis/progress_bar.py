@@ -2,8 +2,6 @@ import os, sys, glob
 import numpy as np
 
 import xvg_tools
-
-
 import argparse, textwrap
 
 parser = argparse.ArgumentParser(
@@ -12,7 +10,8 @@ parser = argparse.ArgumentParser(
 
     Shows progress bar of how much sampling the simulations have reached
 
-    $ python progress_bar.py  /home/server/server2/data/SVR2616698070  14601 
+    EXAMPLE
+    $ python progress_bar.py ~/server2/data/SVR2616698070 14602
 
       ''' ))
 
@@ -26,6 +25,45 @@ print('args.datadir', args.datadir)
 print('args.projnum', args.projnum)
 
 
+
+
+def project_length_in_ns(projnum):
+    """Returns a float with the project length in nanoseconds (ns)"""
+
+    w = {}
+
+    # 7 fragment hits
+    w[14346] = 1.0    # RL
+    w[14348] = 10.0   # L
+
+    #  100 ligands
+    w[14337] = 1.0    # RL
+    w[14339] = 10.0   # L
+
+    # 72 series
+    for i in range(14600, 14613):
+        w[i] = 1.0    # RL
+    for i in range(14349, 14362):
+        w[i] = 10.0   # L
+
+    # Moonshot 03-23
+    w[14363] = 1.0    # RL
+    w[14364] = 10.0   # L
+
+    # Moonshot 03-26
+    for i in range(14365, 14369):
+        w[i] = 1.0    # RL
+    for i in range(14369, 14373):
+        w[i] = 10.0   # L
+
+    # MLTN
+    w[14373] = 1.0    # RL
+    w[14374] = 10.0   # L
+
+    return w[projnum]
+
+
+
 # find the number of runs from the project.xml   file
 project_xml_file = '/home/server/server2/projects/p%d/project.xml'%args.projnum
 fin = open(project_xml_file, 'r')
@@ -34,6 +72,7 @@ for line in lines:
     if line.count('runs'):
         fields = line.split('"')
         nruns = int(fields[1])
+
 
 # Find the viable clones 
 rundirs = [ os.path.join(args.datadir, 'PROJ%d/RUN%d'%(args.projnum,run)) for run in range(0,nruns) ]
@@ -70,7 +109,7 @@ for i in range(nruns):
         resultdirs3.sort()
         resultdirs += resultdirs3
 
-        print('CLONE %04d'%clone, '*'*len(resultdirs))
+        print('CLONE %04d'%clone, '*'*((len(resultdirs)-1)*int(project_length_in_ns(args.projnum))) )  # added -1 to account for empty results dir at end
 
     #    dhdl_xvgfiles = os.path.join(clonedir
     #try:
