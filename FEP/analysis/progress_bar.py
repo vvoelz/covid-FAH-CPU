@@ -66,6 +66,9 @@ def project_length_in_ns(projnum):
 
 # find the number of runs from the project.xml   file
 project_xml_file = '/home/server/server2/projects/p%d/project.xml'%args.projnum
+if not os.path.exists(project_xml_file):
+    # ns338286 projects do not have a leading "p" .... try that
+    project_xml_file = '/home/server/server2/projects/%d/project.xml'%args.projnum
 fin = open(project_xml_file, 'r')
 lines  = fin.readlines()
 for line in lines:
