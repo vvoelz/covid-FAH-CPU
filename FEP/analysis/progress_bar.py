@@ -88,12 +88,20 @@ for i in range(nruns):
     rundir = rundirs[i]
     clonedirs = glob.glob( os.path.join(rundir, 'CLONE*') )
     clones = [ int(os.path.basename(clonedir).replace('CLONE','')) for clonedir in clonedirs]
+
+    # sort those clones!
+    Isort = np.argsort(np.array(clones))
+    clonedirs = [ clonedirs[j] for j in Isort]
+    clones = [ clones[j] for j in Isort ]
+
     run_label = 'RUN%d'%i
     #run_header = '%-8s | .....................................50|ns..................................100|ns.............................................150|ns'%run_label
     run_header = '%-8s | .....................................50|ns..................................100|ns'%run_label
     print(run_header)
 
-    # for each clone, grab the data in the dhdl.xvg and pullx.xvg in each gen
+    # for each clone, count the number of results dirs
+    #     TODO grab the data in the dhdl.xvg and pullx.xvg in each gen
+
     for j in range(len(clones)):
         clone = clones[j]
         clonedir = clonedirs[j]
