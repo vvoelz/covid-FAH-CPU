@@ -11,19 +11,37 @@ parser = argparse.ArgumentParser(
     Shows progress bar of how much sampling the simulations have reached
 
     EXAMPLE
-    $ python progress_bar.py ~/server2/data/SVR2616698070 14602
+    $ python progress_bar.py ~/server2/data/SVR2616698070 14602 -r 0,1,3-4 
 
       ''' ))
 
-parser.add_argument('datadir', type=str, help='the direcory where projdata is saved')
-parser.add_argument('projnum', type=int, help='the project number')
+parser.add_argument('datadir', type=str, help='The direcory where projdata is saved')
+parser.add_argument('projnum', type=int, help='The project number')
 #parser.add_argument('--agg', dest='agg', action='store_true',
 #                    help='Specify the structure comes from an AGG simulation.  The resnum in conf.gro is off by +1!')
+parser.add_argument('-r', action='append',
+                    dest='specific_runs',
+                    default=[],
+                    help='A string (with no spaces! e.g. 0,1,3-4) denoting a specific set of runs')
 
 args = parser.parse_args()
 print('args.datadir', args.datadir)
 print('args.projnum', args.projnum)
+print('args.specific_runs', args.specific_runs)
 
+## If the user has chosen specific runs, parse this string
+myruns = None
+if len(args.specific_runs) > 0:
+    use_specific_runs = True
+    myruns = []
+    fields = args.specific_runs[0].split(',')
+    for field in fields:
+        if field.count('-') == 0:
+            myruns.append(int(field))
+        else:
+            ends = [int(s) for s in field.split('-')]
+            myruns += list(range(ends[0],ends[1]+1)) 
+print('myruns', myruns)
 
 
 
@@ -78,13 +96,16 @@ for line in lines:
 
 
 # Find the viable clones 
-rundirs = [ os.path.join(args.datadir, 'PROJ%d/RUN%d'%(args.projnum,run)) for run in range(0,nruns) ]
+if myruns == None:
+    myruns = range(0,nruns)
+rundirs = [ os.path.join(args.datadir, 'PROJ%d/RUN%d'%(args.projnum,run)) for run in myruns ]
 
 print()
 print('PROJECT', args.projnum)
 
-for i in range(nruns):
+for i in range(len(myruns)):
 
+    run = myruns[i]
     rundir = rundirs[i]
     clonedirs = glob.glob( os.path.join(rundir, 'CLONE*') )
     clones = [ int(os.path.basename(clonedir).replace('CLONE','')) for clonedir in clonedirs]
@@ -94,7 +115,7 @@ for i in range(nruns):
     clonedirs = [ clonedirs[j] for j in Isort]
     clones = [ clones[j] for j in Isort ]
 
-    run_label = 'RUN%d'%i
+    run_label = 'RUN%d'%run
     #run_header = '%-8s | .....................................50|ns..................................100|ns.............................................150|ns'%run_label
     run_header = '%-8s | .....................................50|ns..................................100|ns'%run_label
     print(run_header)
