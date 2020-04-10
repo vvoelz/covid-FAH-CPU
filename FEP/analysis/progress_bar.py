@@ -78,6 +78,17 @@ def project_length_in_ns(projnum):
     w[14373] = 1.0    # RL
     w[14374] = 10.0   # L
 
+    # Moonshot 03-31
+    w[14375] = 1.0    # RL
+    w[14376] = 10.0   # L
+
+    # AGG
+    for i in range(14613, 14628):
+        w[i] = 1.0    # RL
+    for i in range(14630, 14644):
+        w[i] = 10.0   # L
+
+
     return w[projnum]
 
 
