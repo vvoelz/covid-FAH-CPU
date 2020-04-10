@@ -78,6 +78,13 @@ def project_length_in_ns(projnum):
     w[14373] = 1.0    # RL
     w[14374] = 10.0   # L
 
+    # AGG series
+    for i in range(14613, 14629):
+        w[i] = 1.0    # RL
+    for i in range(14630, 14644):
+        w[i] = 10.0   # L
+
+
     return w[projnum]
 
 
