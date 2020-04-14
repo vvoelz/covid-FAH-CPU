@@ -82,12 +82,30 @@ def project_length_in_ns(projnum):
     w[14375] = 1.0    # RL
     w[14376] = 10.0   # L
 
+    # Moonshot 04-06
+    w[14377] = 1.0    # RL
+    w[14378] = 10.0   # L
+
+    # Moonshot 04-06-2
+    w[14379] = 1.0    # RL
+    w[14380] = 10.0   # L
+
+    # Moonshot MSBR
+    w[14381] = 1.0    # RL
+    w[14382] = 1.0    # RL
+    w[14383] = 1.0    # RL
+    w[14384] = 10.0   # L
+    w[14385] = 10.0   # L
+    w[14386] = 10.0   # L
+
     # AGG
     for i in range(14613, 14628):
         w[i] = 1.0    # RL
     for i in range(14630, 14644):
         w[i] = 10.0   # L
 
+    # harmonic potential testing
+    w[14399] = 1.0    # RL
 
     return w[projnum]
 
