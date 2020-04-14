@@ -145,8 +145,7 @@ for i in range(len(myruns)):
     clones = [ clones[j] for j in Isort ]
 
     run_label = 'RUN%d'%run
-    #run_header = '%-8s | .....................................50|ns..................................100|ns.............................................150|ns'%run_label
-    run_header = '%-8s | .....................................50|ns..................................100|ns'%run_label
+    run_header = '%-8s | .......10|ns.......|.........|.........|.......50|ns.......|.........|.........|.........|......100|ns.......|.........|.........|.........|......150|ns'%run_label
     print(run_header)
 
     # for each clone, count the number of results dirs
