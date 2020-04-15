@@ -61,10 +61,7 @@ if (1):
     print('clones', clones) 
 
     # for each clone, grab the data in the dhdl.xvg and pullx.xvg in each gen
-    ## for j in range(len(clones)):
-    
-    # TESTING
-    for j in [0]:
+    for j in range(len(clones)):
         clone = clones[j]
         clonedir = clonedirs[j]
 
@@ -108,11 +105,11 @@ if (1):
             states     = np.concatenate( (states, more_states[1:]), axis=0 )
             energies   = np.concatenate( (energies, more_energies[1:,:]), axis=0 )
 
-        states_outfile = os.path.join(args.outdir, 'r%d-c%d.states.npy'%(run,clone))
+        states_outfile = os.path.join(args.outdir, 'r%d-c%d.states.npy'%(args.run,clone))
         np.save(states_outfile, states)
         print('Wrote:', states_outfile)
 
-        energies_outfile = os.path.join(args.outdir, 'r%d-c%d.energies.npy'%(run,clone))
+        energies_outfile = os.path.join(args.outdir, 'r%d-c%d.energies.npy'%(args.run,clone))
         np.save(energies_outfile, energies)
         print('Wrote:', energies_outfile)
 
@@ -128,7 +125,7 @@ if (1):
             times = np.concatenate( (times, more_times[1:]), axis=0)
             distances = np.concatenate( (distances, more_distances[1:]), axis=0)
 
-        distances_outfile = os.path.join(args.outdir, 'r%d-c%d.distances.npy'%(run,clone))
+        distances_outfile = os.path.join(args.outdir, 'r%d-c%d.distances.npy'%(args.run,clone))
         np.save(distances_outfile, distances)
         print('Wrote:', distances_outfile)
 
