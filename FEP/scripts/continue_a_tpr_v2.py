@@ -132,18 +132,21 @@ for line in chunk_lines:
     if line.count( ' <<' ) > 0:
         init_lambda_state = int(line.split()[0]) - 1  # Argh!!!  the numbering started at 1!  Fixed now
 
-### new in v2: get the pull_coord1_k !
+### new in v2: get the pull_coord1_k  and pull_coord1_init !
 e_from_setup = expanded_ensemble_mdpfile( ligand_only=ligand_only )
 e_from_setup.read_parms_from_mdpfile(mdpfile)
-use_this_pull_coord1_k = e_from_setup.pull_coord1_k
+use_this_pull_coord1_k    = e_from_setup.pull_coord1_k
+use_this_pull_coord1_init = e_from_setup.pull_coord1_init
 print('Will use pull_coord1_k =', use_this_pull_coord1_k)
+print('Will use pull_coord1_init =', use_this_pull_coord1_init)
 
 # Write an mdp file with the latest weights !!!
 e = expanded_ensemble_mdpfile( ligand_only=ligand_only,
                                init_lambda_weights=wang_landau_weights,
                                init_lambda_state=init_lambda_state,
                                wl_increment_in_kT=wl_increment_in_kT,
-                               pull_coord1_k = use_this_pull_coord1_k) 
+                               pull_coord1_k = use_this_pull_coord1_k,
+                               pull_coord1_init = use_this_pull_coord1_init) 
 
 if not os.path.exists(this_jobdir):
     os.mkdir(this_jobdir)

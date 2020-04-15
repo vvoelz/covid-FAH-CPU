@@ -180,6 +180,12 @@ class expanded_ensemble_mdpfile(object):
                 self.pull_coord1_k = fields[1].strip()
                 print('Setting self.pull_coord1_k -->', self.pull_coord1_k)
 
+            # pull_coord1_init
+            if line.count('pull-coord1-init') > 0:   # pull_coord1_init            = {pull_coord1_init}
+                fields = line.split('=')
+                self.pull_coord1_init = fields[1].strip()
+                print('Setting self.pull_coord1_init -->', self.pull_coord1_init)
+
             # fep_lambdas
             if line.count('fep-lambdas') > 0:   # fep-lambdas              = {fep_lambdas_string}
                 fields = line.split('=')
