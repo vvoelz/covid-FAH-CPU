@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#python scrape.py 14366 MS0326_RL_1500-3000 &
+#python scrape.py 14368 MS0326_RL_4500-5660 &
+#python scrape.py 14370 MS0326_L_1500-3000 &
+#python scrape.py 14372 MS0326_L_4500-5660 &
+
+#wait
+
+python analyze.py MS0326_1500-3000 14366
+python analyze.py MS0326_4500-5660 14368
+
+
