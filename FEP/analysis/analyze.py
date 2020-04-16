@@ -35,8 +35,8 @@ server_path = f'{hostname_paths[hostname]}/PROJ{project}'
 
 try:
     desc = re.split(r'[_-]', f'{description}')
-    data_RL_file = max(glob.glob(f'scraped_data/{desc[0]}_RL_{desc[1]}*{desc[2]}*.pkl'), key=os.path.getctime)
-    data_L_file = max(glob.glob(f'scraped_data/{desc[0]}_L_{desc[1]}*{desc[2]}*.pkl'), key=os.path.getctime)
+    data_RL_file = max(glob.glob(f'scraped_data/{desc[0]}_RL_{desc[-2]}*{desc[-1]}*.pkl'), key=os.path.getctime)
+    data_L_file = max(glob.glob(f'scraped_data/{desc[0]}_L_{desc[-2]}*{desc[-1]}*.pkl'), key=os.path.getctime)
     data_RL = pd.read_pickle(data_RL_file)
     data_L = pd.read_pickle(data_L_file)
     whole_dataset = pd.read_pickle(f'{desc[0]}.pkl') # master dataframe for dataset (ask matt if missing)
