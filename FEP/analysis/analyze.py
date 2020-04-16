@@ -195,7 +195,7 @@ for run in tqdm.tqdm(results['run'].values):
 good_results = pd.DataFrame(good_results, columns=good_results_columns)
 good_results = good_results.sort_values(by=['febkT'])
 print(good_results)
-good_results.to_pickle(f'results_{description}.pkl')
+good_results.to_pickle(f'results/{description}_{ts}.pkl')
 
 # stuff I took out of plotting
 #    results.to_pickle(f'results_{description}.pkl')
