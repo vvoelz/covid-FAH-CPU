@@ -12,7 +12,7 @@ import glob
 # Arguments
 project = sys.argv[1]                                             # Project Number
 description = sys.argv[2]                                         # Description -i.e. Ligand_Set_L/RL_start_end
-whole_dataset = pd.read_pickle(f'MS03262020_1-5660.pkl') # master dataframe for dataset (ask matt if missing) 
+whole_dataset = pd.read_pickle(f"{re.split(r'[_-]', f'{description}')[0]}.pkl")
 whole_project = whole_dataset.loc[whole_dataset['project'] == int(project)]  # extract info for project being scraped
 
 try:                                                              # This loads in the most recently scraped df if it exists 

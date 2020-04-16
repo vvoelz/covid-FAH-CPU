@@ -109,10 +109,10 @@ for run in tqdm.tqdm(runs):
             energies_RL.append([float(x) for x in raw_energies])
             clone_energies.append([run, 'RL', ns_RL[-1], wl_increment_RL[-1], energies_RL[-1]])
             # look at harmonic restraint of last gen, for each clone that fits the constraints
- #           with open(f"{server_path}/RUN{run}/CLONE{clone_RL}/results{int(gen_RL['gen'].values[0])}/pullx.xvg") as xvg:
- #               lines = [ line.strip('\n').split() for line in xvg.readlines()][20:][::10]
- #           displacements = [np.sqrt(float(line[1])**2 + float(line[2])**2 + float(line[3])**2) for line in lines]
-            pull_energies.append([]) #displacements) # only look at displacements for v1
+            with open(f"{server_path}/RUN{run}/CLONE{clone_RL}/results{int(gen_RL['gen'].values[0])}/pullx.xvg") as xvg:
+                lines = [ line.strip('\n').split() for line in xvg.readlines()][20:][::10]
+            displacements = [np.sqrt(float(line[1])**2 + float(line[2])**2 + float(line[3])**2) for line in lines]
+            pull_energies.append(displacements) # only look at displacements for v1
 #            pull_energies.append([beta*(kspring/2.0)*(displacement - equilibrium_distance)**2 for displacement in displacements])
 
         except Exception as e:
@@ -133,7 +133,7 @@ clone_energies_columns = ['run', 'type', 'length', 'wl_increment', 'energies']
 results = pd.DataFrame(data, columns=columns)
 clone_energies = pd.DataFrame(clone_energies, columns=clone_energies_columns)
 whole_project = whole_dataset.loc[whole_dataset['project'] == int(project)]
-np.save(f'pull_{description}.npy',pull_energies)
+np.save(f'results/pull_{description}.npy',pull_energies)
 
 print(f'*** Results are based on RL sampling > {RL_gen_cutoff} ns, L sampling > {L_gen_cutoff} ns, and a RL WL-increment < {wl_increment_cutoff}:')
 ### Saving Plots and Dataframe
