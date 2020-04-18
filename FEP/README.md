@@ -1,27 +1,12 @@
-## Directory contents
 
-Here are some old examples of FEP simulations being readied for production on FAH:
+Files and scripts for FEP calculations
 
 ```
-100_ligands                  -- the 100 test ligands from Tim Dudgeon, prepared OpenMM --> gmx 5.0.4 by Matt
-100_ligands_FEPready         -- FEP-ready projects 
-
-100_ligands_noreceptor       -- the 100 test ligands, alone in a small box of solvent
-100_ligands_noreceptor_FEPready   -- FEP-ready versions
-
-7_hits
-7_hits_FEPready -- b
+analysis                    -- scripts for analyzing the FAH covid FEP datal
+debug						
+HPC_cluster
+preliminary-work
+README.md
+scripts			    -- scripts that the FAH servers rely on to prepare and
+                               continue expanded-ensemble WUs. DO NOT MESS WITH THESE (unless you know what you are doing)
 ```
-
-Note: To scp these projects to FAH, you can make a compressed tarball using, e.g:
-`tar -zcvf 100_ligands_FEPready.tar.gz 100_ligands_FEPready`
-
-Also:
-
-* `example-from-tim` - the original example of fragment hit and docked compounds from Tim Dudgeon (InformaticsMatters)
-* `example_FEP` - initial noodling scripts and testing for nutlin (1MQ) - MDM2 FEP calculations.  Can we get ee to work?
-* `hits` -  prep of fragment hits from DiamondMX
-* `test_set` - prep (by Dylan?) of the 100 example compounds from Tim
-
-
-
