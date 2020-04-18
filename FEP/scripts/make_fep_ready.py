@@ -121,7 +121,19 @@ try:
     GMX_BIN = os.environ['GMXBIN']
 except:
     GMX_BIN = '/usr/local/gromacs/bin'
-cmd = 'echo "q\\n" | {GMX_BIN}/gmx make_ndx -f {out_grofile} -o {ndxfile}'.format(GMX_BIN=GMX_BIN, out_grofile=out_grofile, ndxfile=ndxfile)
+
+# Contingency for vav3/4
+gmx_path = os.path.join(GMX_BIN, 'gmx')
+
+if not os.path.exists(gmx_path):
+    GMX_BIN = '/usr/local/bin/gromacs-5.0.4/bin'
+    gmx_path = os.path.join(GMX_BIN, 'gmx') 
+
+if not os.path.exists(gmx_path):
+    print('Can\'t find gmx path!! It\'s not:', gmx_path)
+    sys.exit(1)
+
+cmd = 'echo "q\\n" | {gmx_path} make_ndx -f {out_grofile} -o {ndxfile}'.format(gmx_path=gmx_path, out_grofile=out_grofile, ndxfile=ndxfile)
 os.system(cmd)
 
 if not ligand_only:
@@ -212,7 +224,6 @@ integrator               = steep
 emtol                    = 100.0
 emstep                   = {emstep} ; was 0.05 prev to 3/20/2020
 nsteps                   = 100 ; Trying this Apr 3, 2020 VAV  100000
-
 comm-mode                = Linear
 nstcomm                  = 1
 
@@ -293,8 +304,8 @@ fout.write(mdpfile_text)
 fout.close()
 
 # run the minimization
-os.system( '{GMX_BIN}/gmx grompp -c {out_grofile} -f {out_rundir}/quickmin.mdp -p {out_topfile} -n {ndxfile} -o {out_rundir}/min.tpr'.format(GMX_BIN=GMX_BIN, out_grofile=out_grofile, out_rundir=out_rundir, out_topfile=out_topfile, ndxfile=ndxfile) )
-os.system( '{GMX_BIN}/gmx mdrun -v -s {out_rundir}/min.tpr -c {out_rundir}/npt.gro'.format(GMX_BIN=GMX_BIN, out_rundir=out_rundir) )
+os.system( '{gmx_path} grompp -c {out_grofile} -f {out_rundir}/quickmin.mdp -p {out_topfile} -n {ndxfile} -o {out_rundir}/min.tpr'.format(gmx_path=gmx_path, out_grofile=out_grofile, out_rundir=out_rundir, out_topfile=out_topfile, ndxfile=ndxfile) )
+os.system( '{gmx_path} mdrun -v -s {out_rundir}/min.tpr -c {out_rundir}/npt.gro'.format(gmx_path=gmx_path, out_rundir=out_rundir) )
 
 # print some commands to test the script
 testing_cmds = "### To test this project, try: ###\n"
@@ -303,16 +314,17 @@ if ligand_only:
     testing_cmds += "python ../scripts/create_ee_mdp.py {out_rundir}/npt.gro {out_topfile} {ndxfile} {out_rundir}/prod.mdp ligonly\n".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
 
     testing_cmds += """mkdir test
-{GMX_BIN}/gmx grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
+{gmx_path} grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
 cd test
-{GMX_BIN}/gmx mdrun -nt 1 -v -s testme.tpr""".format(GMX_BIN=GMX_BIN, out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
+{gmx_path} mdrun -nt 1 -v -s testme.tpr""".format(gmx_path=gmx_path, out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
 
 else:
     testing_cmds += "python ../scripts/create_ee_mdp.py {out_rundir}/npt.gro {out_topfile} {ndxfile} {out_rundir}/prod.mdp\n".format(out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir)
 
     testing_cmds += """mkdir test
-{GMX_BIN}/gmx grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
+{gmx_path} grompp -c {out_rundir}/npt.gro -f {out_rundir}/prod.mdp -p {out_topfile} -n {ndxfile} -o test/testme.tpr -po mdout.mdp -maxwarn 1
 cd test
-{GMX_BIN}/gmx mdrun -v -s testme.tpr""".format(GMX_BIN=GMX_BIN, out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir) 
+{gmx_path} mdrun -v -s testme.tpr""".format(gmx_path=gmx_path, out_topfile=out_topfile, ndxfile=ndxfile, out_rundir=out_rundir) 
 
 print(testing_cmds)
+

@@ -1,6 +1,7 @@
 ## Directory contents
 
-Some examples of FEP simulations being readied for production on FAH:
+Here are some old examples of FEP simulations being readied for production on FAH:
+
 ```
 100_ligands                  -- the 100 test ligands from Tim Dudgeon, prepared OpenMM --> gmx 5.0.4 by Matt
 100_ligands_FEPready         -- FEP-ready projects 
@@ -9,7 +10,7 @@ Some examples of FEP simulations being readied for production on FAH:
 100_ligands_noreceptor_FEPready   -- FEP-ready versions
 
 7_hits
-7_hits_FEPready
+7_hits_FEPready -- b
 ```
 
 Note: To scp these projects to FAH, you can make a compressed tarball using, e.g:
