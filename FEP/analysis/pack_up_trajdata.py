@@ -13,12 +13,43 @@ gmx_bin = 'gmx'
 
 ### Functions ###
 
-def run_cmd(cmd, testing=False):
+def run_cmd(cmd, testing=False, verbose=True):
     """Print and do an os.system() on the input command"""
 
-    print('>>', cmd)
+    if verbose:
+        print('>>', cmd)
     if not testing:
         subprocess.check_output(cmd, shell=True)
+
+def check_and_mkdir(dirpath, testing=False, verbose=True):
+    """Check to see of the directory exits.
+    If not, use os.mkdir() to make a new directory, with fancy verbosity."""
+
+    print('os.path.exists(dirpath)', os.path.exists(dirpath))
+
+    if not os.path.exists(dirpath):
+        print('Directory', dirpath, 'does not exist...', end='')
+        os.mkdir(dirpath)
+        print('Created directory', dirpath, '\n')
+
+
+def run_cmd_interactive(cmd, input_string, testing=False, verbose=True):
+    """Run the command and pass it an interactive input string.
+
+    NOTES
+    from https://stackoverflow.com/questions/163542/how-do-i-pass-a-string-into-subprocess-popen-using-the-stdin-argument
+
+    EXAMPLE
+    p = subprocess.Popen(['grep', 'f'], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+    grep_stdout = p.communicate(input=b'one\ntwo\nthree\nfour\nfive\nsix\n')[0]
+    print(grep_stdout.decode())
+    """
+
+    p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+    grep_stdout = p.communicate(input=input_string.encode('utf-8'))[0]
+    if verbose:
+        print(grep_stdout.decode())
+
 
 
 
@@ -81,18 +112,17 @@ parser.add_argument('--verbose', dest='verbose', action='store_true',
 
 
 args = parser.parse_args()
-print('args.setupdir', args.setupdir)
-print('args.datadir', args.datadir)
-print('args.projnum', args.projnum)
-print('args.specific_runs', args.specific_runs)
-
-
+if args.verbose:
+    print('### Input arguments parsed ###')
+    print('args.setupdir', args.setupdir)
+    print('args.datadir', args.datadir)
+    print('args.projnum', args.projnum)
+    print('args.specific_runs', args.specific_runs)
+    print('args.outdir', args.outdir)
+    print('\n')
 
 # If the output directory doesn't exist, make it
-print('args.outdir', args.outdir)
-if not os.path.exists(args.outdir):
-    os.mkdir(args.outdir)
-    print('Created outdir', args.outdir)
+check_and_mkdir(args.outdir)
 
 
 ## If the user has chosen specific runs, parse this string
@@ -107,6 +137,8 @@ if len(args.specific_runs) > 0:
         else:
             ends = [int(s) for s in field.split('-')]
             myruns += list(range(ends[0],ends[1]+1))
+    print('User has selected to pack up runs:', myruns, '\n')
+
 else:
     # find the number of runs from the project.xml   file
     project_xml_file = '/home/server/server2/projects/p%d/project.xml'%args.projnum
@@ -120,6 +152,7 @@ else:
             fields = line.split('"')
             nruns = int(fields[1])
     myruns = range(0,nruns)
+    print('Packing up all runs:', myruns, '\n') 
 
 rundirs = [ os.path.join(args.datadir, 'PROJ%d/RUN%d'%(args.projnum,run)) for run in myruns ]
 
@@ -129,16 +162,12 @@ for i in range(len(myruns)):
     rundatadir = rundirs[i]
 
     this_run_outdir = os.path.join(args.outdir, 'RUN%d'%run)
-    # If this directory doesn't exist, make it
-    print('this_run_outdir', this_run_outdir)
-    if not os.path.exists(this_run_outdir):
-        os.mkdir(this_run_outdir)
-    print('Created', this_run_outdir)
+    check_and_mkdir(this_run_outdir)
 
-    # write the *.tpr to this file
+    # write the Protein_LIG.tpr to the output directory  
     this_setup_rundir = os.path.join(args.setupdir, 'RUN%d'%run)
-    out_tprfile = os.path.join(this_run_outdir, 'Protein_LIG.tpr')
-    traj_tools.build_Protein_LIG_tpr(this_setup_rundir, out_tprfile)
+    traj_tools.build_Protein_LIG_files(this_setup_rundir, this_run_outdir)
+
 
     clonedirs = glob.glob( os.path.join(rundatadir, 'CLONE*') )
     clones = [ int(os.path.basename(clonedir).replace('CLONE','')) for clonedir in clonedirs]
@@ -179,6 +208,8 @@ for i in range(len(myruns)):
         for resultdir in resultdirs:
             print('\t',resultdir)
 
+        ###### XTC ########
+
         ### concatenate all the xtc files into one!
         out_xtcfile = os.path.join(this_run_outdir, 'c%d.xtc'%clone)
         cmd = '{gmx} trjcat -o {out_xtcfile} -f '
@@ -186,8 +217,13 @@ for i in range(len(myruns)):
             cmd += (os.path.join(resultdir,'traj_comp.xtc') + ' ')
         cmd += '-cat'
         run_cmd(cmd.format(gmx=gmx_bin, out_xtcfile=out_xtcfile))
+        # fix PBC artifacts with cluster
+        out_cluster_xtcfile = os.path.join(this_run_outdir, 'c%d.cluster.xtc'%clone)
+        tprfile = os.path.join(this_run_outdir, 'Protein_LIG.tpr')
+        cmd = '{gmx} trjconv -s {tprfile} -o {out_cluster_xtcfile} -f {out_xtcfile} -pbc cluster'.format(
+                gmx=gmx_bin, tprfile=tprfile, out_cluster_xtcfile=out_cluster_xtcfile, out_xtcfile=out_xtcfile)
+        run_cmd_interactive(cmd, "0\n0\n")
 
-        # gmx trjconv -s ../../../PROJ14366-RUN762-setup/Protein_LIG.tpr -o all_cluster.xtc -f all.xtc -pbc cluster
 
         ### Scrape and collect all the dhdl energies!
         for resultdir in resultdirs[0:1]:
@@ -199,7 +235,8 @@ for i in range(len(myruns)):
                 print('\tstates', states)
                 print('\tenergies.shape', energies.shape)
                 print('\tenergies', energies)
-            
+        
+        ###### ENERGIES ######
 
         for resultdir in resultdirs[1:]: 
             dhdl_xvgfile =  os.path.join(resultdir, 'dhdl.xvg')
@@ -232,6 +269,9 @@ for i in range(len(myruns)):
         np.save(distances_outfile, distances)
         print('Wrote:', distances_outfile)
 
+### Cleanup
+
+os.system('rm -f ./#mdout*')
 
 
 
