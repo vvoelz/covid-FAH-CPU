@@ -1,6 +1,6 @@
 ## Directory contents
 
-Here are some examples of FEP simulations being readied for production on FAH:
+Here are some old examples of FEP simulations being readied for production on FAH:
 
 ```
 100_ligands                  -- the 100 test ligands from Tim Dudgeon, prepared OpenMM --> gmx 5.0.4 by Matt
