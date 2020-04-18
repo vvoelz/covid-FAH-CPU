@@ -9,21 +9,27 @@ import subprocess
 
 ######## Functions #############
 
-def run_cmd(cmd, testing=False):
+def run_cmd(cmd, testing=False, verbose=True):
     """Print and do an os.system() on the input command"""
 
-    print('>>', cmd)
+    if verbose:
+        print('>>', cmd)
     if not testing:
         subprocess.check_output(cmd, shell=True)
 
 
-def build_Protein_LIG_tpr(setup_rundir, out_tprfile, version='v1', gmx_bin='gmx', verbose=False):
+def build_Protein_LIG_files(setup_rundir, outdir, version='v1', gmx_bin='gmx', verbose=False):
     """Builds a Protein_LIG only tpr for the purpose of looking at trajectories
     in Chimera, PBC transformations, etc.
     
     INPUT
     setup_rundir - a setup RUN directory like /home/server/server2/projects/p14399/RUN0/
-    out_tprfile  - filename to write the tpr file
+    outdir       - a directory pathname to write the following:
+
+                   Protein_LIG.tpr
+                   Protein_LIG.ndx
+                   Protein_LIG.gro
+                   Protein_LIG.mdp  <-- dummy miniminzation mdp need to build the tpr
 
     PARAMETERS
     version      - 'v1' for the original FEP mdps, 'v2' for the _v2 protocol, etc. (Default: 'v1')
@@ -48,8 +54,9 @@ def build_Protein_LIG_tpr(setup_rundir, out_tprfile, version='v1', gmx_bin='gmx'
     print('index_Protein', index_Protein, 'index_LIG', index_LIG)
 
     # make a new atom group that is the union of Protein nd LIG
-    out_ndxfile = os.path.join(setup_rundir, 'Protein_LIG.ndx')
-    cmd = 'echo -e "{index_Protein}|{index_LIG}\nq\n" | {gmx} make_ndx -n {ndxfile} -o {out_ndxfile}'.format(index_Protein=str(index_Protein), index_LIG=str(index_LIG),
+    out_ndxfile = os.path.join(outdir, 'Protein_LIG.ndx')
+    cmd = 'echo -e "{index_Protein}|{index_LIG}\nq\n" | {gmx} make_ndx -n {ndxfile} -o {out_ndxfile}'.format(
+                    index_Protein=str(index_Protein), index_LIG=str(index_LIG),
                     gmx=gmx_bin, ndxfile=ndxfile, out_ndxfile=out_ndxfile)
     run_cmd(cmd)
 
@@ -60,8 +67,9 @@ def build_Protein_LIG_tpr(setup_rundir, out_tprfile, version='v1', gmx_bin='gmx'
 
     ### Next let's build a Protein_LIG.gro from the setup npt.gro
     grofile = os.path.join(setup_rundir, 'npt.gro')
-    out_grofile = os.path.join(setup_rundir, 'Protein_LIG.gro')
-    cmd = 'echo -e "{index_Protein_LIG}\n" | {gmx} editconf -f {grofile} -n {out_ndxfile} -o {out_grofile}'.format(index_Protein_LIG=str(index_Protein_LIG),
+    out_grofile = os.path.join(outdir, 'Protein_LIG.gro')
+    cmd = 'echo -e "{index_Protein_LIG}\n" | {gmx} editconf -f {grofile} -n {out_ndxfile} -o {out_grofile}'.format(
+                                 index_Protein_LIG=str(index_Protein_LIG),
                                  gmx=gmx_bin, out_ndxfile=out_ndxfile, grofile=grofile, out_grofile=out_grofile)
     run_cmd(cmd)
 
@@ -88,7 +96,7 @@ CL                  31
     while (toplines[-1].count('CL') + toplines[-1].count('NA') + toplines[-1].count('HOH') ) > 0:
         toplines.pop()
 
-    out_topfile = topfile = os.path.join(setup_rundir, 'Protein_LIG.top')
+    out_topfile = os.path.join(outdir, 'Protein_LIG.top')
     fout = open(topfile, 'w')
     fout.writelines(toplines)
     fout.close()
@@ -190,7 +198,7 @@ lincs-iter               = 1   ;2
 
 
     # Grompp this topfile to get a *.tpr -- needed for Chimera; PDB transformations etc!
-    out_tprfile = os.path.join(setup_rundir, 'Protein_LIG.tpr')
+    out_tprfile = os.path.join(outdir, 'Protein_LIG.tpr')
     cmd = '{gmx} grompp -f {mdpfile} -c {out_grofile} -p {out_topfile} -o {out_tprfile}'.format(
                     gmx=gmx_bin, mdpfile=mdpfile, out_grofile=out_grofile, out_topfile=out_topfile, out_tprfile=out_tprfile)
     run_cmd(cmd)
@@ -221,6 +229,7 @@ def get_ndx_group_index(ndxfile, index_strings):
     index_lines = [ line.strip() for line in fin.readlines() if line.count('[') > 0 ]
     fin.close()
 
+    print('ndxfile', ndxfile)
     print('index_strings', index_strings)
     print('index_lines', index_lines)
 
@@ -244,4 +253,4 @@ if __name__ == "__main__":
     #import doctest
     #doctest.testmod()
 
-    build_Protein_LIG_tpr('/home/server/server2/projects/p14399/RUN0')
+    build_Protein_LIG_files('/home/server/server2/projects/p14399/RUN0', './p14399-trajdata')
