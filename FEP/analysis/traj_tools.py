@@ -108,9 +108,9 @@ def build_Protein_LIG_files(setup_rundir, outdir, version='v1', gmx_bin='gmx', v
     ### Next let's build a Protein_LIG.gro from the setup npt.gro
     grofile = os.path.join(setup_rundir, 'npt.gro')
     out_grofile = os.path.join(outdir, 'Protein_LIG.gro')
-    cmd = '{gmx} editconf -f {grofile} -n {out_ndxfile} -o {out_grofile}'.format(
+    cmd = '{gmx} editconf -f {grofile} -n {out_ndxfile} -o {out_grofile} -c'.format(
                                  gmx=gmx_bin, out_ndxfile=out_ndxfile, grofile=grofile, out_grofile=out_grofile)
-    input_string = "{index_Protein_LIG}\n".format(index_Protein_LIG=str(index_Protein_LIG))
+    input_string = "{index_Protein_LIG}\n{index_Protein_LIG}\n".format(index_Protein_LIG=str(index_Protein_LIG))
     run_cmd_interactive(cmd, input_string)
 
     ### Next, we create a topology file that only contains Protein and LIG
