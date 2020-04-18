@@ -211,7 +211,7 @@ define                   =
 integrator               = steep
 emtol                    = 100.0
 emstep                   = {emstep} ; was 0.05 prev to 3/20/2020
-nsteps                   = 1000 ; 100000
+nsteps                   = 100 ; Trying this Apr 3, 2020 VAV  100000
 
 comm-mode                = Linear
 nstcomm                  = 1
