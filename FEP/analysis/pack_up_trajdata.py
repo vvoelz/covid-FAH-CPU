@@ -3,8 +3,27 @@ import numpy as np
 
 import xvg_tools
 import traj_tools
+import subprocess
 
 import argparse, textwrap
+
+
+global gmx_bin
+gmx_bin = 'gmx'
+
+### Functions ###
+
+def run_cmd(cmd, testing=False):
+    """Print and do an os.system() on the input command"""
+
+    print('>>', cmd)
+    if not testing:
+        subprocess.check_output(cmd, shell=True)
+
+
+
+
+### Main ####
 
 parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -43,10 +62,11 @@ parser = argparse.ArgumentParser(
     ...
 
     EXAMPLE
-    $ python pack_up_trajdata.py ~/server2/data/SVR2616698070 14602 -r 0,1,3-4  outdir
+    $ python pack_up_trajdata.py /home/server/server2/projects/p14399 ~/server2/data/SVR2616698070 14399 -r 0,1,3-4 p14399-trajdata
 
       ''' ))
 
+parser.add_argument('setupdir', type=str, help='The setup directory for this project, e.g. ~/server2/projects/p14399')
 parser.add_argument('datadir', type=str, help='The direcory where projdata is saved')
 parser.add_argument('projnum', type=int, help='The project number')
 #parser.add_argument('--agg', dest='agg', action='store_true',
@@ -61,6 +81,7 @@ parser.add_argument('--verbose', dest='verbose', action='store_true',
 
 
 args = parser.parse_args()
+print('args.setupdir', args.setupdir)
 print('args.datadir', args.datadir)
 print('args.projnum', args.projnum)
 print('args.specific_runs', args.specific_runs)
@@ -105,14 +126,19 @@ rundirs = [ os.path.join(args.datadir, 'PROJ%d/RUN%d'%(args.projnum,run)) for ru
 for i in range(len(myruns)):
 
     run = myruns[i]
-    rundatadir = rundirs[run]
+    rundatadir = rundirs[i]
 
     this_run_outdir = os.path.join(args.outdir, 'RUN%d'%run)
     # If this directory doesn't exist, make it
     print('this_run_outdir', this_run_outdir)
-    if not os.path.exists(this_run_outdir)
+    if not os.path.exists(this_run_outdir):
         os.mkdir(this_run_outdir)
     print('Created', this_run_outdir)
+
+    # write the *.tpr to this file
+    this_setup_rundir = os.path.join(args.setupdir, 'RUN%d'%run)
+    out_tprfile = os.path.join(this_run_outdir, 'Protein_LIG.tpr')
+    traj_tools.build_Protein_LIG_tpr(this_setup_rundir, out_tprfile)
 
     clonedirs = glob.glob( os.path.join(rundatadir, 'CLONE*') )
     clones = [ int(os.path.basename(clonedir).replace('CLONE','')) for clonedir in clonedirs]
@@ -146,12 +172,22 @@ for i in range(len(myruns)):
         resultdirs.pop() 
 
         # If --lastgenonly, only look at the last resultsdir
-        if args.lastgenonly:
-            resultdirs = [resultdirs[-1]]
+        #if args.lastgenonly:
+        #    resultdirs = [resultdirs[-1]]
 
         print('resultdirs')
         for resultdir in resultdirs:
             print('\t',resultdir)
+
+        ### concatenate all the xtc files into one!
+        out_xtcfile = os.path.join(this_run_outdir, 'c%d.xtc'%clone)
+        cmd = '{gmx} trjcat -o {out_xtcfile} -f '
+        for resultdir in resultdirs:
+            cmd += (os.path.join(resultdir,'traj_comp.xtc') + ' ')
+        cmd += '-cat'
+        run_cmd(cmd.format(gmx=gmx_bin, out_xtcfile=out_xtcfile))
+
+        # gmx trjconv -s ../../../PROJ14366-RUN762-setup/Protein_LIG.tpr -o all_cluster.xtc -f all.xtc -pbc cluster
 
         ### Scrape and collect all the dhdl energies!
         for resultdir in resultdirs[0:1]:
@@ -172,11 +208,11 @@ for i in range(len(myruns)):
             states     = np.concatenate( (states, more_states[1:]), axis=0 )
             energies   = np.concatenate( (energies, more_energies[1:,:]), axis=0 )
 
-        states_outfile = os.path.join(args.outdir, 'r%d-c%d.states.npy'%(args.run,clone))
+        states_outfile = os.path.join(this_run_outdir, 'c%d.states.npy'%clone)
         np.save(states_outfile, states)
         print('Wrote:', states_outfile)
 
-        energies_outfile = os.path.join(args.outdir, 'r%d-c%d.energies.npy'%(args.run,clone))
+        energies_outfile = os.path.join(this_run_outdir, 'c%d.energies.npy'%clone)
         np.save(energies_outfile, energies)
         print('Wrote:', energies_outfile)
 
@@ -192,20 +228,10 @@ for i in range(len(myruns)):
             times = np.concatenate( (times, more_times[1:]), axis=0)
             distances = np.concatenate( (distances, more_distances[1:]), axis=0)
 
-        distances_outfile = os.path.join(args.outdir, 'r%d-c%d.distances.npy'%(args.run,clone))
+        distances_outfile = os.path.join(this_run_outdir, 'c%d.distances.npy'%clone)
         np.save(distances_outfile, distances)
         print('Wrote:', distances_outfile)
 
-"""
-[ Restraint-Distance ]
-      2527 5408
-"""
-
-
-    #    dhdl_xvgfiles = os.path.join(clonedir
-    #try:
-        
-    
 
 
 

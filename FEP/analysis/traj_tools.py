@@ -48,21 +48,21 @@ def build_Protein_LIG_tpr(setup_rundir, out_tprfile, version='v1', gmx_bin='gmx'
     print('index_Protein', index_Protein, 'index_LIG', index_LIG)
 
     # make a new atom group that is the union of Protein nd LIG
-    out_ndxfile = ndxfile = os.path.join(setup_rundir, 'Protein_LIG.ndx')
+    out_ndxfile = os.path.join(setup_rundir, 'Protein_LIG.ndx')
     cmd = 'echo -e "{index_Protein}|{index_LIG}\nq\n" | {gmx} make_ndx -n {ndxfile} -o {out_ndxfile}'.format(index_Protein=str(index_Protein), index_LIG=str(index_LIG),
                     gmx=gmx_bin, ndxfile=ndxfile, out_ndxfile=out_ndxfile)
     run_cmd(cmd)
 
     # if successful, the above command should make a new atomgroup called Protein_LIG,
     # ... for which we need to find the index
-    index_Protein_LIG = get_ndx_group_index(ndxfile, 'Protein_LIG')
+    index_Protein_LIG = get_ndx_group_index(out_ndxfile, 'Protein_LIG')
     print('index_Protein_LIG', index_Protein_LIG)
 
     ### Next let's build a Protein_LIG.gro from the setup npt.gro
     grofile = os.path.join(setup_rundir, 'npt.gro')
     out_grofile = os.path.join(setup_rundir, 'Protein_LIG.gro')
-    cmd = 'echo -e "{index_Protein_LIG}\n" | {gmx} editconf -f {grofile} -n {ndxfile} -o {out_grofile}'.format(index_Protein_LIG=str(index_Protein_LIG),
-                                 gmx=gmx_bin, ndxfile=ndxfile, grofile=grofile, out_grofile=out_grofile)
+    cmd = 'echo -e "{index_Protein_LIG}\n" | {gmx} editconf -f {grofile} -n {out_ndxfile} -o {out_grofile}'.format(index_Protein_LIG=str(index_Protein_LIG),
+                                 gmx=gmx_bin, out_ndxfile=out_ndxfile, grofile=grofile, out_grofile=out_grofile)
     run_cmd(cmd)
 
     ### Next, we create a topology file that only contains Protein and LIG
