@@ -1,0 +1,171 @@
+CC(CN)(Cc1cccnc1)c1ccccc1
+ OpenBabel03122003513D
+
+ 17 18  0  0  0  0  0  0  0  0999 V2000
+   10.0124    2.0889   21.5854 C   0  0  0  0  0  0  0  0  0  0  0  0
+   10.5148    2.4713   23.0027 C   0  0  1  0  0  0  0  0  0  0  0  0
+    9.3175    3.1668   23.7647 C   0  0  0  0  0  0  0  0  0  0  0  0
+    8.8567    4.4363   23.1969 N   0  0  0  0  0  0  0  0  0  0  0  0
+   10.8739    1.1702   23.8035 C   0  0  0  0  0  0  0  0  0  0  0  0
+   11.8396    0.1714   23.1981 C   0  0  0  0  0  0  0  0  0  0  0  0
+   13.2107    0.4548   23.1244 C   0  0  0  0  0  0  0  0  0  0  0  0
+   14.0826   -0.4477   22.5116 C   0  0  0  0  0  0  0  0  0  0  0  0
+   13.5735   -1.6223   21.9906 C   0  0  0  0  0  0  0  0  0  0  0  0
+   12.2592   -1.8705   22.0596 N   0  0  0  0  0  0  0  0  0  0  0  0
+   11.3898   -1.0142   22.6248 C   0  0  0  0  0  0  0  0  0  0  0  0
+   11.7143    3.4593   22.9227 C   0  0  0  0  0  0  0  0  0  0  0  0
+   12.4406    3.6393   21.7277 C   0  0  0  0  0  0  0  0  0  0  0  0
+   13.5779    4.4532   21.6725 C   0  0  0  0  0  0  0  0  0  0  0  0
+   14.0001    5.1435   22.8005 C   0  0  0  0  0  0  0  0  0  0  0  0
+   13.2813    5.0235   23.9832 C   0  0  0  0  0  0  0  0  0  0  0  0
+   12.1578    4.1895   24.0451 C   0  0  0  0  0  0  0  0  0  0  0  0
+  2  1  1  6  0  0  0
+  2  3  1  0  0  0  0
+  2  5  1  0  0  0  0
+  2 12  1  0  0  0  0
+  3  4  1  0  0  0  0
+  5  6  1  0  0  0  0
+  6  7  2  0  0  0  0
+  6 11  1  0  0  0  0
+  7  8  1  0  0  0  0
+  8  9  2  0  0  0  0
+  9 10  1  0  0  0  0
+ 10 11  2  0  0  0  0
+ 12 13  2  0  0  0  0
+ 12 17  1  0  0  0  0
+ 13 14  1  0  0  0  0
+ 14 15  2  0  0  0  0
+ 15 16  1  0  0  0  0
+ 16 17  2  0  0  0  0
+M  END
+>  <CHROM.1>
+-64.21513149,53.83609265,-16.52484456,72.92746616,11.90891127,2.04853695
+22.81719732,1.73983168,0.12245837,0.09896950
+
+>  <Name>
+CC(CN)(Cc1cccnc1)c1ccccc1
+
+>  <RI>
+0
+
+>  <Rbt.Current_Directory>
+/home/gse84885/github/im/docking-validation/targets/mpro/expts/jackall/work/Mpro-x0072_0/work/93/848a7cb03c280e1437794b5475ce27
+
+>  <Rbt.Executable>
+rbdock ($Id: //depot/dev/client3/rdock/2013.1/src/exe/rbdock.cxx#4 $)
+
+>  <Rbt.Library>
+libRbt.so (2013.1, Build901 2013/11/27)
+
+>  <Rbt.Parameter_File>
+/rDock_2013.1/data/scripts/dock.prm
+
+>  <Rbt.Receptor>
+docking-global.prm
+
+>  <SCORE>
+-9.78131
+
+>  <SCORE.INTER>
+-9.62791
+
+>  <SCORE.INTER.CONST>
+1
+
+>  <SCORE.INTER.POLAR>
+0
+
+>  <SCORE.INTER.REPUL>
+0
+
+>  <SCORE.INTER.ROT>
+4
+
+>  <SCORE.INTER.VDW>
+-19.0279
+
+>  <SCORE.INTER.norm>
+-0.566348
+
+>  <SCORE.INTRA>
+-0.153403
+
+>  <SCORE.INTRA.DIHEDRAL>
+0.385655
+
+>  <SCORE.INTRA.DIHEDRAL.0>
+1.43234
+
+>  <SCORE.INTRA.POLAR>
+0
+
+>  <SCORE.INTRA.POLAR.0>
+0
+
+>  <SCORE.INTRA.REPUL>
+0
+
+>  <SCORE.INTRA.REPUL.0>
+0
+
+>  <SCORE.INTRA.VDW>
+-0.34623
+
+>  <SCORE.INTRA.VDW.0>
+0.205271
+
+>  <SCORE.INTRA.norm>
+-0.00902369
+
+>  <SCORE.RESTR>
+0
+
+>  <SCORE.RESTR.CAVITY>
+0
+
+>  <SCORE.RESTR.norm>
+0
+
+>  <SCORE.SYSTEM>
+0
+
+>  <SCORE.SYSTEM.CONST>
+0
+
+>  <SCORE.SYSTEM.DIHEDRAL>
+0
+
+>  <SCORE.SYSTEM.norm>
+0
+
+>  <SCORE.heavy>
+17
+
+>  <SCORE.norm>
+-0.575371
+
+>  <XChemDeepScore>
+0.977608
+
+>  <SuCOS_Max_Score>
+0.45647179950185857
+
+>  <SuCOS_Max_FeatureMap_Score>
+0.21528535648111105
+
+>  <SuCOS_Max_Protrude_Score>
+0.69765824252260611
+
+>  <SuCOS_Max_Index>
+2
+
+>  <SuCOS_Cum_Score>
+2.1526129821422058
+
+>  <SuCOS_Cum_FeatureMap_Score>
+0.72201817407381796
+
+>  <SuCOS_Cum_Protrude_Score>
+3.5832077902105932
+
+$$$$

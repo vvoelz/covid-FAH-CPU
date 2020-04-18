@@ -1,0 +1,180 @@
+NC(CCCOCc1ccccc1)CCc1ccncc1
+ OpenBabel03122003513D
+
+ 21 22  0  0  0  0  0  0  0  0999 V2000
+   13.9503    0.0120   23.4406 N   0  0  0  0  0  0  0  0  0  0  0  0
+   12.9281    0.8524   22.8208 C   0  0  1  0  0  0  0  0  0  0  0  0
+   11.5593    0.1571   22.7922 C   0  0  0  0  0  0  0  0  0  0  0  0
+   11.5739   -1.1981   22.0924 C   0  0  0  0  0  0  0  0  0  0  0  0
+   10.1724   -1.7827   22.0551 C   0  0  0  0  0  0  0  0  0  0  0  0
+    9.4097   -1.0290   21.1250 O   0  0  0  0  0  0  0  0  0  0  0  0
+    8.0473   -1.4462   21.1307 C   0  0  0  0  0  0  0  0  0  0  0  0
+    7.3026   -0.8410   19.9728 C   0  0  0  0  0  0  0  0  0  0  0  0
+    7.9399    0.1276   19.1862 C   0  0  0  0  0  0  0  0  0  0  0  0
+    7.2827    0.7026   18.1035 C   0  0  0  0  0  0  0  0  0  0  0  0
+    5.9860    0.3051   17.7799 C   0  0  0  0  0  0  0  0  0  0  0  0
+    5.3513   -0.6725   18.5411 C   0  0  0  0  0  0  0  0  0  0  0  0
+    6.0073   -1.2521   19.6292 C   0  0  0  0  0  0  0  0  0  0  0  0
+   12.8304    2.1619   23.6193 C   0  0  0  0  0  0  0  0  0  0  0  0
+   12.1192    3.2709   22.8394 C   0  0  0  0  0  0  0  0  0  0  0  0
+   11.9269    4.5073   23.6828 C   0  0  0  0  0  0  0  0  0  0  0  0
+   10.6554    5.0628   23.8523 C   0  0  0  0  0  0  0  0  0  0  0  0
+   10.5055    6.1781   24.6664 C   0  0  0  0  0  0  0  0  0  0  0  0
+   11.5765    6.7117   25.2737 N   0  0  0  0  0  0  0  0  0  0  0  0
+   12.8157    6.2204   25.1121 C   0  0  0  0  0  0  0  0  0  0  0  0
+   13.0210    5.1117   24.3044 C   0  0  0  0  0  0  0  0  0  0  0  0
+  2  1  1  1  0  0  0
+  2  3  1  0  0  0  0
+  2 14  1  0  0  0  0
+  3  4  1  0  0  0  0
+  4  5  1  0  0  0  0
+  5  6  1  0  0  0  0
+  6  7  1  0  0  0  0
+  7  8  1  0  0  0  0
+  8  9  2  0  0  0  0
+  8 13  1  0  0  0  0
+  9 10  1  0  0  0  0
+ 10 11  2  0  0  0  0
+ 11 12  1  0  0  0  0
+ 12 13  2  0  0  0  0
+ 14 15  1  0  0  0  0
+ 15 16  1  0  0  0  0
+ 16 17  2  0  0  0  0
+ 16 21  1  0  0  0  0
+ 17 18  1  0  0  0  0
+ 18 19  2  0  0  0  0
+ 19 20  1  0  0  0  0
+ 20 21  2  0  0  0  0
+M  END
+>  <CHROM.1>
+-56.24746901,162.68662974,-177.42815132,71.58699242,-174.62776332,-169.11778784
+-7.80889058,175.02666980,-125.19741650,10.17488514,1.53251404,22.01842932
+-0.83990611,0.55657776,-2.85328420
+
+>  <Name>
+NC(CCCOCc1ccccc1)CCc1ccncc1
+
+>  <RI>
+0
+
+>  <Rbt.Current_Directory>
+/home/gse84885/github/im/docking-validation/targets/mpro/expts/jackall/work/Mpro-x0072_0/work/02/8551378c8ae56971d85b652a28554d
+
+>  <Rbt.Executable>
+rbdock ($Id: //depot/dev/client3/rdock/2013.1/src/exe/rbdock.cxx#4 $)
+
+>  <Rbt.Library>
+libRbt.so (2013.1, Build901 2013/11/27)
+
+>  <Rbt.Parameter_File>
+/rDock_2013.1/data/scripts/dock.prm
+
+>  <Rbt.Receptor>
+docking-global.prm
+
+>  <SCORE>
+-8.71784
+
+>  <SCORE.INTER>
+-10.9219
+
+>  <SCORE.INTER.CONST>
+1
+
+>  <SCORE.INTER.POLAR>
+0
+
+>  <SCORE.INTER.REPUL>
+0
+
+>  <SCORE.INTER.ROT>
+9
+
+>  <SCORE.INTER.VDW>
+-25.3219
+
+>  <SCORE.INTER.norm>
+-0.520092
+
+>  <SCORE.INTRA>
+2.20409
+
+>  <SCORE.INTRA.DIHEDRAL>
+2.40883
+
+>  <SCORE.INTRA.DIHEDRAL.0>
+1.51144
+
+>  <SCORE.INTRA.POLAR>
+0
+
+>  <SCORE.INTRA.POLAR.0>
+0
+
+>  <SCORE.INTRA.REPUL>
+0
+
+>  <SCORE.INTRA.REPUL.0>
+0
+
+>  <SCORE.INTRA.VDW>
+0.999673
+
+>  <SCORE.INTRA.VDW.0>
+-1.18663
+
+>  <SCORE.INTRA.norm>
+0.104957
+
+>  <SCORE.RESTR>
+0
+
+>  <SCORE.RESTR.CAVITY>
+0
+
+>  <SCORE.RESTR.norm>
+0
+
+>  <SCORE.SYSTEM>
+0
+
+>  <SCORE.SYSTEM.CONST>
+0
+
+>  <SCORE.SYSTEM.DIHEDRAL>
+0
+
+>  <SCORE.SYSTEM.norm>
+0
+
+>  <SCORE.heavy>
+21
+
+>  <SCORE.norm>
+-0.415135
+
+>  <XChemDeepScore>
+0.969507
+
+>  <SuCOS_Max_Score>
+0.40224136970058433
+
+>  <SuCOS_Max_FeatureMap_Score>
+0.20477205537554352
+
+>  <SuCOS_Max_Protrude_Score>
+0.59971068402562511
+
+>  <SuCOS_Max_Index>
+1
+
+>  <SuCOS_Cum_Score>
+2.2846292610688597
+
+>  <SuCOS_Cum_FeatureMap_Score>
+0.79268909206534344
+
+>  <SuCOS_Cum_Protrude_Score>
+3.7765694300723758
+
+$$$$

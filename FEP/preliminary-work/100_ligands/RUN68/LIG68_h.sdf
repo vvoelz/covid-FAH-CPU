@@ -1,0 +1,184 @@
+O=NN(CC(=O)O)Cc1ccccc1
+ OpenBabel03122003533D
+
+ 24 24  0  0  0  0  0  0  0  0999 V2000
+   14.3346    0.4882   22.9193 O   0  0  0  0  0  0  0  0  0  0  0  0
+   13.3995    0.6245   23.7181 N   0  0  0  0  0  0  0  0  0  0  0  0
+   12.2498    0.6979   23.0828 N   0  0  0  0  0  0  0  0  0  0  0  0
+   11.4199   -0.5237   23.2420 C   0  0  0  0  0  0  0  0  0  0  0  0
+   11.7618   -1.6244   22.2092 C   0  0  0  0  0  0  0  0  0  0  0  0
+   10.7786   -2.2320   21.6976 O   0  0  0  0  0  0  0  0  0  0  0  0
+   13.0031   -1.8286   22.0354 O   0  0  0  0  0  0  0  0  0  0  0  0
+   11.4893    1.9383   23.3242 C   0  0  0  0  0  0  0  0  0  0  0  0
+   12.2580    3.2115   23.0047 C   0  0  0  0  0  0  0  0  0  0  0  0
+   12.8474    3.9628   24.0319 C   0  0  0  0  0  0  0  0  0  0  0  0
+   13.6709    5.0506   23.7312 C   0  0  0  0  0  0  0  0  0  0  0  0
+   13.9039    5.4100   22.4022 C   0  0  0  0  0  0  0  0  0  0  0  0
+   13.2980    4.6906   21.3745 C   0  0  0  0  0  0  0  0  0  0  0  0
+   12.4794    3.5984   21.6727 C   0  0  0  0  0  0  0  0  0  0  0  0
+   10.3908   -0.2546   23.1258 H   0  0  0  0  0  0  0  0  0  0  0  0
+   11.6204   -0.9230   24.2143 H   0  0  0  0  0  0  0  0  0  0  0  0
+   13.6324   -1.2977   22.4827 H   0  0  0  0  0  0  0  0  0  0  0  0
+   11.2094    1.9651   24.3566 H   0  0  0  0  0  0  0  0  0  0  0  0
+   10.6452    1.9150   22.6671 H   0  0  0  0  0  0  0  0  0  0  0  0
+   12.6715    3.7103   25.0170 H   0  0  0  0  0  0  0  0  0  0  0  0
+   14.1086    5.5905   24.4941 H   0  0  0  0  0  0  0  0  0  0  0  0
+   14.5229    6.2059   22.1820 H   0  0  0  0  0  0  0  0  0  0  0  0
+   13.4540    4.9647   20.3919 H   0  0  0  0  0  0  0  0  0  0  0  0
+   12.0329    3.0705   20.9065 H   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  2  0  0  0  0
+  2  3  1  0  0  0  0
+  3  4  1  0  0  0  0
+  3  8  1  0  0  0  0
+  4  5  1  0  0  0  0
+  4 15  1  0  0  0  0
+  4 16  1  0  0  0  0
+  5  6  2  0  0  0  0
+  5  7  1  0  0  0  0
+  7 17  1  0  0  0  0
+  8  9  1  0  0  0  0
+  8 18  1  0  0  0  0
+  8 19  1  0  0  0  0
+  9 10  2  0  0  0  0
+  9 14  1  0  0  0  0
+ 10 11  1  0  0  0  0
+ 10 20  1  0  0  0  0
+ 11 12  2  0  0  0  0
+ 11 21  1  0  0  0  0
+ 12 13  1  0  0  0  0
+ 12 22  1  0  0  0  0
+ 13 14  2  0  0  0  0
+ 13 23  1  0  0  0  0
+ 14 24  1  0  0  0  0
+M  END
+>  <CHROM.1>
+107.73732154,-85.75245353,55.90448032,-138.04997952,-100.72660538,12.63469208
+1.53202175,22.73538617,-1.80525389,-0.34339845,-0.00931041
+
+>  <Name>
+O=NN(CC(=O)O)Cc1ccccc1
+
+>  <RI>
+0
+
+>  <Rbt.Current_Directory>
+/home/gse84885/github/im/docking-validation/targets/mpro/expts/jackall/work/Mpro-x0072_0/work/5d/f6f76001792a0a2ea9f0c62dfd1bda
+
+>  <Rbt.Executable>
+rbdock ($Id: //depot/dev/client3/rdock/2013.1/src/exe/rbdock.cxx#4 $)
+
+>  <Rbt.Library>
+libRbt.so (2013.1, Build901 2013/11/27)
+
+>  <Rbt.Parameter_File>
+/rDock_2013.1/data/scripts/dock.prm
+
+>  <Rbt.Receptor>
+docking-global.prm
+
+>  <SCORE>
+-6.8276
+
+>  <SCORE.INTER>
+-6.24648
+
+>  <SCORE.INTER.CONST>
+1
+
+>  <SCORE.INTER.POLAR>
+0
+
+>  <SCORE.INTER.REPUL>
+0.00130551
+
+>  <SCORE.INTER.ROT>
+5
+
+>  <SCORE.INTER.VDW>
+-16.653
+
+>  <SCORE.INTER.norm>
+-0.446177
+
+>  <SCORE.INTRA>
+-0.581119
+
+>  <SCORE.INTRA.DIHEDRAL>
+0.77009
+
+>  <SCORE.INTRA.DIHEDRAL.0>
+3.43263
+
+>  <SCORE.INTRA.POLAR>
+0
+
+>  <SCORE.INTRA.POLAR.0>
+0
+
+>  <SCORE.INTRA.REPUL>
+0
+
+>  <SCORE.INTRA.REPUL.0>
+0
+
+>  <SCORE.INTRA.VDW>
+-0.966163
+
+>  <SCORE.INTRA.VDW.0>
+-0.947062
+
+>  <SCORE.INTRA.norm>
+-0.0415085
+
+>  <SCORE.RESTR>
+0
+
+>  <SCORE.RESTR.CAVITY>
+0
+
+>  <SCORE.RESTR.norm>
+0
+
+>  <SCORE.SYSTEM>
+0
+
+>  <SCORE.SYSTEM.CONST>
+0
+
+>  <SCORE.SYSTEM.DIHEDRAL>
+0
+
+>  <SCORE.SYSTEM.norm>
+0
+
+>  <SCORE.heavy>
+14
+
+>  <SCORE.norm>
+-0.487685
+
+>  <XChemDeepScore>
+0.974995
+
+>  <SuCOS_Max_Score>
+0.35138867604476826
+
+>  <SuCOS_Max_FeatureMap_Score>
+0.14483477824115809
+
+>  <SuCOS_Max_Protrude_Score>
+0.55794257384837842
+
+>  <SuCOS_Max_Index>
+1
+
+>  <SuCOS_Cum_Score>
+1.6532421742051793
+
+>  <SuCOS_Cum_FeatureMap_Score>
+0.26046549232172522
+
+>  <SuCOS_Cum_Protrude_Score>
+3.0460188560886339
+
+$$$$
