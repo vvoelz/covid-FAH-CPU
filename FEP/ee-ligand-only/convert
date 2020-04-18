@@ -1,7 +1,0 @@
-# Example use of continue_a_tpr.py 
-
-# NOTE the actually location of the `*.tpr` files in datadir is outside the results* directory
-
-mkdir job1
-python ../scripts/continue_a_tpr.py job0/frame0.tpr job0 job1  RUN0/topol.top RUN0/index.ndx 10000 job1/frame1.tpr ligonly
-
