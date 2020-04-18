@@ -75,8 +75,12 @@ for run in tqdm.tqdm(range(runs)):
                 print(f'Bad md.log file! {path}/RUN{run}/CLONE{clone}/results{gen}/md.log. Skipping to next gen, I guess?')
 
             # SMILES...yr on Camera ( writes SMILES string or identity)  
-            identity = run_info['identity'].values[0]
-
+            try:
+                identity = run_info['identity'].values[0]
+            except Exception as e:
+                print(f'Exception parsing identity for rcg: {run}, {clone}, {gen}')
+                print(run_info)
+                continue
             try: # get WL-increment at end of md.log
                 cmd = f'tail -n 1000 {path}/RUN{run}/CLONE{clone}/results{gen}/md.log | grep "increment" | tail -n 1'
                 wl_increment = float(subprocess.check_output(cmd, shell=True).decode().split()[3])
