@@ -80,6 +80,35 @@ def modify_topfile(in_topfile, out_topfile):
     print('...Done.')
 
 
+def active_site_restraint_info(grofile, residues=['ALA', 'VAL'], cutoff=0.10):
+    """Get information about protein and ligand atom groups to restrain.
+    
+    INPUT
+    grofile        - an input grofile with the LIG residue correctly named
+    
+    PARAMETERS
+    residues       - list of three-letter amino acid residue codes to search. (Default: ['ALA', 'VAL'])
+    cutoff         - the cutoff distance (in nm) threshold to include residue alphha-carbons in the restraint list.
+                     The distance is computed as d(x2 - x1) where:
+                     
+                         x1 is the center of mass (COM) of all carbons in the ligand,
+                         x2 is each alpha-carbon in the specified residues.
+
+                     (Default: 0.10 nm)
+    RETURNS
+    protein_atoms  - a list of protein CA indices (in the gmx convention, starting at 1,  gmx) for atom group 1
+    ligand_atoms   - a list of ligand C indices ((in the gmx convention, starting at 1,  gmx) for atom group 2
+    com_distance   - the distance between the center of masses of the protein_atoms and ligand_atoms
+    """
+
+    # read in the grofilelines
+    fin = open(grofile, 'r')
+    gro_contents = fin.read()
+    fin.close()
+
+
+
+
 
 def quick_minimize(input_grofile, topfile, ndxfile, output_grofile, workdir, babysteps=False):
     """Perform a quick minimization.
@@ -220,6 +249,21 @@ cd test
     print(testing_cmds)
 
 
+
+def create_ndxfile(grofile, ndxfile, verbose=True):
+    """Create an ndxfile from the given grofile.  If it already exists, make a backup."""
+
+    ## if it already exists, back it up
+    if os.path.exists(ndxfile):
+        print('Index file exists! Backing up... ', end='')
+        bkup_cmd = 'mv {ndxfile} {ndxfile}.bkup'.format(ndxfile=ndxfile)
+        print(bkup_cmd)
+        os.system(bkup_cmd)
+
+    cmd = 'echo "q\\n" | {GMX_BIN}/gmx make_ndx -f {grofile} -o {ndxfile}'.format(GMX_BIN=GMX_BIN, grofile=grofile, ndxfile=ndxfile)
+    os.system(cmd)
+
+
 #############################################
 
 # Main
@@ -287,7 +331,7 @@ or
     ### convert the grofile to FEP-ready by renaming the ligand residues to LIG ###
     in_grofile = os.path.join(in_rundir, 'conf.gro')
     out_grofile = os.path.join(out_rundir, 'minimize_me.gro')
-    rename_grofile_residues(in_grofile, out_grofile
+    rename_grofile_residues(in_grofile, out_grofile)
 
 
     ### convert the topfile to FEP-ready by changing resnames and hydrogen masses ###
@@ -296,26 +340,25 @@ or
     modify_topfile(in_topfile, out_topfile)
 
 
+    ############## make a default index file ###########
+    ndxfile = os.path.join(out_rundir, 'index.ndx')
+    create_ndxfile(out_grofile, ndxfile)
+
+
     ###  NEW in v3 -- let's find all of the ALA and VAL alpha-carbon 
+    if not ligand_only:
+        protein_atoms, ligand_atoms, com_distance = active_site_restraint_info(out_grofile, residues=['ALA', 'VAL'], cutoff=0.10, ligand_atoms='carbon')
 
 
-    sys.exit(1)
+
+        # read in the lines
+    fin = open(in_grofile, 'r')
+    gro_contents = fin.read()
+    fin.close()
 
 
-############## make an index file ###########
 
-# Make the "default" index file that gmx makes from a grofile
-ndxfile = os.path.join(out_rundir, 'index.ndx')
-
-## if it already exists, back it up
-if os.path.exists(ndxfile):
-    print('Index file exists! Backing up... ', end='')
-    bkup_cmd = 'mv {ndxfile} {ndxfile}.bkup'.format(ndxfile=ndxfile) 
-    print(bkup_cmd) 
-    os.system(bkup_cmd)
-
-cmd = 'echo "q\\n" | {GMX_BIN}/gmx make_ndx -f {out_grofile} -o {ndxfile}'.format(GMX_BIN=GMX_BIN, out_grofile=out_grofile, ndxfile=ndxfile)
-os.system(cmd)
+    
 
 if not ligand_only:
 
@@ -443,8 +486,7 @@ e.write_to_filename(mdpfile)
 def rename_grofile_residues(in_grofile, out_grofile, old_res_names=['UNK', 'UNL'])
     """This function will read in a grofile and change 'UNK', 'UNL', etc. residue names to 'LIG'. """
 
-    ############# convert the grofile ###############3
-    # Find the conf.gro file
+    # find the grofile
     in_grofile = os.path.join(in_rundir, 'conf.gro')
     if not os.path.exists(in_grofile):
         print("Can't find grofile", in_grofile)
@@ -469,8 +511,6 @@ def rename_grofile_residues(in_grofile, out_grofile, old_res_names=['UNK', 'UNL'
 
     return
 
-
-###########
 
 def quick_minimize(input_grofile, topfile, ndxfile, output_grofile, workdir, babysteps=False):
     """Perform a quick minimization.
@@ -612,7 +652,7 @@ cd test
 
 
 ###############
-##  Main
+#  Main
 
 
 if __name__ == '__main__':
