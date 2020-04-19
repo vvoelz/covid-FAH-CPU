@@ -85,17 +85,17 @@ class expanded_ensemble_mdpfile(object):
         self.fep_lambdas      = fep_lambdas
         self.rest_lambdas     = rest_lambdas
         self.nlambdas         = len(self.fep_lambdas)
-        self.fep_lambdas_string   = ' '.join(['%2.3f'%fep_lambdas[i] for i in range(self.nlambdas)])
-        self.rest_lambdas_string   = ' '.join(['%2.3f'%rest_lambdas[i] for i in range(self.nlambdas)])
+        self.fep_lambdas_string   = ' '.join(['%2.5f'%fep_lambdas[i] for i in range(self.nlambdas)])
+        self.rest_lambdas_string   = ' '.join(['%2.5f'%rest_lambdas[i] for i in range(self.nlambdas)])
 
         self.init_lambda_weights  = init_lambda_weights
-        self.init_lambda_weights_string =  ' '.join(['%2.3f'%init_lambda_weights[i] for i in range(self.nlambdas)])
+        self.init_lambda_weights_string =  ' '.join(['%2.5f'%init_lambda_weights[i] for i in range(self.nlambdas)])
 
         self.coul_lambdas     = coul_lambdas
-        self.coul_lambdas_string   = ' '.join(['%2.3f'%coul_lambdas[i] for i in range(self.nlambdas)])
+        self.coul_lambdas_string   = ' '.join(['%2.5f'%coul_lambdas[i] for i in range(self.nlambdas)])
 
         self.vdw_lambdas     = vdw_lambdas
-        self.vdw_lambdas_string   = ' '.join(['%2.3f'%vdw_lambdas[i] for i in range(self.nlambdas)])
+        self.vdw_lambdas_string   = ' '.join(['%2.5f'%vdw_lambdas[i] for i in range(self.nlambdas)])
 
         self.init_lambda_state    = init_lambda_state
         self.wl_increment_in_kT   = wl_increment_in_kT
