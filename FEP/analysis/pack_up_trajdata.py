@@ -224,6 +224,14 @@ for i in range(len(myruns)):
                 gmx=gmx_bin, tprfile=tprfile, out_cluster_xtcfile=out_cluster_xtcfile, out_xtcfile=out_xtcfile)
         run_cmd_interactive(cmd, "0\n0\n")
 
+        # while we're at it, let's fix the PBC artifact with Protein_LIG.gro as well
+        grofile = os.path.join(this_run_outdir, 'Protein_LIG.gro') 
+        out_grofile = os.path.join(this_run_outdir, 'Protein_LIG.cluster.gro')        
+        cmd = '{gmx} trjconv -s {tprfile} -o {out_grofile} -f {grofile} -pbc cluster'.format(
+                gmx=gmx_bin, tprfile=tprfile, out_grofile=out_grofile, grofile=grofile)
+        run_cmd_interactive(cmd, "0\n0\n")
+
+
 
         ### Scrape and collect all the dhdl energies!
         for resultdir in resultdirs[0:1]:
