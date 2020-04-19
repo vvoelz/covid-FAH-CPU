@@ -21,7 +21,7 @@ if not os.path.exists(GMX_BIN):
 
 # Subroutines and Functions
 
-def rename_grofile_residues(in_grofile, out_grofile, old_res_names=['UNK', 'UNL'])
+def rename_grofile_residues(in_grofile, out_grofile, old_res_names=['UNK', 'UNL']):
     """This function will read in a grofile and change 'UNK', 'UNL', etc. residue names to 'LIG'. """
 
     ############# convert the grofile ###############3
@@ -65,13 +65,13 @@ def modify_topfile(in_topfile, out_topfile):
 
     for i in range(len(top_lines)):
 
-    # Change names from UNL to LIG
-    top_lines[i] = top_lines[i].replace('UNL', 'LIG').replace('UNK', 'LIG')
+        # Change names from UNL to LIG
+        top_lines[i] = top_lines[i].replace('UNL', 'LIG').replace('UNK', 'LIG')
 
-    # Convert any hydrogen mass to 4.000 amu
-    ### NOTE there is no error-checking here -- to do: make this more robust
-    if top_lines[i].count('H') > 0:   # We ASSUME that atom names have an 'H'
-        top_lines[i] = top_lines[i].replace('1.007947', '4.000000')
+        # Convert any hydrogen mass to 4.000 amu
+        ### NOTE there is no error-checking here -- to do: make this more robust
+        if top_lines[i].count('H') > 0:   # We ASSUME that atom names have an 'H'
+            top_lines[i] = top_lines[i].replace('1.007947', '4.000000')
 
     print('Writing to', out_topfile, '...')
     fout = open(out_topfile, 'w')
@@ -333,9 +333,6 @@ def create_ndxfile(grofile, ndxfile, verbose=True):
 
 if __name__ == '__main__':
 
-    print('Hello world!')
-    sys.exit(1)
-
     import argparse, textwrap
 
     parser = argparse.ArgumentParser(
@@ -367,10 +364,6 @@ or
                     help='Specify this is a ligand-only simulation')
     parser.add_argument('--babysteps', dest='babysteps', action='store_true',
                     help='Use "baby steps" in the energy minimization to avoid errors')
-    parser.add_argument('--moonshot', dest='moonshot', action='store_true',
-                    help='Specify the structure comes from a moonshot simulation.  The resnum in conf.gro is off by +2!')
-    parser.add_argument('--agg', dest='agg', action='store_true',
-                    help='Specify the structure comes from an AGG simulation.  The resnum in conf.gro is off by +1!')
 
     args = parser.parse_args()
     print('args.in_rundir', args.in_rundir)
@@ -386,8 +379,6 @@ or
         os.mkdir(out_rundir)
     ligand_only = args.ligand_only
     babysteps = args.babysteps
-    moonshot = args.moonshot
-    agg = args.agg
 
 
     ### convert the grofile to FEP-ready by renaming the ligand residues to LIG ###
@@ -408,7 +399,7 @@ or
 
     ###  NEW in v3 -- let's find a set of protein and ligand indices whose COM distance we will restrain
     if not ligand_only:
-        protein_indices, ligand_indices, com_distance = active_site_restraint_info(out_grofile, residues=['ALA', 'VAL'], cutoff=0.10, ligand_atoms='carbon')
+        protein_indices, ligand_indices, com_distance = active_site_restraint_info(out_grofile, residues=['ALA', 'VAL'], cutoff=1.0)
 
     ### add these pull groups to the index file
     pull_group_1 = ' '.join( [str(i) for i in protein_indices ])
@@ -447,7 +438,8 @@ or
                                       pull_coord1_init  = com_distance)
     else:
         e = expanded_ensemble_mdpfile(ligand_only = ligand_only)
-    
+
+    mdpfile = os.path.join(out_rundir, 'prod.mdp')
     e.write_to_filename(mdpfile)
 
 
