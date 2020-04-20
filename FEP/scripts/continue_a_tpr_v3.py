@@ -57,7 +57,7 @@ if len(sys.argv) > 8:
 #############################
 # Read in the previous md.log file and get the latest WL weights!
 
-wl_increment_in_kT, wang_landau_weights, init_lambda_state = extract_wl_info_from_mdlog(prev_gen_mdlog):
+wl_increment_in_kT, wang_landau_weights, init_lambda_state = extract_wl_info_from_mdlog(prev_gen_mdlog)
 
 ### new as of v2: get the pull_coord1_k  and pull_coord1_init !
 e_from_setup = expanded_ensemble_mdpfile( ligand_only=ligand_only )
