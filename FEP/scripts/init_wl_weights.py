@@ -214,6 +214,10 @@ if __name__ == '__main__':
     parser.add_argument('input_mdpfile', type=str, help='the input *.mdp file')
     parser.add_argument('project_run_datadir', type=str, help='The FAH data directory e.g. ~/server2/data/SVRxxxxxxx/PROJxxxx/RUNxxx')
     parser.add_argument('output_mdpfile', type=str, help='the output *.mdp file')
+    parser.add_argument('--wl_increment_x2', dest='wl_increment_x2', action='store_true',
+                    help='If specified, will multiply the WL increment (in kT) by 2.0')
+    parser.add_argument('--wl_increment_x10', dest='wl_increment_x10', action='store_true',
+                    help='If specified, will multiply the WL increment (in kT) by 10.0')
 
     args = parser.parse_args()
     print('args.input_mdpfile', args.input_mdpfile)
@@ -237,6 +241,10 @@ if __name__ == '__main__':
     e.init_lambda_weights_string =  ' '.join(['%2.5f'%e.init_lambda_weights[i] for i in range(e.nlambdas)])
     e.init_lambda_state    = wl_state_index
     e.wl_increment_in_kT   = wl_increment_in_kT
+    if args.wl_increment_x2:
+        e.wl_increment_in_kT   = 2.0*wl_increment_in_kT
+    if args.wl_increment_x10:
+        e.wl_increment_in_kT   = 10.0*wl_increment_in_kT
 
     # write the new mdpfile
     if os.path.exists(args.output_mdpfile):
