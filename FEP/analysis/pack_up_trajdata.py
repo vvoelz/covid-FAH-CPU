@@ -197,8 +197,10 @@ for i in range(len(myruns)):
         resultdirs3.sort()
         resultdirs += resultdirs3
 
+        
         # remove the last results directory, which is empty!
-        resultdirs.pop() 
+        if len(resultdirs) > 0:
+            resultdirs.pop() 
 
         # If --lastgenonly, only look at the last resultsdir
         #if args.lastgenonly:
@@ -212,71 +214,76 @@ for i in range(len(myruns)):
 
         ### concatenate all the xtc files into one!
         out_xtcfile = os.path.join(this_run_outdir, 'c%d.xtc'%clone)
-        cmd = '{gmx} trjcat -o {out_xtcfile} -f '
-        for resultdir in resultdirs:
-            cmd += (os.path.join(resultdir,'traj_comp.xtc') + ' ')
-        cmd += '-cat'
-        run_cmd(cmd.format(gmx=gmx_bin, out_xtcfile=out_xtcfile))
-        # fix PBC artifacts with cluster
-        out_cluster_xtcfile = os.path.join(this_run_outdir, 'c%d.cluster.xtc'%clone)
-        tprfile = os.path.join(this_run_outdir, 'Protein_LIG.tpr')
-        cmd = '{gmx} trjconv -s {tprfile} -o {out_cluster_xtcfile} -f {out_xtcfile} -pbc cluster'.format(
-                gmx=gmx_bin, tprfile=tprfile, out_cluster_xtcfile=out_cluster_xtcfile, out_xtcfile=out_xtcfile)
-        run_cmd_interactive(cmd, "0\n0\n")
 
-        # while we're at it, let's fix the PBC artifact with Protein_LIG.gro as well
-        grofile = os.path.join(this_run_outdir, 'Protein_LIG.gro') 
-        out_grofile = os.path.join(this_run_outdir, 'Protein_LIG.cluster.gro')        
-        cmd = '{gmx} trjconv -s {tprfile} -o {out_grofile} -f {grofile} -pbc cluster'.format(
+        # make a list of all the xtc_files:
+        result_xtcfiles = [os.path.join(resultdir,'traj_comp.xtc') for resultdir in resultdirs if os.path.exists(os.path.join(resultdir,'traj_comp.xtc'))]
+        if len(result_xtcfiles) > 0: 
+            cmd = '{gmx} trjcat -o {out_xtcfile} -f '
+            for result_xtcfile in result_xtcfiles:
+                cmd += (result_xtcfile + ' ')
+            cmd += '-cat'
+            run_cmd(cmd.format(gmx=gmx_bin, out_xtcfile=out_xtcfile))
+            # fix PBC artifacts with cluster
+            out_cluster_xtcfile = os.path.join(this_run_outdir, 'c%d.cluster.xtc'%clone)
+            tprfile = os.path.join(this_run_outdir, 'Protein_LIG.tpr')
+            cmd = '{gmx} trjconv -s {tprfile} -o {out_cluster_xtcfile} -f {out_xtcfile} -pbc cluster'.format(
+                    gmx=gmx_bin, tprfile=tprfile, out_cluster_xtcfile=out_cluster_xtcfile, out_xtcfile=out_xtcfile)
+            run_cmd_interactive(cmd, "0\n0\n")
+
+            # while we're at it, let's fix the PBC artifact with Protein_LIG.gro as well
+            grofile = os.path.join(this_run_outdir, 'Protein_LIG.gro') 
+            out_grofile = os.path.join(this_run_outdir, 'Protein_LIG.cluster.gro')        
+            cmd = '{gmx} trjconv -s {tprfile} -o {out_grofile} -f {grofile} -pbc cluster'.format(
                 gmx=gmx_bin, tprfile=tprfile, out_grofile=out_grofile, grofile=grofile)
-        run_cmd_interactive(cmd, "0\n0\n")
+            run_cmd_interactive(cmd, "0\n0\n")
 
+        ###### ENERGIES ########
 
+        result_dhdlfiles = [os.path.join(resultdir,'dhdl.xvg') for resultdir in resultdirs if os.path.exists(os.path.join(resultdir,'dhdl.xvg'))]
+        if len(result_dhdlfiles) > 0:
 
-        ### Scrape and collect all the dhdl energies!
-        for resultdir in resultdirs[0:1]:
-            dhdl_xvgfile =  os.path.join(resultdir, 'dhdl.xvg')
-            time_in_ps, states, energies = xvg_tools.get_dhdl(dhdl_xvgfile)
-            if (args.verbose):
-                print(resultdir)
-                print('\ttime_in_ps', time_in_ps)
-                print('\tstates', states)
-                print('\tenergies.shape', energies.shape)
-                print('\tenergies', energies)
+            ### Scrape and collect all the dhdl energies!
+            for resultdir in resultdirs[0:1]:
+                dhdl_xvgfile =  os.path.join(resultdir, 'dhdl.xvg')
+                time_in_ps, states, energies = xvg_tools.get_dhdl(dhdl_xvgfile)
+                if (args.verbose):
+                    print(resultdir)
+                    print('\ttime_in_ps', time_in_ps)
+                    print('\tstates', states)
+                    print('\tenergies.shape', energies.shape)
+                    print('\tenergies', energies)
         
-        ###### ENERGIES ######
+            for resultdir in resultdirs[1:]: 
+                dhdl_xvgfile =  os.path.join(resultdir, 'dhdl.xvg')
+                more_time_in_ps, more_states, more_energies = xvg_tools.get_dhdl(dhdl_xvgfile)
+                time_in_ps = np.concatenate( (time_in_ps, more_time_in_ps[1:]), axis=0)
+                states     = np.concatenate( (states, more_states[1:]), axis=0 )
+                energies   = np.concatenate( (energies, more_energies[1:,:]), axis=0 )
 
-        for resultdir in resultdirs[1:]: 
-            dhdl_xvgfile =  os.path.join(resultdir, 'dhdl.xvg')
-            more_time_in_ps, more_states, more_energies = xvg_tools.get_dhdl(dhdl_xvgfile)
-            time_in_ps = np.concatenate( (time_in_ps, more_time_in_ps[1:]), axis=0)
-            states     = np.concatenate( (states, more_states[1:]), axis=0 )
-            energies   = np.concatenate( (energies, more_energies[1:,:]), axis=0 )
+            states_outfile = os.path.join(this_run_outdir, 'c%d.states.npy'%clone)
+            np.save(states_outfile, states)
+            print('Wrote:', states_outfile)
 
-        states_outfile = os.path.join(this_run_outdir, 'c%d.states.npy'%clone)
-        np.save(states_outfile, states)
-        print('Wrote:', states_outfile)
+            energies_outfile = os.path.join(this_run_outdir, 'c%d.energies.npy'%clone)
+            np.save(energies_outfile, energies)
+            print('Wrote:', energies_outfile)
 
-        energies_outfile = os.path.join(this_run_outdir, 'c%d.energies.npy'%clone)
-        np.save(energies_outfile, energies)
-        print('Wrote:', energies_outfile)
+            ### Scrape and collect all the pullx distances!
+            for resultdir in resultdirs[0:1]:
+                pullx_xvgfile =  os.path.join(resultdir, 'pullx.xvg')
+                times, distances = xvg_tools.get_distances(pullx_xvgfile)
+                print('distances', distances)
 
-        ### Scrape and collect all the pullx distances!
-        for resultdir in resultdirs[0:1]:
-            pullx_xvgfile =  os.path.join(resultdir, 'pullx.xvg')
-            times, distances = xvg_tools.get_distances(pullx_xvgfile)
-            print('distances', distances)
+            for resultdir in resultdirs[1:]:
+                pullx_xvgfile =  os.path.join(resultdir, 'pullx.xvg')
+                more_times, more_distances = xvg_tools.get_distances(pullx_xvgfile)
+                times = np.concatenate( (times, more_times[1:]), axis=0)
+                distances = np.concatenate( (distances, more_distances[1:]), axis=0)
 
-        for resultdir in resultdirs[1:]:
-            pullx_xvgfile =  os.path.join(resultdir, 'pullx.xvg')
-            more_times, more_distances = xvg_tools.get_distances(pullx_xvgfile)
-            times = np.concatenate( (times, more_times[1:]), axis=0)
-            distances = np.concatenate( (distances, more_distances[1:]), axis=0)
-
-        distances_outfile = os.path.join(this_run_outdir, 'c%d.distances.npy'%clone)
-        np.save(distances_outfile, distances)
-        print('Wrote:', distances_outfile)
-
+            distances_outfile = os.path.join(this_run_outdir, 'c%d.distances.npy'%clone)
+            np.save(distances_outfile, distances)
+            print('Wrote:', distances_outfile)
+    
 ### Cleanup
 
 os.system('rm -f ./#mdout*')
