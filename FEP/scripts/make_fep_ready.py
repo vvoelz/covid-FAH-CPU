@@ -192,11 +192,11 @@ if not ligand_only:
     fout = open(ndxfile, 'a')  # append these new lines to the index file...
     index_txt = """[ a1-Protein ]
       {protein_atomnum} 
-    [ a2-Ligand ]
-      {ligand_atomnum}
-    [ Restraint-Distance ]
-      {protein_atomnum} {ligand_atomnum}
-    """.format(protein_atomnum=protein_atomnum, ligand_atomnum=ligand_atomnum)
+[ a2-Ligand ]
+  {ligand_atomnum}
+[ Restraint-Distance ]
+  {protein_atomnum} {ligand_atomnum}
+""".format(protein_atomnum=protein_atomnum, ligand_atomnum=ligand_atomnum)
     fout.write(index_txt)
     fout.close()
 
