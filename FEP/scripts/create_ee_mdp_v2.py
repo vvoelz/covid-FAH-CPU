@@ -72,7 +72,9 @@ if not ligand_only:
     e = expanded_ensemble_mdpfile(ligand_only = ligand_only,
                         pull_group1_name = 'a1-Protein',
                         pull_group2_name = 'a2-Ligand',
-                        pull_coord1_init  = atom_distance)
+                        pull_coord1_init = atom_distance,
+                        pull_coord1_k    = 800.0 )
+
 
 else:
     e = expanded_ensemble_mdpfile(ligand_only = ligand_only)
