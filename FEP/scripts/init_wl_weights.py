@@ -68,7 +68,8 @@ def most_converged_mdlogfile(project_run_datadir):
 
         # the very last resultdir is empty, because of how the continue_a_tpr_vX.py scripts work
         # so lets ignore it 
-        resultdirs.pop()
+        if len(resultdirs) > 0:
+            resultdirs.pop()
         print('resultdirs', resultdirs)
 
         maxgen_per_clone.append( len(resultdirs)-1 ) 
