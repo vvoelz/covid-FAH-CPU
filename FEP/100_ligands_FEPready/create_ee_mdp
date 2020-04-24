@@ -1,1 +1,0 @@
-python ../scripts/create_ee_mdp.py RUN1/npt.gro RUN1/topol.top RUN1/index.ndx RUN1/prod.mdp

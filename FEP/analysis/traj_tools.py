@@ -9,21 +9,47 @@ import subprocess
 
 ######## Functions #############
 
-def run_cmd(cmd, testing=False):
-    """Print and do an os.system() on the input command"""
+def run_cmd(cmd, testing=False, verbose=True):
+    """Print the command and execute in a shell"""
 
-    print('>>', cmd)
+    if verbose:
+        print('>>', cmd)
     if not testing:
         subprocess.check_output(cmd, shell=True)
 
+def run_cmd_interactive(cmd, input_string, testing=False, verbose=True):
+    """Run the command and pass it an interactive input string.
+    
+    NOTES
+    from https://stackoverflow.com/questions/163542/how-do-i-pass-a-string-into-subprocess-popen-using-the-stdin-argument
 
-def build_Protein_LIG_tpr(setup_rundir, out_tprfile, version='v1', gmx_bin='gmx', verbose=False):
+    EXAMPLE
+    p = subprocess.Popen(['grep', 'f'], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+    grep_stdout = p.communicate(input=b'one\ntwo\nthree\nfour\nfive\nsix\n')[0]
+    print(grep_stdout.decode())
+    """
+
+    p = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+    grep_stdout = p.communicate(input=input_string.encode('utf-8'))[0]
+    if verbose:
+        print(grep_stdout.decode())
+
+
+
+
+
+def build_Protein_LIG_files(setup_rundir, outdir, version='v1', gmx_bin='gmx', verbose=False):
     """Builds a Protein_LIG only tpr for the purpose of looking at trajectories
     in Chimera, PBC transformations, etc.
     
     INPUT
     setup_rundir - a setup RUN directory like /home/server/server2/projects/p14399/RUN0/
-    out_tprfile  - filename to write the tpr file
+    outdir       - a directory pathname to write the following:
+
+                   Protein_LIG.tpr
+                   Protein_LIG.ndx
+                   Protein_LIG.gro
+                   Protein_LIG.mdp  <-- dummy miniminzation mdp need to build the tpr
 
     PARAMETERS
     version      - 'v1' for the original FEP mdps, 'v2' for the _v2 protocol, etc. (Default: 'v1')
@@ -47,11 +73,32 @@ def build_Protein_LIG_tpr(setup_rundir, out_tprfile, version='v1', gmx_bin='gmx'
     index_Protein, index_LIG = get_ndx_group_index(ndxfile, ['Protein', 'LIG'])
     print('index_Protein', index_Protein, 'index_LIG', index_LIG)
 
-    # make a new atom group that is the union of Protein nd LIG
-    out_ndxfile = os.path.join(setup_rundir, 'Protein_LIG.ndx')
-    cmd = 'echo -e "{index_Protein}|{index_LIG}\nq\n" | {gmx} make_ndx -n {ndxfile} -o {out_ndxfile}'.format(index_Protein=str(index_Protein), index_LIG=str(index_LIG),
+    # make a new atom group that is the union of Protein and LIG: Protein_LIG
+    out_ndxfile = os.path.join(outdir, 'Protein_LIG.ndx')
+    if (0):
+        cmd = 'echo -e "{index_Protein}|{index_LIG}\nq\n" > {gmx} make_ndx -n {ndxfile} -o {out_ndxfile}'.format(
+                    index_Protein=str(index_Protein), index_LIG=str(index_LIG),
                     gmx=gmx_bin, ndxfile=ndxfile, out_ndxfile=out_ndxfile)
-    run_cmd(cmd)
+        run_cmd(cmd)
+    if (0):
+        cmd = '{gmx} make_ndx -n {ndxfile} -o {out_ndxfile}'.format(gmx=gmx_bin, ndxfile=ndxfile, out_ndxfile=out_ndxfile)
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, 
+                         stderr=subprocess.STDOUT, stdin=subprocess.PIPE) 
+        p.communicate("{index_Protein}|{index_LIG}\nq\n".format(index_Protein=str(index_Protein), index_LIG=str(index_LIG)))
+        run_cmd(cmd)
+    if (0):
+        gmx_bin = '/usr/local/gromacs/bin/gmx'
+        cmd = '{gmx} make_ndx -n {ndxfile} -o {out_ndxfile}'.format(gmx=gmx_bin, ndxfile=ndxfile, out_ndxfile=out_ndxfile)
+        input_string = "{index_Protein}|{index_LIG}\nq\n".format(index_Protein=str(index_Protein), index_LIG=str(index_LIG))
+        code = os.spawnvpe(os.P_WAIT, cmd, [cmd, input_string], os.environ)
+        if code == 127:
+            sys.stderr.write('{0}: command not found\n'.format(cmd))
+        return code
+    if (1):
+        cmd = '{gmx} make_ndx -n {ndxfile} -o {out_ndxfile}'.format(gmx=gmx_bin, ndxfile=ndxfile, out_ndxfile=out_ndxfile)
+        input_string = '{index_Protein}|{index_LIG}\nq\n'.format(index_Protein=str(index_Protein), index_LIG=str(index_LIG))
+        run_cmd_interactive(cmd, input_string)
+
 
     # if successful, the above command should make a new atomgroup called Protein_LIG,
     # ... for which we need to find the index
@@ -60,10 +107,11 @@ def build_Protein_LIG_tpr(setup_rundir, out_tprfile, version='v1', gmx_bin='gmx'
 
     ### Next let's build a Protein_LIG.gro from the setup npt.gro
     grofile = os.path.join(setup_rundir, 'npt.gro')
-    out_grofile = os.path.join(setup_rundir, 'Protein_LIG.gro')
-    cmd = 'echo -e "{index_Protein_LIG}\n" | {gmx} editconf -f {grofile} -n {out_ndxfile} -o {out_grofile}'.format(index_Protein_LIG=str(index_Protein_LIG),
+    out_grofile = os.path.join(outdir, 'Protein_LIG.gro')
+    cmd = '{gmx} editconf -f {grofile} -n {out_ndxfile} -o {out_grofile} -c'.format(
                                  gmx=gmx_bin, out_ndxfile=out_ndxfile, grofile=grofile, out_grofile=out_grofile)
-    run_cmd(cmd)
+    input_string = "{index_Protein_LIG}\n{index_Protein_LIG}\n".format(index_Protein_LIG=str(index_Protein_LIG))
+    run_cmd_interactive(cmd, input_string)
 
     ### Next, we create a topology file that only contains Protein and LIG
     """
@@ -81,18 +129,21 @@ CL                  31
         print("Can't find topfile", topfile)
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), topfile)
 
+    print('Reading input topfile:', topfile)
     fin = open(topfile, 'r')
     toplines = fin.readlines()
     fin.close()
 
+    # get rid of the osolvent and ions
     while (toplines[-1].count('CL') + toplines[-1].count('NA') + toplines[-1].count('HOH') ) > 0:
         toplines.pop()
 
-    out_topfile = topfile = os.path.join(setup_rundir, 'Protein_LIG.top')
-    fout = open(topfile, 'w')
-    fout.writelines(toplines)
+    out_topfile = os.path.join(outdir, 'Protein_LIG.top')
+    fout = open(out_topfile, 'w')
+    fout.write(''.join(toplines))
     fout.close()
     print('Wrote:', out_topfile)
+
 
 
     #### Then, we write a quick-and-dirty *.mdp file, just so we can grompp to a tpr...
@@ -183,14 +234,14 @@ lincs-order              = 4   ;12
 lincs-iter               = 1   ;2
     """
 
-    mdpfile = os.path.join(setup_rundir, 'Protein_LIG.mdp')
+    mdpfile = os.path.join(outdir, 'Protein_LIG.mdp')
     fout = open(mdpfile, 'w')
     fout.write(mdp_txt)
     fout.close()
 
 
     # Grompp this topfile to get a *.tpr -- needed for Chimera; PDB transformations etc!
-    out_tprfile = os.path.join(setup_rundir, 'Protein_LIG.tpr')
+    out_tprfile = os.path.join(outdir, 'Protein_LIG.tpr')
     cmd = '{gmx} grompp -f {mdpfile} -c {out_grofile} -p {out_topfile} -o {out_tprfile}'.format(
                     gmx=gmx_bin, mdpfile=mdpfile, out_grofile=out_grofile, out_topfile=out_topfile, out_tprfile=out_tprfile)
     run_cmd(cmd)
@@ -221,6 +272,7 @@ def get_ndx_group_index(ndxfile, index_strings):
     index_lines = [ line.strip() for line in fin.readlines() if line.count('[') > 0 ]
     fin.close()
 
+    print('ndxfile', ndxfile)
     print('index_strings', index_strings)
     print('index_lines', index_lines)
 
@@ -244,4 +296,4 @@ if __name__ == "__main__":
     #import doctest
     #doctest.testmod()
 
-    build_Protein_LIG_tpr('/home/server/server2/projects/p14399/RUN0')
+    build_Protein_LIG_files('/home/server/server2/projects/p14399/RUN0', './p14399-trajdata')

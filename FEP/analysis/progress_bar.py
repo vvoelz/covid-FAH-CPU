@@ -105,7 +105,11 @@ def project_length_in_ns(projnum):
         w[i] = 10.0   # L
 
     # harmonic potential testing
+    w[14398] = 1.0    # RL
     w[14399] = 1.0    # RL
+
+    for i in range(14700, 14900):
+        w[i] = 1.0    # RL
 
     return w[projnum]
 
