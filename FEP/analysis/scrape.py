@@ -12,8 +12,11 @@ import glob
 # Arguments
 project = sys.argv[1]                                             # Project Number
 description = sys.argv[2]                                         # Description -i.e. Ligand_Set_L/RL_start_end
-whole_dataset = pd.read_pickle(f"{re.split(r'[_-]', f'{description}')[0]}.pkl")
-whole_project = whole_dataset.loc[whole_dataset['project'] == int(project)]  # extract info for project being scraped
+whole_dataset = pd.read_pickle(f"master_FEP.pkl")
+for version in ['v1','v2','v3']:
+    whole_project = whole_dataset.loc[whole_dataset[f'{version}_project'] == int(project)]
+    if not whole_project.empty:
+        break
 
 try:                                                              # This loads in the most recently scraped df if it exists 
     previous_df = pd.read_pickle(max(glob.glob(f'scraped_data/{description}*') , key=os.path.getctime))
@@ -56,7 +59,7 @@ path = f'{hostname_paths[hostname]}/PROJ{project}'
 # scrape the new data
 data = []
 for run in tqdm.tqdm(range(runs)):
-    run_info = whole_project.loc[whole_project['run'] == run]
+    run_info = whole_project.loc[whole_project[f'{version}_run'] == run]
     for clone in range(clones):
         for gen in range(gens):
             if not os.path.exists(f'{path}/RUN{run}/CLONE{clone}/results{gen}/md.log'):    # This breaks the loop if the gen does not exist

@@ -20,6 +20,8 @@ parser.add_argument('datadir', type=str, help='The direcory where projdata is sa
 parser.add_argument('projnum', type=int, help='The project number')
 parser.add_argument('run', type=int, help='The run number')
 parser.add_argument('outdir', type=str, help='The directory where outputfiles will be saved.')
+parser.add_argument('--lastgenonly', dest='lastgenonly', action='store_true',
+                    help='If specified, print output verbosely')
 parser.add_argument('--verbose', dest='verbose', action='store_true',
                     help='If specified, print output verbosely')
 args = parser.parse_args()
@@ -28,6 +30,9 @@ args = parser.parse_args()
 print('args.setupdir', args.setupdir)
 index_file = os.path.join(args.setupdir, 'RUN%d/index.ndx'%args.projnum)
 print('\tindex_file =', index_file)
+mdp_file = os.path.join(args.setupdir, 'RUN%d/prod.mdp'%args.projnum)
+print('\tmdp_file =', mdp_file)
+
 
 print('args.datadir', args.datadir)
 print('args.projnum', args.projnum)
@@ -81,6 +86,10 @@ if (1):
 
         # remove the last results directory, which is empty!
         resultdirs.pop() 
+
+        # If --lastgenonly, only look at the last resultsdir
+        if args.lastgenonly:
+            resultdirs = [resultdirs[-1]]
 
         print('resultdirs')
         for resultdir in resultdirs:
