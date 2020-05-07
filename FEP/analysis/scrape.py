@@ -49,7 +49,7 @@ hostname_paths = {'vav3.ocis.temple.edu':'/home/server/server2/data/SVR166219',
                   'folder-prod-001':'/data/SVR1163805190', #avast1
                   'folder-prod-002':'/data/SVR1163805191', #avast2
                   'fah5':'/data/SVR679057516',
-                  'aws2':'/data/SVR51748107'}
+                  'aws2':'/home/server/server2/data/SVR51748107'}
 hostname = subprocess.check_output('hostname', shell=True).decode().strip('\n')
 path = f'{hostname_paths[hostname]}/PROJ{project}'
     
