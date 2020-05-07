@@ -12,8 +12,11 @@ import glob
 # Arguments
 project = sys.argv[1]                                             # Project Number
 description = sys.argv[2]                                         # Description -i.e. Ligand_Set_L/RL_start_end
-whole_dataset = pd.read_pickle(f"{re.split(r'[_-]', f'{description}')[0]}.pkl")
-whole_project = whole_dataset.loc[whole_dataset['project'] == int(project)]  # extract info for project being scraped
+whole_dataset = pd.read_pickle(f"master_FEP.pkl")
+for version in ['v1','v2','v3']:
+    whole_project = whole_dataset.loc[whole_dataset[f'{version}_project'] == int(project)]
+    if not whole_project.empty:
+        break
 
 try:                                                              # This loads in the most recently scraped df if it exists 
     previous_df = pd.read_pickle(max(glob.glob(f'scraped_data/{description}*') , key=os.path.getctime))
@@ -56,7 +59,7 @@ path = f'{hostname_paths[hostname]}/PROJ{project}'
 # scrape the new data
 data = []
 for run in tqdm.tqdm(range(runs)):
-    run_info = whole_project.loc[whole_project['run'] == run]
+    run_info = whole_project.loc[whole_project[f'{version}_run'] == run]
     for clone in range(clones):
         for gen in range(gens):
             if not os.path.exists(f'{path}/RUN{run}/CLONE{clone}/results{gen}/md.log'):    # This breaks the loop if the gen does not exist
@@ -68,9 +71,11 @@ for run in tqdm.tqdm(range(runs)):
                 pass
             # this averages the last 100 entries in md.log
             try:
+                cmd = f'grep -m1 -h "G(in" {path}/RUN{run}/CLONE{clone}/results{gen}/md.log'
+                free_energy_field = subprocess.check_output(cmd, shell=True).decode().split().index('G(in')
                 cmd = f'tail -n 6208 {path}/RUN{run}/CLONE{clone}/results{gen}/md.log | grep -B 39 "40  0.000  1.000  1.000"'
                 log = [line.split() for line in subprocess.check_output(cmd, shell=True).decode().split('\n')[:-1]]
-                free_energies = [np.average([float(line[5]) for line in log if line[0] == str(lam)]) for lam in range(1,41)]
+                free_energies = [np.average([float(line[free_energy_field]) for line in log if line[0] == str(lam)]) for lam in range(1,41)]
             except Exception as e:
                 print(f'Bad md.log file! {path}/RUN{run}/CLONE{clone}/results{gen}/md.log. Skipping to next gen, I guess?')
 
@@ -88,7 +93,6 @@ for run in tqdm.tqdm(range(runs)):
             except Exception as e:
                 print(f'Bad md.log file2! {path}/RUN{run}/CLONE{clone}/results{gen}/md.log. Skipping to next gen, I guess?')
                 continue
-
 if chk_df is not None:
     df = previous_df.append(pd.DataFrame(data, columns=columns), ignore_index=True)     # This appends old df with new info
     df = df.sort_values(['run', 'clone', 'gen'], ascending=[True, True, True])          # This sorts run,clone,gen in sequential order
