@@ -71,12 +71,11 @@ for run in tqdm.tqdm(range(runs)):
                 pass
             # this averages the last 100 entries in md.log
             try:
+                cmd = f'grep -m1 -h "G(in" {path}/RUN{run}/CLONE{clone}/results{gen}/md.log'
+                free_energy_field = subprocess.check_output(cmd, shell=True).decode().split().index('G(in')
                 cmd = f'tail -n 6208 {path}/RUN{run}/CLONE{clone}/results{gen}/md.log | grep -B 39 "40  0.000  1.000  1.000"'
                 log = [line.split() for line in subprocess.check_output(cmd, shell=True).decode().split('\n')[:-1]]
-                if version == 'v1':
-                    free_energies = [np.average([float(line[5]) for line in log if line[0] == str(lam)]) for lam in range(1,41)]
-                elif version in ['v2','v3']:
-                    free_energies = [np.average([float(line[6]) for line in log if line[0] == str(lam)]) for lam in range(1,41)]
+                free_energies = [np.average([float(line[free_energy_field]) for line in log if line[0] == str(lam)]) for lam in range(1,41)]
             except Exception as e:
                 print(f'Bad md.log file! {path}/RUN{run}/CLONE{clone}/results{gen}/md.log. Skipping to next gen, I guess?')
 
