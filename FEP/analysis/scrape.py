@@ -71,9 +71,11 @@ for run in tqdm.tqdm(range(runs)):
                 pass
             # this averages the last 100 entries in md.log
             try:
+                cmd = f'grep -m1 -h "G(in" {path}/RUN{run}/CLONE{clone}/results{gen}/md.log'
+                free_energy_field = subprocess.check_output(cmd, shell=True).decode().split().index('G(in')
                 cmd = f'tail -n 6208 {path}/RUN{run}/CLONE{clone}/results{gen}/md.log | grep -B 39 "40  0.000  1.000  1.000"'
                 log = [line.split() for line in subprocess.check_output(cmd, shell=True).decode().split('\n')[:-1]]
-                free_energies = [np.average([float(line[5]) for line in log if line[0] == str(lam)]) for lam in range(1,41)]
+                free_energies = [np.average([float(line[free_energy_field]) for line in log if line[0] == str(lam)]) for lam in range(1,41)]
             except Exception as e:
                 print(f'Bad md.log file! {path}/RUN{run}/CLONE{clone}/results{gen}/md.log. Skipping to next gen, I guess?')
 
@@ -91,7 +93,6 @@ for run in tqdm.tqdm(range(runs)):
             except Exception as e:
                 print(f'Bad md.log file2! {path}/RUN{run}/CLONE{clone}/results{gen}/md.log. Skipping to next gen, I guess?')
                 continue
-
 if chk_df is not None:
     df = previous_df.append(pd.DataFrame(data, columns=columns), ignore_index=True)     # This appends old df with new info
     df = df.sort_values(['run', 'clone', 'gen'], ascending=[True, True, True])          # This sorts run,clone,gen in sequential order
