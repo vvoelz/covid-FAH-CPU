@@ -91,7 +91,7 @@ for run in tqdm.tqdm(runs):
             ns_L.append(10+int(gen_L['gen'].values[0])*10)
             raw_energies = gen_L[gen_L.columns[-lambdas:]].values[0]
             energies_L.append([float(x) for x in raw_energies]) #- raw_energies[0] for x in raw_energies])
-            clone_energies.append([run, 'L', ns_L[-1], wl_increment_L[-1], list(reversed(energies_L[-1]))])
+            clone_energies.append([run, 'L', ns_L[-1], wl_increment_L[-1], energies_L[-1]])
         except Exception as e:
             print(f'L Exception: {run}, {clone_L}, {e}')
             continue
@@ -114,7 +114,7 @@ for run in tqdm.tqdm(runs):
             ns_RL.append(int(gen_RL['gen'].values[0])+1)
             raw_energies = gen_RL[gen_RL.columns[-lambdas:]].values[0]
             energies_RL.append([float(x) for x in raw_energies])
-            clone_energies.append([run, 'RL', ns_RL[-1], wl_increment_RL[-1], energies_RL[-1]])
+            clone_energies.append([run, 'RL', ns_RL[-1], wl_increment_RL[-1], list(reversed(energies_RL[-1]))])
             # look at harmonic restraint of last gen, for each clone that fits the constraints
 #            with open(f"{server_path}/RUN{run}/CLONE{clone_RL}/results{int(gen_RL['gen'].values[0])}/pullx.xvg") as xvg:
 #                lines = [ line.strip('\n').split() for line in xvg.readlines()][20:][::10]
@@ -130,8 +130,8 @@ for run in tqdm.tqdm(runs):
         avg_WL_increment_RL = np.average(wl_increment_RL)
         avg_ns_RL = np.average(ns_RL)
         avg_RL_energies = [np.average(np.asarray(energies_RL)[:,lam]) for lam in range(lambdas)]
-        avg_free_energy = avg_RL_energies[-1] - avg_L_energies[-1]
-        data.append([run, avg_ns_RL, avg_ns_L, avg_WL_increment_RL, avg_WL_increment_L, avg_free_energy] + list(reversed(avg_L_energies)) + list(avg_RL_energies))
+        avg_free_energy = 0
+        data.append([run, avg_ns_RL, avg_ns_L, avg_WL_increment_RL, avg_WL_increment_L, avg_free_energy] + avg_L_energies + list(reversed(avg_RL_energies)))
     except Exception as e:
         continue
 
@@ -140,7 +140,7 @@ clone_energies_columns = ['run', 'type', 'length', 'wl_increment', 'energies']
 results = pd.DataFrame(data, columns=columns)
 clone_energies = pd.DataFrame(clone_energies, columns=clone_energies_columns)
 whole_project = whole_dataset.loc[whole_dataset[f'{version}_project'] == int(project)]
-np.save(f'results/pull_{description}.npy',pull_energies)
+#np.save(f'results/pull_{description}.npy',pull_energies)
 
 print(f'*** Results are based on RL sampling > {RL_gen_cutoff} ns, L sampling > {L_gen_cutoff} ns, and a RL WL-increment < {wl_increment_cutoff}:')
 ### Saving Plots and Dataframe
@@ -153,9 +153,11 @@ for run in tqdm.tqdm(results['run'].values):
         clones_L = clone_energies.loc[(clone_energies['run'] == run) & (clone_energies['type'] == 'L')]
         result = results.loc[results['run'] == run]
         summary = list(result[result.columns[:6]].values[0]) # run ns_RL, ns_L, wl_increment_RL, wl_increment_L
-        energies = result[result.columns[6:]].values[0]
+        l_energies = result[result.columns[6:lambdas+6]].values[0]
+        r_energies = result[result.columns[lambdas+6:]].values[0]
+        r_energies = [ x - r_energies[0] + l_energies[-1] for x in r_energies]
+        energies = list(l_energies) + list(r_energies)
         energies = [x - energies[0] for x in energies] # set first point to 0kT reference
-
         if len(clones_RL) < clone_cutoff: # skip runs which have fewer RL clones than the clone_cutoff
             continue
 
@@ -163,14 +165,15 @@ for run in tqdm.tqdm(results['run'].values):
         fig, ax = plt.subplots()
         for lindex, lrow in clones_L.iterrows():
             for rindex, rrow in clones_RL.iterrows():
-                clone_energy = lrow['energies'] + rrow['energies']
+                rl_corrected_energies = [x - rrow['energies'][0] + lrow['energies'][-1] for x in rrow['energies']]
+                clone_energy = lrow['energies'] + rl_corrected_energies
                 clone_energy = [x - clone_energy[0] for x in clone_energy]
                 ax.plot(range(len(clone_energy)), clone_energy)
                 clone_combinations.append(clone_energy)
         energy_errors = np.std(clone_combinations, axis=0)
         ax.errorbar(range(len(energies)), energies, yerr=energy_errors)
         ax.axhline(0,linestyle='--') # draw horizontal lines at reference
-        ax.axhline(summary[-1],linestyle='--') # and at free energy
+        ax.axhline(energies[-1],linestyle='--') # and at free energy
         if result['wl_increment_RL'].values[0] > 0.2: # color complex lambdas based on WL-increment
             wl_color = 'red'
         elif result['wl_increment_RL'].values[0] > 0.1:
@@ -179,12 +182,12 @@ for run in tqdm.tqdm(results['run'].values):
             wl_color = 'green'
         ax.axvspan(0, lambdas-1, alpha=0.1, color='blue') # color first half of lambdas blue
         ax.axvspan(lambdas-1, lambdas*2, alpha=0.1, color=wl_color) # color second half of lambdas (consider changing this based on some other metric.)
-        if summary[-1] < 0: # change color of horizontal free energy strip depending on sign
+        if energies[-1] < 0: # change color of horizontal free energy strip depending on sign
             nrg_color = 'green'
         else:
             nrg_color = 'red'
-        ax.axhspan(0,summary[-1], alpha=0.5, color=nrg_color)
-        ax.set_title(f"{desc[0]}: p{run_info[f'{version}_project'].values[0]}:R{run_info[f'{version}_run'].values[0]}, {run_info['identity'].values[0]}, ΔG = {summary[-1]:.3f}±{energy_errors[-1]:.2f}kT")
+        ax.axhspan(0,energies[-1], alpha=0.5, color=nrg_color)
+        ax.set_title(f"{desc[0]}: p{run_info[f'{version}_project'].values[0]}:R{run_info[f'{version}_run'].values[0]}, {run_info['identity'].values[0]}, ΔG = {energies[-1]:.3f}±{energy_errors[-1]:.2f}kT")
         plt.xlim(0,80)
         plt.xlabel('Ligand Decoupling → Receptor-Ligand Coupling')
         plt.ylabel('Free Energy (kT)')
@@ -193,7 +196,7 @@ for run in tqdm.tqdm(results['run'].values):
         plt.savefig(f"plots/{description}_p{run_info[f'{version}_project'].values[0]}_{run}_{ts}.png")
         plt.close()
 
-        good_results.append([f'{desc[0]}_{version}',f"PROJ{run_info[f'{version}_project'].values[0]}/RUN{run_info[f'{version}_run'].values[0]}",run_info['identity'].values[0],run_info['receptor'].values[0],run_info['score'].values[0], result['free_energy'].values[0], energy_errors[-1], clones_RL['length'].values, clones_L['length'].values, clones_RL['wl_increment'].values])
+        good_results.append([f'{desc[0]}_{version}',f"PROJ{run_info[f'{version}_project'].values[0]}/RUN{run_info[f'{version}_run'].values[0]}",run_info['identity'].values[0],run_info['receptor'].values[0],run_info['score'].values[0], energies[-1], energy_errors[-1], clones_RL['length'].values, clones_L['length'].values, clones_RL['wl_increment'].values])
 
     except Exception as e:
         print(f'Exception in computing energies/errors and plotting: {e}')
