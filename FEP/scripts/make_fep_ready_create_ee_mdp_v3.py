@@ -154,8 +154,12 @@ def active_site_restraint_info(grofile, residues=['ALA', 'VAL', 'LEU', 'ILE'], c
     protein_lines = []
     for res in residues:
         protein_lines += [ line for line in gro_contents.split('\n') if line.count('{res}     CA'.format(res=res)) > 0 ]
+        # some structures have a different numbers of spaces, like GUZ
+        if len(protein_lines) == 0:
+            protein_lines += [ line for line in gro_contents.split('\n') if line.count('{res}   CA'.format(res=res)) > 0 ]
+
     if len(protein_lines) == 0:
-        print("Can't find any ALA of VAL residues????   - what is this crazy protein strutcure?  formatting problems?  Exiting.")
+        print("Can't find any %r residues????   - what is this crazy protein strutcure?  formatting problems?  Exiting."%residues)
         sys.exit(1)
 
     protein_indices = []
