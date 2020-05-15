@@ -136,7 +136,8 @@ class expanded_ensemble_mdpfile(object):
         fin.close()
 
         # Search for keywords
-        print('---- Searching for keywords ----')
+        if VERBOSE:
+            print('---- Searching for keywords ----')
         for line in lines:
 
             # REMOVE COMMENTS -- anything before ';'
@@ -148,90 +149,108 @@ class expanded_ensemble_mdpfile(object):
                     self.ligand_only = False
                 else:
                     self.ligand_only = True
-                print('Setting ligand_only -->', self.ligand_only)
+                if VERBOSE:
+                    print('Setting ligand_only -->', self.ligand_only)
 
             # couple-moltype
             if line.count('couple-moltype') > 0:   # couple-moltype           = {couple_moltype}
                 fields = line.split('=') 
                 self.couple_moltype = fields[1].strip()
-                print('Setting self.couple_moltype -->', self.couple_moltype)
+                if VERBOSE:
+                    print('Setting self.couple_moltype -->', self.couple_moltype)
 
             # pull_group1_name
             if line.count('pull_group1_name') > 0:   # pull_group1_name         = {pull_group1_name}
                 fields = line.split('=')
                 self.pull_group1_name = fields[1].strip()
-                print('Setting self.pull_group1_name -->', self.pull_group1_name)
+                if VERBOSE:
+                    print('Setting self.pull_group1_name -->', self.pull_group1_name)
 
             # pull_group2_name
             if line.count('pull_group2_name') > 0:   # pull_group2_name         = {pull_group2_name}
                 fields = line.split('=')
                 self.pull_group2_name = fields[1].strip()
-                print('Setting self.pull_group2_name -->', self.pull_group2_name)
+                if VERBOSE:
+                    print('Setting self.pull_group2_name -->', self.pull_group2_name)
 
             # pull_geometry
             if line.count('pull-geometry') > 0:   # pullgeometry         = {pull_geometry}
                 fields = line.split('=')
                 self.pull_geometry = fields[1].strip()
-                print('Setting self.pull_geometry -->', self.pull_geometry)
+                if VERBOSE:
+                    print('Setting self.pull_geometry -->', self.pull_geometry)
 
             # pull_coord1_k
             if line.count('pull_coord1_k') > 0:   # pull_coord1_k            = {pull_coord1_k}
                 fields = line.split('=')
                 self.pull_coord1_k = fields[1].strip()
-                print('Setting self.pull_coord1_k -->', self.pull_coord1_k)
+                if VERBOSE:
+                    print('Setting self.pull_coord1_k -->', self.pull_coord1_k)
 
             # pull_coord1_init
             if line.count('pull-coord1-init') > 0:   # pull_coord1_init            = {pull_coord1_init}
                 fields = line.split('=')
                 self.pull_coord1_init = fields[1].strip()
-                print('Setting self.pull_coord1_init -->', self.pull_coord1_init)
+                if VERBOSE:
+                    print('Setting self.pull_coord1_init -->', self.pull_coord1_init)
 
             # fep_lambdas
             if line.count('fep-lambdas') > 0:   # fep-lambdas              = {fep_lambdas_string}
                 fields = line.split('=')
                 self.fep_lambdas_string = fields[1].strip()
-                print('Setting self.fep_lambdas_string -->', self.fep_lambdas_string)
+                if VERBOSE:
+                    print('Setting self.fep_lambdas_string -->', self.fep_lambdas_string)
                 self.fep_lambdas = np.array( [ float(s) for s in self.fep_lambdas_string.split() ] )
-                print('Setting self.fep_lambdas --> ', self.fep_lambdas)
+                if VERBOSE:
+                    print('Setting self.fep_lambdas --> ', self.fep_lambdas)
                 self.nlambdas = self.fep_lambdas.shape[0]
-                print('Setting self.nlambdas --> ', self.nlambdas)
+                if VERBOSE:
+                    print('Setting self.nlambdas --> ', self.nlambdas)
 
             # rest_lambdas
             if line.count('restraint-lambdas') > 0:   # restraint-lambdas        = {rest_lambdas_string}
                 fields = line.split('=')
                 self.rest_lambdas_string = fields[1].strip()
-                print('Setting self.rest_lambdas_string -->', self.rest_lambdas_string)
+                if VERBOSE:
+                    print('Setting self.rest_lambdas_string -->', self.rest_lambdas_string)
                 self.rest_lambdas = np.array( [ float(s) for s in self.rest_lambdas_string.split() ] )
-                print('Setting self.rest_lambdas --> ', self.rest_lambdas)
+                if VERBOSE:
+                    print('Setting self.rest_lambdas --> ', self.rest_lambdas)
                 self.nlambdas = self.rest_lambdas.shape[0]
-                print('Setting self.nlambdas --> ', self.nlambdas)
+                if VERBOSE:
+                    print('Setting self.nlambdas --> ', self.nlambdas)
 
 
             # init_lambda_state
             if line.count('init-lambda-state') > 0:  # init-lambda-state        = {init_lambda_state}
                 fields = line.split('=')
                 self.init_lambda_state = int(fields[1].strip())
-                print('Setting self.init_lambda_state -->', self.init_lambda_state)
+                if VERBOSE:
+                    print('Setting self.init_lambda_state -->', self.init_lambda_state)
 
             # init_lambda_weights
             if line.count('init-lambda-weights') > 0:  # init-lambda-weights      = {init_lambda_weights}
                 fields = line.split('=')
                 self.init_lambda_weights_string = fields[1].strip()
-                print('Setting self.init_lambda_weights_string -->', self.init_lambda_weights_string)
+                if VERBOSE:
+                    print('Setting self.init_lambda_weights_string -->', self.init_lambda_weights_string)
                 self.init_lambda_weights = np.array( [ float(s) for s in self.init_lambda_weights_string.split() ] )
-                print('Setting self.init_lambda_weights -->', self.init_lambda_weights)
+                if VERBOSE:
+                    print('Setting self.init_lambda_weights -->', self.init_lambda_weights)
 
             # wl_increment_in_kT
             if line.count('init-wl-delta') > 0:  # init-wl-delta            = {wl_increment_in_kT}  ; kT -- default is 1.0
                 fields = line.split('=')
                 self.wl_increment_in_kT = float(fields[1].strip())
-                print('Setting self.wl_increment_in_kT -->', self.wl_increment_in_kT)
+                if VERBOSE:
+                    print('Setting self.wl_increment_in_kT -->', self.wl_increment_in_kT)
 
 
         # print a final report
-        print('\nThe rest of the settings have their defaults retained:')
-        self.report()
-
+        if VERBOSE:
+            print('\nThe rest of the settings have their defaults retained:')
+            self.report()
+  
          
 
     def mdpfile_text(self):
