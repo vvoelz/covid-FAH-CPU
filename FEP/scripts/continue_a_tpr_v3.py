@@ -83,7 +83,7 @@ e.write_to_filename(this_mdpfile)
 print ('...Done')
 
 GMX_BIN = '/usr/local/gromacs/bin/gmx'
-cmd = "{GMX_BIN} grompp -c {prev_gen_tpr} -t {prev_gen_trr} -f {this_mdpfile} -p {topfile} -n {ndxfile} -o {this_gen_tpr} -po {this_jobdir}/mdout.mdp -maxwarn 1".format(GMX_BIN=GMX_BIN, prev_gen_tpr=prev_gen_tpr, prev_gen_trr=prev_gen_trr, \
+cmd = "{GMX_BIN} grompp -c {prev_gen_tpr} -t {prev_gen_trr} -f {this_mdpfile} -p {topfile} -n {ndxfile} -o {this_gen_tpr} -po {this_jobdir}/mdout.mdp -maxwarn 40".format(GMX_BIN=GMX_BIN, prev_gen_tpr=prev_gen_tpr, prev_gen_trr=prev_gen_trr, \
 	this_mdpfile=this_mdpfile, topfile=topfile, ndxfile=ndxfile, this_gen_tpr=this_gen_tpr, this_jobdir=this_jobdir)
 print('cmd:', cmd)
 os.system(cmd)
