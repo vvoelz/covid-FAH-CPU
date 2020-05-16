@@ -134,9 +134,16 @@ CL                  31
     toplines = fin.readlines()
     fin.close()
 
+    keep_toplines = []
     # get rid of the osolvent and ions
-    while (toplines[-1].count('CL') + toplines[-1].count('NA') + toplines[-1].count('HOH') ) > 0:
-        toplines.pop()
+    while toplines[-1].count('[ molecules ]') == 0:
+        if (toplines[-1].count('CL') + toplines[-1].count('NA') + toplines[-1].count('HOH') ) > 0:
+            toplines.pop()
+        else:
+            keep_toplines.insert(0, toplines.pop())
+    print('keep_toplines', keep_toplines)
+    for line in keep_toplines:
+        toplines.append( line )
 
     out_topfile = os.path.join(outdir, 'Protein_LIG.top')
     fout = open(out_topfile, 'w')

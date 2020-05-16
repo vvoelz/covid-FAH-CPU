@@ -7,7 +7,7 @@ import codecs
 ######## Functions #############
 
 
-def get_distances(xvgfile, skip=None, stride=1,  gmx_v512=False):
+def get_distances(xvgfile, skip=None, stride=1,  gmx_v512=False, verbose=False):
     """Extract time points (ps) and distances (nm) from a pullx.xvg file
 
     OPTIONS
@@ -23,7 +23,6 @@ def get_distances(xvgfile, skip=None, stride=1,  gmx_v512=False):
 
     os.system("cat %s | grep -v '@' | grep -v '#' > tmp/pullx.dat"%xvgfile)
     pullx = np.loadtxt('tmp/pullx.dat')
-    #print('pullx', pullx)
     """
     # time (ps) dX (nm)         dY (nm)         dZ (nm)
     0.0000      0.236968        0.955994        -0.792
@@ -31,7 +30,9 @@ def get_distances(xvgfile, skip=None, stride=1,  gmx_v512=False):
     2.0000      0.293425        1.07143 -0.82839
     """
 
-    print('pullx', pullx)
+    if verbose:
+        print('pullx', pullx)
+
     # compute the distances
     if skip != None:
         Ind = (pullx[:,0] >= skip)  # skip the first few snapshots
@@ -49,7 +50,7 @@ def get_distances(xvgfile, skip=None, stride=1,  gmx_v512=False):
 
     return times[::stride], distances[::stride]
 
-def get_dhdl(xvgfile, skip=None, ignore_last_column=False):
+def get_dhdl(xvgfile, skip=None, ignore_last_column=False, verbose=False):
     """Extract time points and all the \Delta energies from a dhdl.xvg file.
 
     OPTIONS
@@ -127,11 +128,13 @@ base) server@vav16:~/git/covid-FAH-CPU/FEP/analysis$ head -30 /home/server/serve
     # pop off header lines until we find the first "@ s3 legend "xD\f{}H xl\f{} to (0.0000, 0.0000, 0.0000, 1.0000)"
     while header_lines[0].count("to (") == 0:
         header_lines.pop(0)
-    print('header_lines[0]', header_lines[0])
+    if verbose:
+        print('header_lines[0]', header_lines[0])
 
     # The number after the s (i.e. "@ s5") means that index 6 is where the energy data starts!!! 
     energy_start_index = int(header_lines[0][3]) + 1
-    print('energy_start_index', energy_start_index)
+    if verbose:
+        print('energy_start_index', energy_start_index)
 
     if not os.path.exists('tmp'):
         os.mkdir('tmp')

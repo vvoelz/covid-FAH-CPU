@@ -1,0 +1,8 @@
+python harmonic_rest_correction.py ~/server2/projects/p14399 ~/server2/data/SVR2616698070 14399 0 testout --verbose --lastgenonly
+python harmonic_rest_correction.py ~/server2/projects/p14399 ~/server2/data/SVR2616698070 14399 1 testout --verbose --lastgenonly
+python harmonic_rest_correction.py ~/server2/projects/p14399 ~/server2/data/SVR2616698070 14399 2 testout --verbose --lastgenonly
+python harmonic_rest_correction.py ~/server2/projects/p14399 ~/server2/data/SVR2616698070 14399 3 testout --verbose --lastgenonly
+python harmonic_rest_correction.py ~/server2/projects/p14399 ~/server2/data/SVR2616698070 14399 4 testout --verbose --lastgenonly
+python harmonic_rest_correction.py ~/server2/projects/p14399 ~/server2/data/SVR2616698070 14399 5 testout --verbose --lastgenonly
+python harmonic_rest_correction.py ~/server2/projects/p14399 ~/server2/data/SVR2616698070 14399 6 testout --verbose --lastgenonly
+
