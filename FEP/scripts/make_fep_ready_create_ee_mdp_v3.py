@@ -224,7 +224,7 @@ def active_site_restraint_info(grofile, residues=['ALA', 'VAL', 'LEU', 'ILE'], c
 
 
 
-def quick_minimize(input_grofile, topfile, ndxfile, output_grofile, workdir, babysteps=False):
+def quick_minimize(input_grofile, topfile, ndxfile, output_grofile, workdir, nsteps=100, babysteps=False, longer=False):
     """Perform a quick minimization.
 
     A 'quickmin.mdp' and 'quickmin.tpr' will be written to the workdir, and
@@ -240,6 +240,8 @@ def quick_minimize(input_grofile, topfile, ndxfile, output_grofile, workdir, bab
         emstep = 0.003
     else:
         emstep = 0.03
+    if longer:
+        nsteps = 10000
 
     mdpfile_text = """;       generated from expanded_ensemble_mdpfile() on Sat Mar 14 21:04:11 2020
 ;
@@ -254,7 +256,7 @@ define                   =
 integrator               = steep
 emtol                    = 100.0
 emstep                   = {emstep} ; was 0.05 prev to 3/20/2020
-nsteps                   = 100 ; Trying this Apr 3, 2020 VAV  100000
+nsteps                   = {nsteps} ; Trying this Apr 3, 2020 VAV  100000
 
 comm-mode                = Linear
 nstcomm                  = 1
@@ -329,14 +331,14 @@ constraint-algorithm     = lincs
 lincs-order              = 4   ;12
 lincs-iter               = 1   ;2
 
-""".format(emstep=emstep)
+""".format(emstep=emstep, nsteps=nsteps)
 
     fout = open(min_mdpfile, 'w')
     fout.write(mdpfile_text)
     fout.close()
 
     # run the minimization
-    os.system( '{GMX_BIN}/gmx grompp -c {input_grofile} -f {min_mdpfile} -p {topfile} -n {ndxfile} -o {min_tprfile}'.format(GMX_BIN=GMX_BIN,
+    os.system( '{GMX_BIN}/gmx grompp -c {input_grofile} -f {min_mdpfile} -p {topfile} -n {ndxfile} -o {min_tprfile} -maxwarn 40'.format(GMX_BIN=GMX_BIN,
                 input_grofile=input_grofile, min_mdpfile=min_mdpfile, topfile=topfile, ndxfile=ndxfile, min_tprfile=min_tprfile) )
     os.system( '{GMX_BIN}/gmx mdrun -v -s {min_tprfile} -c {output_grofile}'.format(GMX_BIN=GMX_BIN,
                 min_tprfile=min_tprfile, output_grofile=output_grofile) )
@@ -451,13 +453,14 @@ or
                     help='Specify this is a ligand-only simulation')
     parser.add_argument('--babysteps', dest='babysteps', action='store_true',
                     help='Use "baby steps" in the energy minimization to avoid errors')
-
+    parser.add_argument('--longer', dest='longer', action='store_true',
+                    help='Run a longer minimization of 10000 steps')
     args = parser.parse_args()
     print('args.in_rundir', args.in_rundir)
     print('args.out_rundir', args.out_rundir)
     print('args.ligand_only', args.ligand_only)
     print('args.babysteps', args.babysteps)
-
+    print('args.longer', args.longer)
 
     # parse the input arguments
     in_rundir = args.in_rundir
@@ -465,8 +468,8 @@ or
     if not os.path.exists(out_rundir):
         os.mkdir(out_rundir)
     ligand_only = args.ligand_only
-    babysteps = args.babysteps
-
+    #babysteps = args.babysteps
+    #longer = args.longer
 
     ### convert the grofile to FEP-ready by renaming the ligand residues to LIG ###
     in_grofile = os.path.join(in_rundir, 'conf.gro')
@@ -502,7 +505,7 @@ or
 
     ### do a very quick minimization to make sure we're all set to run
     minimized_grofile = os.path.join(out_rundir, 'npt.gro')
-    quick_minimize(out_grofile, out_topfile, ndxfile, minimized_grofile, out_rundir)
+    quick_minimize(out_grofile, out_topfile, ndxfile, minimized_grofile, out_rundir, nsteps=1000, babysteps=args.babysteps, longer=args.longer)
 
     ### Create an expanded-ensemble mdpfile the correct pull groups and equilibrium distance 
     if not ligand_only:
